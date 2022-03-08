@@ -6,3 +6,4 @@ Featuring
 2. Ms. G
 3. Mr. Phone
 
+![Daniel Cubed Meets Chan Jamboard](https://user-images.githubusercontent.com/75279704/157279674-38a1baae-15b8-4490-b09e-6a3acba1c61e.gif)
