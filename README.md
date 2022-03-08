@@ -1,4 +1,4 @@
-# **Chan_Wars**
+# **Chan Wars**
 Fight your way through the bosses with this unique memory game, loosely based on Westmount C.I. teachers!
 
 Featuring
