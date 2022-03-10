@@ -2,6 +2,7 @@
 Fight your way through the bosses with this unique memory game, loosely based on Westmount C.I. teachers!
 
 Dependencies
+* Python 3.10.X and up
 * Pygame
 
 Bosses
