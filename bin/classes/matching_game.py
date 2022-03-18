@@ -4,9 +4,9 @@ from math import floor
 
 
 class CardPair:
-    def __init__(self, pos1, pos2, image):
-        self.position1 = pos1
-        self.position2 = pos2
+    def __init__(self, image, pos):
+        self.position1 = pos[0]
+        self.position2 = pos[1]
         self.image = image
 
 
@@ -17,11 +17,8 @@ class Screen:
         self.image_list = image_list
 
     def generate_pairs(self, size, margins):
-        pos_list = [[[a, b] for b in range(self.rows)] for a in range(self.columns)]
         key_list = [a for a in range(self.rows * self.columns)]
-        for m in range(self.rows * self.columns):
-            keys = key_list.pop(random.randint(0, len(key_list))), key_list.pop(random.randint(0, len(key_list)))
-            pos1 = pos_list[floor(keys[0] // len(pos_list))], pos_list[floor(keys[0] // len(pos_list))][keys[0] % len(pos_list) - 1]
-            pos2 =
-            image = self.image_list.pop(random.randint(0, len(self.image_list)))
+        key_list = random.sample(key_list, len(key_list))
+        image_cards = [(self.image_list[floor(a/2)-1], (a % self.columns, floor(a / self.rows))) for a in key_list]
+        screen_complete = [CardPair(pair[0], pair[1]) for pair in image_cards]
 
