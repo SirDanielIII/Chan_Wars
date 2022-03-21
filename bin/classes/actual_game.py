@@ -26,4 +26,3 @@ while running:
     surface.fill((0, 0, 0))
     pg.display.update()
 
-
