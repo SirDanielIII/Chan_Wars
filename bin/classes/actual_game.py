@@ -9,10 +9,17 @@ from bin.levels.main_menu import MainMenu
 
 pg.init()
 
-width = 1600
-height = 900
+width = 1280
+height = 720
 
-surface = pg.display.set_mode((width, height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
+w = 4  # number of cards horizontally
+h = 3  # number of cards vertically
+
+bg = pg.transform.smoothscale(pg.image.load('temp_background.jpg'), (1280, 720))
+card = pg.transform.smoothscale(pg.image.load('card.png'), (100, 150))
+
+
+surface = pg.display.set_mode((width, height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
 
 running = True
 
@@ -24,6 +31,10 @@ while running:
             pg.quit()
             sys.exit()
     surface.fill((0, 0, 0))
+    surface.blit(bg, (0, 0))
+
+    for i in range(1, w+1):
+        for j in range(1, h+1):
+            surface.blit(card, (250 + 100*i, 0 + 150*j))
+
     pg.display.update()
-
-
