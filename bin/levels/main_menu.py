@@ -12,9 +12,9 @@ class MainMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time)
         # Fonts
-        self.f_regular_small = pg.font.Font(os.getcwd() + "/bin/resources/Herculanum-Regular.ttf", 40)
-        self.f_regular = pg.font.Font(os.getcwd() + "/bin/resources/Herculanum-Regular.ttf", 50)
-        self.f_regular_big = pg.font.Font(os.getcwd() + "/bin/resources/Herculanum-Regular.ttf", 100)
+        self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 40)
+        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
+        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 100)
         # Create Button Class
         self.b_play_game = Button(self.text_canvas, 100, 400, 650, 150, blue, "Play Game", self.f_regular_big, white)
         self.b_options = Button(self.text_canvas, 100, 600, 300, 100, blue, "Options", self.f_regular, white)
@@ -22,6 +22,7 @@ class MainMenu(Level):
         self.b_credits = Button(self.text_canvas, 100, 750, 300, 100, blue, "Credits", self.f_regular, white)
         self.b_quit = Button(self.text_canvas, 450, 750, 300, 100, blue, "Quit", self.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
+        self.test = pg.Surface((1280, 720), flags=pg.HWACCEL and pg.DOUBLEBUF)
 
     def run(self):
         while True:
@@ -43,11 +44,17 @@ class MainMenu(Level):
 
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
+            self.test.fill((0, 255, 255))
+            self.surface.blit(self.test, ((self.width - self.test.get_width()) / 2, (self.height - self.test.get_height()) / 2))
             # ------------------------------------------------------------------------------------------------------------------
             for i in self.buttons:
                 i.draw_button(mx, my)
                 if i.check_click(mx, my, self.click):
                     print("done")
+            if self.b_play_game.check_click(mx, my, self.click):
+                return 2
+            if self.b_quit.check_click(mx, my, self.click):
+                return 6
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
