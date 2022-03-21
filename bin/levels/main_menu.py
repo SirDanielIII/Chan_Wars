@@ -8,6 +8,9 @@ from ..tools.colours import *
 from ..classes.button import Button
 
 
+gameOn = False
+
+
 class MainMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time)
@@ -23,6 +26,7 @@ class MainMenu(Level):
         self.b_quit = Button(self.text_canvas, 450, 750, 300, 100, blue, "Quit", self.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
         self.test = pg.Surface((1280, 720), flags=pg.HWACCEL and pg.DOUBLEBUF)
+
 
     def run(self):
         while True:
