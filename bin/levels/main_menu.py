@@ -8,6 +8,9 @@ from ..tools.colours import *
 from ..classes.button import Button
 
 
+gameOn = False
+
+
 class MainMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time)
@@ -22,6 +25,7 @@ class MainMenu(Level):
         self.b_credits = Button(self.text_canvas, 100, 750, 300, 100, blue, "Credits", self.f_regular, white)
         self.b_quit = Button(self.text_canvas, 450, 750, 300, 100, blue, "Quit", self.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
+
 
     def run(self):
         while True:
