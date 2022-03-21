@@ -35,7 +35,7 @@ class CardPair:
 class MatchingScreen:
     def __init__(self, level, image_list, screen):
         self.rows = 4
-        self.columns = 2 * level
+        self.columns = 2 * level + 1
         self.image_list = image_list
         self.card_set = []
         self.screen = screen
@@ -48,3 +48,7 @@ class MatchingScreen:
                        for a, image in enumerate(self.image_list)}
         self.card_set = [CardPair(card, image_cards[card], size, margins) for card in image_cards]
         return self.card_set
+
+    def complete(self):
+        for card in self.card_set:
+            pass
