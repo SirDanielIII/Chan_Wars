@@ -7,8 +7,12 @@ import time
 import pygame as pg
 
 from bin.classes.audio import Audio
+from bin.levels.credits import Credits
+from bin.levels.game_menu import GameMenu
+from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
 from bin.levels.matching_game import Game
+from bin.levels.options import Options
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
@@ -31,6 +35,10 @@ class Main(object):
         self.audio = Audio()
         self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
         self.lvl_matching_game = Game(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
         self.lvl_settings = None
         self.lvl_pause = None
         self.lvl_credits = None
@@ -62,19 +70,19 @@ class Main(object):
                     self.lvl = 1
                 case 1:  # Main Menu
                     self.lvl = self.lvl_main_menu.run()
-                case 2:  # Game
+                case 2:  # Game Menu
+                    self.lvl = self.lvl_game_menu.run()
+                case 3:  # Game
                     self.lvl = self.lvl_matching_game.run()
-                case 3:  # Options
-                    pass
-                case 4:  # How to Play
-                    pass
-                case 5:  # Credits
-                    pass
-                case 6:  # Quit
+                case 4:  # Options
+                    self.lvl = self.lvl_options.run()
+                case 5:  # How to Play
+                    self.lvl = self.lvl_how_to_play.run()
+                case 6:  # Credits
+                    self.lvl = self.lvl_how_to_play.run()
+                case 7:  # Quit
                     pg.quit()
                     sys.exit()
-                case 7:  # Game Screen
-                    pass
             # ----------------------------------------------------------------------------------------------------------
             pg.display.update()
             self.clock.tick(self.FPS)
