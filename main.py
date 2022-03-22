@@ -1,4 +1,5 @@
-# Fucking Header or Something IDK
+# Chan Wars
+# By Daniel Z, Daniel F, Daniel L, and Kris
 
 import sys
 import time
@@ -6,7 +7,12 @@ import time
 import pygame as pg
 
 from bin.classes.audio import Audio
+from bin.levels.credits import Credits
+from bin.levels.game_menu import GameMenu
+from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
+from bin.levels.matching_game import Game
+from bin.levels.options import Options
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
@@ -28,6 +34,11 @@ class Main(object):
         # Audio System
         self.audio = Audio()
         self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_matching_game = Game(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
         self.lvl_settings = None
         self.lvl_pause = None
         self.lvl_credits = None
@@ -55,20 +66,23 @@ class Main(object):
             # self.last_phase = self.config.get("phase", "")
             # ----------------------------------------------------------------------------------------------------------
             match self.lvl:
-                case 0:
+                case 0:  # Boot Screen
                     self.lvl = 1
-                case 1:
-                    self.lvl_main_menu.run()
-            # # ----------------------------------------------------------------------------------------------------------
-            # if self.last_phase == 1:
-            #     self.phase_1 = Phase1(self.width, self.height, self.surface, self.game_canvas,
-            #                           self.clock, self.FPS, self.last_time, self.glitch, self.overlay, self.audio)
-            #     self.phase_1.cinematic()
-            # # ----------------------------------------------------------------------------------------------------------
-            # if self.last_phase == 2:
-            #     self.phase_2 = Phase2(self.width, self.height, self.surface, self.game_canvas,
-            #                           self.clock, self.FPS, self.last_time, self.glitch, self.overlay, self.audio)
-            #     self.phase_2.level_switcher()
+                case 1:  # Main Menu
+                    self.lvl = self.lvl_main_menu.run()
+                case 2:  # Game Menu
+                    self.lvl = self.lvl_game_menu.run()
+                case 3:  # Game
+                    self.lvl = self.lvl_matching_game.run()
+                case 4:  # Options
+                    self.lvl = self.lvl_options.run()
+                case 5:  # How to Play
+                    self.lvl = self.lvl_how_to_play.run()
+                case 6:  # Credits
+                    self.lvl = self.lvl_how_to_play.run()
+                case 7:  # Quit
+                    pg.quit()
+                    sys.exit()
             # ----------------------------------------------------------------------------------------------------------
             pg.display.update()
             self.clock.tick(self.FPS)
@@ -79,7 +93,4 @@ main = Main()
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     main.handler()
-
-# Kris is making a comment teeheeeeeee
-# Daniel Z is kinda cool
-# Amir likes math
+# Test
