@@ -10,7 +10,7 @@ class Boss:
 
 
 chan = Boss("Devil Chan", 3, 4, 50, "Devilish Stab", "A neat little hack", ["Here's a neat little hack"])
-mrs_g = Boss("Mrs. G", 4, 5, 100, "", "Send you to Siberia",
+mrs_g = Boss("Mrs. G", 3, 6, 100, "", "Send you to Siberia",
              ["Sean", "One of them is a woman, the other has an Indian accent if you’re into it",
               "I'll only give you 100 if you're one of my favourite students", "Do it on Repl", "Go to Siberia!",
               "Don't ask me, use your brain", "Troubleshoot it"])
