@@ -12,12 +12,12 @@ pg.init()
 width = 1280
 height = 720
 
-w = 4  # number of cards horizontally
-h = 3  # number of cards vertically
+w = 3  # number of cards horizontally
+h = 4  # number of cards vertically
 
 bg = pg.transform.smoothscale(pg.image.load('temp_background.jpg'), (1280, 720))
 card = pg.transform.smoothscale(pg.image.load('card.png'), (100, 150))
-
+count = 0
 
 surface = pg.display.set_mode((width, height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
 
@@ -35,6 +35,13 @@ while running:
 
     for i in range(1, w+1):
         for j in range(1, h+1):
-            surface.blit(card, (250 + 100*i, 0 + 150*j))
+            surface.blit(card, (390-(50*(w-3)) + 100*i, -85 + 150*j))
+
+    count += 1
+
+    if count == 100:
+        w = 5
+    elif count == 200:
+        w = 7
 
     pg.display.update()
