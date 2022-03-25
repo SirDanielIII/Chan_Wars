@@ -1,6 +1,7 @@
 import random
 from math import floor
 import pygame as pg
+import bin.levels.matching_game
 
 
 def redraw_screen():
@@ -9,10 +10,12 @@ def redraw_screen():
 
 
 class CardPair:
-    def __init__(self, image, pos, size, margins):
+    def __init__(self, image, pos, size, m, columns, o_set):
         self.size = size
-        self.position1 = [pos[0][0] * (size[0] + margins[0]) + 50, pos[0][1] * (size[1] + margins[1]) + 50]
-        self.position2 = [pos[1][0] * (size[0] + margins[0]) + 50, (pos[1][1] * (size[1] + margins[1])) + 50]
+        self.position1 = [o_set[0] - columns + 2 + (size[0] + m[0]) * pos[0][0],
+                          o_set[1] + (size[1] + m[1]) * (pos[0][1] + 1)]
+        self.position2 = [o_set[0] - columns + 2 + (size[0] + m[0]) * pos[1][0],
+                          o_set[1] + (size[1] + m[1]) * (pos[1][1] + 1)]
         self.image = image
         self.chosen1 = 0
         self.chosen2 = 0
@@ -42,18 +45,18 @@ class MatchingScreen:
         self.card_set = []
         self.screen = screen
 
-    def generate_pairs(self, size, margins):
+    def generate_pairs(self, size, m, o_set):
         key_list = random.sample([a + 1 for a in range(self.rows * self.columns)], self.rows * self.columns)
         key_list = [(key_list[2 * a], key_list[(2 * a) + 1]) for a in range(int(self.rows * self.columns / 2))]
         image_cards = {image: ((floor((key_list[a][0] - 1) / self.columns), (key_list[a][0] - 1) % self.columns),
                                (floor((key_list[a][1] - 1) / self.columns), (key_list[a][1] - 1) % self.columns))
                        for a, image in enumerate(self.image_list)}
-        self.card_set = [CardPair(card, image_cards[card], size, margins) for card in image_cards]
+        self.card_set = [CardPair(card, image_cards[card], size, m, self.columns, o_set) for card in image_cards]
         return self.card_set
 
-    def draw_cards(self, mouse_pos):
+    def draw_cards(self, m_pos):
         for pair in self.card_set:
-            pair.choose(mouse_pos)
+            pair.choose(m_pos)
         for pair in self.card_set:
             pair.draw_matching(image_1, self.screen)
         redraw_screen()
@@ -77,6 +80,8 @@ class MatchingScreen:
 
 clock = pg.time.Clock()
 level = 1
+X = 400
+Y = 400
 surface = pg.display.set_mode((400, 400))
 image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
 image_1 = pg.transform.scale(image_1, (40, 40))
@@ -92,8 +97,11 @@ image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\im
 image_6 = pg.transform.scale(image_6, (40, 40))
 image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
 run = True
+margins = (10, 10)
+offset = [(X+margins[0]*3)/2, (Y+margins[1]*(2*level+1))/2]
 g = MatchingScreen(1, image_list, surface)
-pairs = g.generate_pairs((40, 40), (10, 10))
+
+pairs = g.generate_pairs((40, 40), margins, offset)
 
 t = 0
 instance = True
