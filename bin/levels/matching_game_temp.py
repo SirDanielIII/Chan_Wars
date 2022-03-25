@@ -1,7 +1,7 @@
 
 import sys
 import time
-
+import os
 import pygame as pg
 
 from bin.classes.audio import Audio
@@ -22,8 +22,8 @@ card_y = 150
 offset_x = card_x + 290
 offset_y = card_y-65
 
-bg = pg.transform.smoothscale(pg.image.load('temp_background.jpg'), (1280, 720))
-card = pg.transform.smoothscale(pg.image.load('card.png'), (card_x, card_y))
+bg = pg.transform.smoothscale(pg.image.load('bg.jpg'), (1280, 720))
+card = pg.transform.smoothscale(pg.image.load('Mr_Chan.png'), (card_x, card_y))
 
 word = pg.font.SysFont('In your face, Joffrey!', 50)
 
@@ -34,7 +34,7 @@ surface = pg.display.set_mode((width, height), flags=pg.HWSURFACE and pg.DOUBLEB
 running = True
 
 
-def generate_cards():
+def generate_cards(card, energy):
     text = word.render("Energy: "+str(energy), True, white)  # number of lines
     surface.blit(text, (20, 10))
 
@@ -58,6 +58,6 @@ while running:
         energy -= 1
         count = 0
 
-    generate_cards()
+    generate_cards(card, energy)
 
     pg.display.update()
