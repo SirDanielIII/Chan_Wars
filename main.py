@@ -79,7 +79,7 @@ class Main(object):
                 case 5:  # How to Play
                     self.lvl = self.lvl_how_to_play.run()
                 case 6:  # Credits
-                    self.lvl = self.lvl_how_to_play.run()
+                    self.lvl = self.lvl_credits.run()
                 case 7:  # Quit
                     pg.quit()
                     sys.exit()
