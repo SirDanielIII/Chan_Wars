@@ -1,7 +1,6 @@
 import random
 from math import floor
 import pygame as pg
-import bin.levels.matching_game
 
 
 def redraw_screen():
@@ -12,10 +11,10 @@ def redraw_screen():
 class CardPair:
     def __init__(self, image, pos, size, m, columns, o_set):
         self.size = size
-        self.position1 = [o_set[0] - columns + 2 + (size[0] + m[0]) * pos[0][0],
-                          o_set[1] + (size[1] + m[1]) * (pos[0][1] + 1)]
-        self.position2 = [o_set[0] - columns + 2 + (size[0] + m[0]) * pos[1][0],
-                          o_set[1] + (size[1] + m[1]) * (pos[1][1] + 1)]
+        self.position1 = [o_set[0] - columns + (size[0] + m[0]) * pos[0][0],
+                          o_set[1] + (size[1] + m[1]) * pos[0][1]]
+        self.position2 = [o_set[0] - columns + (size[0] + m[0]) * pos[1][0],
+                          o_set[1] + (size[1] + m[1]) * pos[1][1]]
         self.image = image
         self.chosen1 = 0
         self.chosen2 = 0
@@ -78,40 +77,40 @@ class MatchingScreen:
             a.chosen2 = 0
 
 
-clock = pg.time.Clock()
-level = 1
+def run(level, X, Y, image_list, size, margins):
+    clock = pg.time.Clock()
+    running = True
+    offset = [(X-(margins[0]+size[0])*4)/2, (Y-(margins[1]+size[1])*(2*level+1))/2]
+    g = MatchingScreen(1, image_list, surface)
+    pairs = g.generate_pairs(size, margins, offset)
+    while running:
+        mouse_pos = [0, 0]
+        for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN:
+                mouse_pos = list(pg.mouse.get_pos())
+        g.draw_cards(mouse_pos)
+        if g.complete() >= 2:
+            pg.time.wait(1000)
+            g.reset()
+        clock.tick(10)
+
+
 X = 400
 Y = 400
-surface = pg.display.set_mode((400, 400))
-image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
-image_1 = pg.transform.scale(image_1, (40, 40))
-image_2 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_2.jpg").convert_alpha()
-image_2 = pg.transform.scale(image_2, (40, 40))
-image_3 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_3.jpg").convert_alpha()
-image_3 = pg.transform.scale(image_3, (40, 40))
-image_4 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_4.jpg").convert_alpha()
-image_4 = pg.transform.scale(image_4, (40, 40))
-image_5 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_5.jpg").convert_alpha()
-image_5 = pg.transform.scale(image_5, (40, 40))
-image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
-image_6 = pg.transform.scale(image_6, (40, 40))
-image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
-run = True
+size = (40, 40)
 margins = (10, 10)
-offset = [(X+margins[0]*3)/2, (Y+margins[1]*(2*level+1))/2]
-g = MatchingScreen(1, image_list, surface)
-
-pairs = g.generate_pairs((40, 40), margins, offset)
-
-t = 0
-instance = True
-while run:
-    mouse_pos = [0, 0]
-    for event in pg.event.get():
-        if event.type == pg.MOUSEBUTTONDOWN:
-            mouse_pos = list(pg.mouse.get_pos())
-    g.draw_cards(mouse_pos)
-    if g.complete() >= 2:
-        pg.time.wait(1000)
-        g.reset()
-    clock.tick(10)
+surface = pg.display.set_mode((X, Y))
+image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
+image_1 = pg.transform.scale(image_1, size)
+image_2 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_2.jpg").convert_alpha()
+image_2 = pg.transform.scale(image_2, size)
+image_3 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_3.jpg").convert_alpha()
+image_3 = pg.transform.scale(image_3, size)
+image_4 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_4.jpg").convert_alpha()
+image_4 = pg.transform.scale(image_4, size)
+image_5 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_5.jpg").convert_alpha()
+image_5 = pg.transform.scale(image_5, size)
+image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
+image_6 = pg.transform.scale(image_6, size)
+image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
+run(1, X, Y, image_list, size, margins)
