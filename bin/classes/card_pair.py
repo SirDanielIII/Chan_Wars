@@ -1,7 +1,6 @@
 import random
 from math import floor
 import pygame as pg
-import bin.levels.matching_game
 
 
 def redraw_screen():
