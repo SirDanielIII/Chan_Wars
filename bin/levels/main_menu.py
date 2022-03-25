@@ -57,6 +57,12 @@ class MainMenu(Level):
                     print("done")
             if self.b_play_game.check_click(mx, my, self.click):
                 return 2
+            if self.b_options.check_click(mx, my, self.click):
+                return 3
+            if self.b_help.check_click(mx, my, self.click):
+                return 4
+            if self.b_credits.check_click(mx, my, self.click):
+                return 5
             if self.b_quit.check_click(mx, my, self.click):
                 return 6
             # ------------------------------------------------------------------------------------------------------------------
