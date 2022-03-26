@@ -2,6 +2,8 @@ import random
 from math import floor
 import pygame as pg
 
+pg.font.init()
+
 
 def redraw_screen():
     pg.display.update()
@@ -53,9 +55,10 @@ class MatchingScreen:
         self.card_set = [CardPair(card, image_cards[card], size, m, self.columns, o_set) for card in image_cards]
         return self.card_set
 
-    def draw_cards(self, m_pos):
-        for pair in self.card_set:
-            pair.choose(m_pos)
+    def draw_cards(self, m_pos, chosen_cards):
+        if chosen_cards < 2:
+            for pair in self.card_set:
+                pair.choose(m_pos)
         for pair in self.card_set:
             pair.draw_matching(image_1, self.screen)
         redraw_screen()
@@ -64,10 +67,10 @@ class MatchingScreen:
         count = 0
         for a in self.card_set:
             if a.chosen1 + a.chosen2 == 2:
-                return 2
+                return 2, 1, 1
             else:
                 count += a.chosen1 + a.chosen2
-        return count
+        return count, 1, 0
 
     def reset(self):
         for m, a in enumerate(self.card_set):
@@ -77,27 +80,43 @@ class MatchingScreen:
             a.chosen2 = 0
 
 
-def run(level, X, Y, image_list, size, margins):
+def run(level, X, Y, image_list, size, margins, matches, delay):
     clock = pg.time.Clock()
-    running = True
     offset = [(X-(margins[0]+size[0])*4)/2, (Y-(margins[1]+size[1])*(2*level+1))/2]
     g = MatchingScreen(1, image_list, surface)
     pairs = g.generate_pairs(size, margins, offset)
-    while running:
+    word = pg.font.SysFont('Comic Sans MS', 20)
+    time = 0
+    correct_matches = 0
+    f = [0]
+    close_time = pg.time.get_ticks()
+    while matches or close_time + delay[0] > pg.time.get_ticks():
+        if not pairs:
+            pairs = g.generate_pairs(size, margins, offset)
         mouse_pos = [0, 0]
         for event in pg.event.get():
             if event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = list(pg.mouse.get_pos())
-        g.draw_cards(mouse_pos)
-        if g.complete() >= 2:
-            pg.time.wait(1000)
-            g.reset()
-        clock.tick(10)
+        g.draw_cards(mouse_pos, f[0])
+        f = g.complete()
+        if f[0] == 2:
+            if not time:
+                time = pg.time.get_ticks()
+            if pg.time.get_ticks() > time + delay[1]:
+                correct_matches += f[2]
+                matches -= f[1]
+                g.reset()
+                time = 0
+                if not matches:
+                    close_time = pg.time.get_ticks()
+        text = word.render("Energy: "+str(matches), True, (255, 0, 0))
+        surface.blit(text, (20, 10))
+        clock.tick(60)
 
 
 X = 400
 Y = 400
-size = (40, 40)
+size = (80, 40)
 margins = (10, 10)
 surface = pg.display.set_mode((X, Y))
 image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
@@ -113,4 +132,4 @@ image_5 = pg.transform.scale(image_5, size)
 image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
 image_6 = pg.transform.scale(image_6, size)
 image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
-run(1, X, Y, image_list, size, margins)
+run(1, X, Y, image_list, size, margins, 3, (500, 500))
