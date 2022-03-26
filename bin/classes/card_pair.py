@@ -1,11 +1,12 @@
 import random
 from math import floor
+
 import pygame as pg
 
 pg.font.init()
 
 
-def redraw_screen():
+def redraw_screen(surface):
     pg.display.update()
     surface.fill((255, 255, 255))
 
@@ -22,9 +23,11 @@ class CardPair:
         self.chosen2 = 0
 
     def choose(self, m_pos):
-        if self.position1[0] < m_pos[0] < self.position1[0] + self.size[0] and self.position1[1] < m_pos[1] < self.position1[1] + self.size[1]:
+        if self.position1[0] < m_pos[0] < self.position1[0] + self.size[0] and self.position1[1] < m_pos[1] < \
+                self.position1[1] + self.size[1]:
             self.chosen1 = 1
-        if self.position2[0] < m_pos[0] < self.position2[0] + self.size[0] and self.position2[1] < m_pos[1] < self.position2[1] + self.size[1]:
+        if self.position2[0] < m_pos[0] < self.position2[0] + self.size[0] and self.position2[1] < m_pos[1] < \
+                self.position2[1] + self.size[1]:
             self.chosen2 = 1
 
     def draw_matching(self, default, screen):
@@ -60,8 +63,8 @@ class MatchingScreen:
             for pair in self.card_set:
                 pair.choose(m_pos)
         for pair in self.card_set:
-            pair.draw_matching(image_1, self.screen)
-        redraw_screen()
+            pair.draw_matching(self.image_list[-1], self.screen)
+        redraw_screen(self.screen)
 
     def complete(self):
         count = 0
@@ -80,9 +83,9 @@ class MatchingScreen:
             a.chosen2 = 0
 
 
-def run(level, X, Y, image_list, size, margins, matches, delay):
+def run(level, X, Y, image_list, size, margins, matches, delay, surface):
     clock = pg.time.Clock()
-    offset = [(X-(margins[0]+size[0])*4)/2, (Y-(margins[1]+size[1])*(2*level+1))/2]
+    offset = [(X - (margins[0] + size[0]) * 4) / 2, (Y - (margins[1] + size[1]) * (2 * level + 1)) / 2]
     g = MatchingScreen(1, image_list, surface)
     pairs = g.generate_pairs(size, margins, offset)
     word = pg.font.SysFont('Comic Sans MS', 20)
@@ -109,27 +112,26 @@ def run(level, X, Y, image_list, size, margins, matches, delay):
                 time = 0
                 if not matches:
                     close_time = pg.time.get_ticks()
-        text = word.render("Energy: "+str(matches), True, (255, 0, 0))
+        text = word.render("Energy: " + str(matches), True, (255, 0, 0))
         surface.blit(text, (20, 10))
         clock.tick(60)
 
-
-X = 400
-Y = 400
-size = (80, 40)
-margins = (10, 10)
-surface = pg.display.set_mode((X, Y))
-image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
-image_1 = pg.transform.scale(image_1, size)
-image_2 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_2.jpg").convert_alpha()
-image_2 = pg.transform.scale(image_2, size)
-image_3 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_3.jpg").convert_alpha()
-image_3 = pg.transform.scale(image_3, size)
-image_4 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_4.jpg").convert_alpha()
-image_4 = pg.transform.scale(image_4, size)
-image_5 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_5.jpg").convert_alpha()
-image_5 = pg.transform.scale(image_5, size)
-image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
-image_6 = pg.transform.scale(image_6, size)
-image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
-run(1, X, Y, image_list, size, margins, 3, (500, 500))
+# X = 800
+# Y = 600
+# size = (80, 120)
+# margins = (20, 30)
+# surface = pg.display.set_mode((X, Y))
+# image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
+# image_1 = pg.transform.scale(image_1, size)
+# image_2 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_2.jpg").convert_alpha()
+# image_2 = pg.transform.scale(image_2, size)
+# image_3 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_3.jpg").convert_alpha()
+# image_3 = pg.transform.scale(image_3, size)
+# image_4 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_4.jpg").convert_alpha()
+# image_4 = pg.transform.scale(image_4, size)
+# image_5 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_5.jpg").convert_alpha()
+# image_5 = pg.transform.scale(image_5, size)
+# image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
+# image_6 = pg.transform.scale(image_6, size)
+# image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
+# run(1, X, Y, image_list, size, margins, 3, (1000, 500), surface)
