@@ -6,9 +6,12 @@ import pygame as pg
 pg.font.init()
 
 
-def redraw_screen(surface):
+def redraw_screen(surface, X=None, Y=None, background=None):
     pg.display.update()
     surface.fill((255, 255, 255))
+    if background:
+        background.transform.scale(background, (X, Y))
+        surface.blit(background, (0, 0))
 
 
 class CardPair:
