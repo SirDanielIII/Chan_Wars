@@ -1,5 +1,7 @@
 import random
 import pygame as pg
+import os
+from bin.classes import load
 
 pg.font.init()
 
@@ -121,18 +123,8 @@ Y = 600
 size = (80, 120)
 margins = (20, 30)
 surface = pg.display.set_mode((X, Y))
-image_1 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_1.jpg").convert_alpha()
-image_1 = pg.transform.scale(image_1, size)
-image_2 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_2.jpg").convert_alpha()
-image_2 = pg.transform.scale(image_2, size)
-image_3 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_3.jpg").convert_alpha()
-image_3 = pg.transform.scale(image_3, size)
-image_4 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_4.jpg").convert_alpha()
-image_4 = pg.transform.scale(image_4, size)
-image_5 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_5.jpg").convert_alpha()
-image_5 = pg.transform.scale(image_5, size)
-image_6 = pg.image.load(r"C:\Users\massi\IdeaProjects\Grade_12\Testing_Folder\image_6.jpg").convert_alpha()
-image_6 = pg.transform.scale(image_6, size)
-image_list = [image_1, image_2, image_3, image_4, image_5, image_6]
+image_list = load.Load.load_images(os.getcwd() + "/Testing_Resources/")
+image_list = [pg.transform.scale(image, size) for image in image_list]
+print(image_list)
 f = MatchingScreen(1, image_list, surface)
 f.run(1, X, Y,  size, margins, 10, (1000, 500))
