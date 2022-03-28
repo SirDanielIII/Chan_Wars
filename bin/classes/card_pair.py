@@ -123,7 +123,7 @@ Y = 600
 size = (80, 120)
 margins = (20, 30)
 surface = pg.display.set_mode((X, Y))
-image_list = load.Load.load_images(os.getcwd() + "/Testing_Resources/")
+image_list = load.Load.load_images(os.getcwd() + "/bin/classes/Testing_Resources/")
 image_list = [pg.transform.scale(image, size) for image in image_list]
 print(image_list)
 f = MatchingScreen(1, image_list, surface)
