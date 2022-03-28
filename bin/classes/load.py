@@ -31,7 +31,7 @@ class Load(object):
         """
         image_list = []
         for filename in os.listdir(path_to_directory):
-            if filename.endswith('.png'):
+            if filename.endswith('.png') or filename.endswith('.jpg'):
                 path = os.path.join(path_to_directory, filename)
                 image_list.append(pg.image.load(path).convert())
         return image_list
