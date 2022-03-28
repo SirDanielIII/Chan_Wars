@@ -3,6 +3,7 @@ import sys
 import time
 
 from bin.classes.level import Level
+from bin.classes.card_pair import *
 
 
 class Game(Level):
