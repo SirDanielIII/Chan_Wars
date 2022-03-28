@@ -1,13 +1,18 @@
+# https://zetcode.com/python/yaml/
+
 import yaml
 import os
 
 
-# https://zetcode.com/python/yaml/
 class Config(object):
     def __init__(self):
-        with open(os.getcwd() + "config.yml", "r") as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-        print(data)
+        with open(os.getcwd() + "/config.yml", "r") as f:
+            self.data = yaml.load(f, Loader=yaml.FullLoader)
+        self.return_boss_info("mr_phone")
 
-    def setup(self):
-        pass
+    def return_boss_info(self, name):
+        print(self.data.get("bosses").get(name))
+
+# # Test
+# yeet = Config()
+# yeet.return_boss_info("mr_phone")

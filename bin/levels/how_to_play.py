@@ -6,8 +6,8 @@ from bin.classes.level import Level
 
 
 class HowToPlay(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
 
     def run(self):
         while True:
