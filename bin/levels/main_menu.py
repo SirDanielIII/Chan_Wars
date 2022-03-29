@@ -43,7 +43,8 @@ class MainMenu(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
             # ------------------------------------------------------------------------------------------------------------------
-            self.transition_lvl("game", self.game_canvas, dt)
+            if not self.fade_out:
+                self.transition_in("game", self.game_canvas, dt)
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
             # ------------------------------------------------------------------------------------------------------------------
@@ -53,21 +54,25 @@ class MainMenu(Level):
                     print("done")
             if self.b_play_game.check_click(mx, my, self.click):
                 self.next_level = 2
-                self.transition = 2
+                self.fade_out = True
+                print("BREAK")
             if self.b_options.check_click(mx, my, self.click):
-                self.next_level = 3
-                self.transition = 2
-            if self.b_help.check_click(mx, my, self.click):
                 self.next_level = 4
-                self.transition = 2
-            if self.b_credits.check_click(mx, my, self.click):
+                self.fade_out = True
+            if self.b_help.check_click(mx, my, self.click):
                 self.next_level = 5
-                self.transition = 2
-            if self.b_quit.check_click(mx, my, self.click):
+                self.fade_out = True
+            if self.b_credits.check_click(mx, my, self.click):
                 self.next_level = 6
-                self.transition = 2
+                self.fade_out = True
+            if self.b_quit.check_click(mx, my, self.click):
+                self.next_level = 7
+                self.fade_out = True
+            if self.transition_out("game", self.game_canvas, dt):
+                self.restore()
+                return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            # print(self.alpha_game)
+            # print(self.fade_in, self.fade_out)
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

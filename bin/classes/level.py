@@ -18,11 +18,19 @@ class Level(ABC):
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         self.alpha_game = 0
         self.alpha_text = 255
-        self.transition = 1  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
-        self.transition_speed = 3  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
+        self.fade_in = True
+        self.fade_out = False
+        self.transition_speed = 5  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
         self.next_level = None
         self.click = False
         self.screen_offset = [0, 0]
+
+    def restore(self):
+        self.fade_in = True
+        self.fade_out = False
+        self.alpha_game = 0
+        self.alpha_text = 255
+        print(self.alpha_game)
 
     def fill_screens(self):
         """Fill the surfaces to avoid smudging"""
@@ -99,14 +107,15 @@ class Level(ABC):
                     self.alpha_text = 0
                     return True
 
-    def transition_lvl(self, screen_type, screen, dt):
-        if self.transition == 1:
+    def transition_in(self, screen_type, screen, dt):
+        if self.fade_in:
             if self.fade_screen_in(screen_type, screen, self.transition_speed, dt):
-                self.transition = 0
-        elif self.transition == 2:
+                self.fade_in = False
+
+    def transition_out(self, screen_type, screen, dt):
+        if self.fade_out:
             if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
-                self.transition = 0
-                return self.next_level
+                return True
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod
