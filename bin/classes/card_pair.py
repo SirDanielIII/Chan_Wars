@@ -1,16 +1,14 @@
 import random
 import pygame as pg
-import os
 from bin.classes import load
 
 pg.font.init()
 
 
-def redraw_screen(surface, X=None, Y=None, background=None):
+def redraw_screen(surface, background=None):
     pg.display.update()
     surface.fill((255, 255, 255))
     if background:
-        background.transform.scale(background, (X, Y))
         surface.blit(background, (0, 0))
 
 
@@ -54,18 +52,19 @@ class MatchingScreen:
 
     def generate_pairs(self, size, m, o_set):
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
-        pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.rows) for b in range(self.columns)]
+        print(len(image_collection), self.rows*self.columns, self.rows, self.columns)
+        pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
         self.card_set = [CardPair(image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, m, self.columns, o_set)
                          for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         return self.card_set
 
-    def draw_cards(self, m_pos, chosen_cards):
+    def draw_cards(self, m_pos, chosen_cards, background):
         if chosen_cards < 2:
             for pair in self.card_set:
                 pair.choose(m_pos)
         for pair in self.card_set:
             pair.draw_matching(self.image_list[-1], self.screen)
-        redraw_screen(self.screen)
+        redraw_screen(self.screen, background)
 
     def complete(self):
         count = 0
@@ -83,10 +82,10 @@ class MatchingScreen:
             a.chosen1 = 0
             a.chosen2 = 0
 
-    def run(self, level, X, Y, size, margins, matches, delay):
+    def run(self, level, X, Y, size, margins, matches, delay, background):
         clock = pg.time.Clock()
-        offset = [(X - (margins[0] + size[0]) * 4) / 2, (Y - (margins[1] + size[1]) * (2 * level + 1)) / 2]
-        g = MatchingScreen(1, self.image_list, self.screen)
+        offset = [(X - (margins[0] + size[0]) * (2 * level + 1)) / 2, (Y - (margins[1] + size[1]) * 4) / 2]
+        g = MatchingScreen(level, self.image_list, self.screen)
         pairs = g.generate_pairs(size, margins, offset)
         word = pg.font.SysFont('Comic Sans MS', 20)
         time = 0
@@ -100,7 +99,7 @@ class MatchingScreen:
             for event in pg.event.get():
                 if event.type == pg.MOUSEBUTTONDOWN:
                     mouse_pos = list(pg.mouse.get_pos())
-            g.draw_cards(mouse_pos, f[0])
+            g.draw_cards(mouse_pos, f[0], background)
             f = g.complete()
             if f[0] == 2:
                 if not time:
@@ -118,13 +117,14 @@ class MatchingScreen:
         return correct_matches
 
 
-X = 800
-Y = 600
+X = 1280
+Y = 720
 size = (80, 120)
 margins = (20, 30)
 surface = pg.display.set_mode((X, Y))
-image_list = load.Load.load_images(os.getcwd() + "/resources/Testing_Resources/")
-image_list = [pg.transform.scale(image, size) for image in image_list]
-print(image_list)
+image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
+             [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
+background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
 f = MatchingScreen(1, image_list, surface)
-# f.run(1, X, Y,  size, margins, 10, (1000, 500))
+level = 3
+f.run(level, X, Y,  size, margins, 2 + level, (500, 500), background)
