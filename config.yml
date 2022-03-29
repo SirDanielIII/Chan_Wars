@@ -49,3 +49,15 @@ bosses:
       - "My record just increased."
       - "Did you write your TQPs?"
       - "You chose that? Come on, that's such a crazy talk!!!"
+settings:
+  fps:
+    show: false
+    30: false
+    60: false
+    75: false
+    165: true
+  audio:
+    enable_sfx: true
+    enable_music: true
+    sfx_vol: 1.0
+    music_vol: 1.0
