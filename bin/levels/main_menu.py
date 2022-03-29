@@ -43,8 +43,10 @@ class MainMenu(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
             # ------------------------------------------------------------------------------------------------------------------
-            if not self.fade_out:
+            if not self.fade_out and not self.freeze:
                 self.transition_in("game", self.game_canvas, dt)
+            elif self.freeze:
+                self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
             # ------------------------------------------------------------------------------------------------------------------

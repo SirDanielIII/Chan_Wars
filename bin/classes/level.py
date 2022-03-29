@@ -24,12 +24,14 @@ class Level(ABC):
         self.next_level = None
         self.click = False
         self.screen_offset = [0, 0]
+        self.freeze = False
 
     def restore(self):
         self.fade_in = True
         self.fade_out = False
         self.alpha_game = 0
         self.alpha_text = 255
+        self.freeze = True
         print(self.alpha_game)
 
     def fill_screens(self):
