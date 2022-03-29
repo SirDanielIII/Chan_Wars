@@ -4,7 +4,7 @@ import sys
 import time
 
 from ..classes.level import Level
-from ..tools.colours import *
+from bin.colours import *
 from ..classes.button import Button
 
 gameOn = False
@@ -45,36 +45,42 @@ class MainMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
                 self.transition_in("game", self.game_canvas, dt)
-            elif self.freeze:
+            elif self.freeze:  # To prevent the transition from happening offscreen
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
             # ------------------------------------------------------------------------------------------------------------------
+            self.surface.fill((255, 255, 255))
+            pg.draw.rect(self.game_canvas, (0, 0, 0, 100), pg.Rect(0, 0, self.width, 350))
+
+            # ------------------------------------------------------------------------------------------------------------------
             for i in self.buttons:
                 i.draw_button(mx, my)
-                if i.check_click(mx, my, self.click):
-                    print("done")
+            # --------------------------------------------------------------------------------------------------------------
             if self.b_play_game.check_click(mx, my, self.click):
                 self.next_level = 2
                 self.fade_out = True
-                print("BREAK")
+            # --------------------------------------------------------------------------------------------------------------
             if self.b_options.check_click(mx, my, self.click):
                 self.next_level = 4
                 self.fade_out = True
+            # --------------------------------------------------------------------------------------------------------------
             if self.b_help.check_click(mx, my, self.click):
                 self.next_level = 5
                 self.fade_out = True
+            # --------------------------------------------------------------------------------------------------------------
             if self.b_credits.check_click(mx, my, self.click):
                 self.next_level = 6
                 self.fade_out = True
+            # --------------------------------------------------------------------------------------------------------------
             if self.b_quit.check_click(mx, my, self.click):
                 self.next_level = 7
                 self.fade_out = True
+            # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            # print(self.fade_in, self.fade_out)
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

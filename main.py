@@ -5,6 +5,7 @@ import sys
 import time
 
 import pygame as pg
+import os
 
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
@@ -31,7 +32,7 @@ class Main(object):
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
         # Pygame Window Caption
         pg.display.set_caption("Chan Wars")  # Sets Caption Text
-        # pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/glitch/vhs_glitch_00021.png").convert_alpha())  # Caption Icon
+        pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/mr_phone/phone_thinking_question.png").convert_alpha())  # Caption Icon
         # Audio System
         self.audio = Audio()
         # Config File
@@ -43,13 +44,10 @@ class Main(object):
         self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_settings = None
-        self.lvl_pause = None
-        self.lvl_credits = None
-        self.lvl_how_to_play = None
         self.lvl = 0
 
         # ------------------------------------------------------------------------------------------------------------------
+
     def handler(self):
         running = True
         # --------------------------------------------------------------------------------------------------------------
@@ -94,4 +92,3 @@ main = Main()
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     main.handler()
-

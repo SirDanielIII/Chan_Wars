@@ -12,6 +12,14 @@
 # How to import the module (* imports all defined variables): |
 #   >>> from [Parent Folders].Colours import *                |
 # ------------------------------------------------------------|
+# Note: Colours for the game's colour pallet has been added
+
+import pygame as pg
+
+cw_green = pg.Color("#08f26e")
+cw_tan = pg.Color("#ffffb9")
+cw_gold = pg.Colour("#ffaa00")
+cw_light_blue = pg.Color("#01baef")
 
 # Basic Colours
 Black = (0, 0, 0)

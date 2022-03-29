@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import pygame as pg
 
-from ..tools.colours import *
+from bin.colours import *
 
 
 class Level(ABC):
@@ -32,7 +32,6 @@ class Level(ABC):
         self.alpha_game = 0
         self.alpha_text = 255
         self.freeze = True
-        print(self.alpha_game)
 
     def fill_screens(self):
         """Fill the surfaces to avoid smudging"""

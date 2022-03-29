@@ -1,12 +1,8 @@
 
 import sys
-import time
-import os
 import pygame as pg
 
-from bin.classes.audio import Audio
-from bin.tools.colours import *
-from bin.levels.main_menu import MainMenu
+from bin.colours import *
 
 pg.init()
 

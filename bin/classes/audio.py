@@ -2,7 +2,6 @@ import os
 
 import pygame as pg
 
-from ..tools import read_json as j
 from .load import Load
 
 

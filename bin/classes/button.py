@@ -3,7 +3,7 @@
 
 import pygame as pg
 
-from ..tools.blit_tools import draw_text
+from bin.blit_tools import draw_text
 
 
 class Button(object):
