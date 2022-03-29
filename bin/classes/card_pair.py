@@ -117,14 +117,14 @@ class MatchingScreen:
         return correct_matches
 
 
-X = 1280
-Y = 720
-size = (80, 120)
-margins = (20, 30)
-surface = pg.display.set_mode((X, Y))
-image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
-             [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
-background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
-f = MatchingScreen(1, image_list, surface)
-level = 3
-f.run(level, X, Y,  size, margins, 2 + level, (500, 500), background)
+# X = 1280
+# Y = 720
+# size = (80, 120)
+# margins = (20, 30)
+# surface = pg.display.set_mode((X, Y))
+# image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
+#              [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
+# background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
+# f = MatchingScreen(1, image_list, surface)
+# level = 3
+# f.run(level, X, Y,  size, margins, 2 + level, (500, 500), background)
