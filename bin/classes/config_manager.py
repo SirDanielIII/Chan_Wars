@@ -10,8 +10,17 @@ class Config(object):
             self.data = yaml.load(f, Loader=yaml.FullLoader)
             print(self.data)
 
+    def generate(self):
+        pass
+
     def return_boss_info(self, name):
         return self.data.get("bosses").get(name)
+
+    def return_boss_stat(self, boss, header):
+        # name: str | energy: int | rows: int | columns: int | hp: int
+        # basic: str | special: str | kill: str | phrases: []
+        return self.data.get("bosses").get(boss).get(header)
+
 
 # # Test
 yeet = Config()
