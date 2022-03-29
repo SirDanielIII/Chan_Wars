@@ -1,3 +1,5 @@
+player:
+  hp: 50
 bosses:
   devil_chan:
     name: "Devil Chan"
