@@ -3,6 +3,7 @@ import sys
 import time
 import os
 
+from bin.classes.config_manager import Config
 from bin.classes.level import Level
 from bin.colours import *
 
@@ -39,6 +40,8 @@ class Boot(Level):
             self.game_canvas.fill(white)
             self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
+            # Loading Files
+            self.config.load_config()
             if self.click:
                 self.fade_out = True
                 self.next_level = 1
