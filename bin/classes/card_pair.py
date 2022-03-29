@@ -1,6 +1,5 @@
 import random
 import pygame as pg
-from bin.classes import load
 
 pg.font.init()
 

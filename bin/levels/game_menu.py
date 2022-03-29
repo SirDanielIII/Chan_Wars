@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 import time
+import os
 
 from bin.classes.level import Level
 import bin.classes.load as load
@@ -14,12 +15,12 @@ class GameMenu(Level):
     def run(self):
         size = (80, 120)
         margins = (20, 30)
-        image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
-                     [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
-        background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (self.width, self.height))
+        image_list = load.Load.load_images_resize(os.getcwd() + "/resources/chans", size) + \
+                     [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back_PNG.png"), size)]
+        background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/background.jpg"), (self.width, self.height))
         f = MatchingScreen(1, image_list, self.surface)
         level = 1
-        self.click = f.run(level, self.width, self.height,  size, margins, 2 + level, (750, 500), background)[1]
+        self.click = f.run(level, self.width, self.height, size, margins, 2 + level, (750, 500), background)[1]
         if self.click:
             return 1
         # while True:

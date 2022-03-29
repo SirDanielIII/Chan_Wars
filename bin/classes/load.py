@@ -63,7 +63,7 @@ class Load(object):
         for filename in os.listdir(path_to_directory):
             if filename.endswith('.png'):
                 path = os.path.join(path_to_directory, filename)
-                image_list.append(pg.transform.scale(pg.image.load(path), size).convert_alpha())
+                image_list.append(pg.transform.smoothscale(pg.image.load(path), size).convert_alpha())
         return image_list
 
     @staticmethod
@@ -79,7 +79,7 @@ class Load(object):
         for filename in os.listdir(path_to_directory):
             if filename.endswith('.png'):
                 path = os.path.join(path_to_directory, filename)
-                image_list.append(pg.transform.scale(pg.image.load(path), size).convert())
+                image_list.append(pg.transform.smoothscale(pg.image.load(path), size).convert())
         return image_list
 
     @staticmethod
@@ -93,5 +93,5 @@ class Load(object):
         """
         lst = []
         for idx, i in enumerate(images):
-            lst.append(pg.transform.scale(i, size).convert_alpha())
+            lst.append(pg.transform.smoothscale(i, size).convert_alpha())
         return lst

@@ -20,11 +20,11 @@ class Level(ABC):
         self.alpha_text = 255
         self.fade_in = True
         self.fade_out = False
-        self.transition_speed = 5  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
+        self.transition_speed = 10  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
         self.next_level = None
         self.click = False
         self.screen_offset = [0, 0]
-        self.freeze = False
+        self.freeze = True
 
     def restore(self):
         self.fade_in = True
