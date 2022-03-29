@@ -20,6 +20,7 @@ class GameMenu(Level):
         background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/background.jpg"), (self.width, self.height))
         f = MatchingScreen(1, image_list, self.surface)
         level = 1
+
         self.click = f.run(level, self.width, self.height, size, margins, 2 + level, (750, 500), background)[1]
         if self.click:
             return 1
