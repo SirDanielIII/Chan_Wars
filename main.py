@@ -9,6 +9,7 @@ import os
 
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
+from bin.levels.boot import Boot
 from bin.levels.credits import Credits
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
@@ -38,6 +39,7 @@ class Main(object):
         # Config File
         self.config = Config()
         # Levels
+        self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_matching_game = Game(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
@@ -66,7 +68,7 @@ class Main(object):
             # ----------------------------------------------------------------------------------------------------------
             match self.lvl:
                 case 0:  # Boot Screen
-                    self.lvl = 1
+                    self.lvl = self.lvl_boot.run()
                 case 1:  # Main Menu
                     self.lvl = self.lvl_main_menu.run()
                 case 2:  # Game Menu

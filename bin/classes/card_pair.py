@@ -124,11 +124,10 @@ class MatchingScreen:
 
 def move_screen(in_out, time_start, current_time, Y):
     if in_out:
-        pos = Y - Y/(1+5**(-((current_time-time_start)*1/100)+7))
+        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
     else:
-        pos = Y/(1+5**(-((current_time-time_start)*1/100)+3))
+        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 3))
     return pos
-
 
 # X = 1280
 # Y = 720
