@@ -5,11 +5,12 @@ from bin.classes import load
 pg.font.init()
 
 
-def redraw_screen(surface, background=None):
+def redraw_screen(surface, time_start, background=None):
     pg.display.update()
     surface.fill((255, 255, 255))
+
     if background:
-        surface.blit(background, (0, 0))
+        surface.blit(background, (0, 800 - move_screen(1, time_start, pg.time.get_ticks())))
 
 
 class CardPair:
@@ -43,16 +44,16 @@ class CardPair:
 
 
 class MatchingScreen:
-    def __init__(self, lvl, images, screen):
+    def __init__(self, lvl, images, screen, time_start):
         self.rows = 4
         self.columns = 2 * lvl + 1
         self.image_list = images
         self.card_set = []
         self.screen = screen
+        self.time_start = time_start
 
     def generate_pairs(self, size, m, o_set):
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
-        print(len(image_collection), self.rows*self.columns, self.rows, self.columns)
         pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
         self.card_set = [CardPair(image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, m, self.columns, o_set)
                          for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
@@ -64,7 +65,7 @@ class MatchingScreen:
                 pair.choose(m_pos)
         for pair in self.card_set:
             pair.draw_matching(self.image_list[-1], self.screen)
-        redraw_screen(self.screen, background)
+        redraw_screen(self.screen, self.time_start, background)
 
     def complete(self):
         count = 0
@@ -85,13 +86,13 @@ class MatchingScreen:
     def run(self, level, X, Y, size, margins, matches, delay, background):
         clock = pg.time.Clock()
         offset = [(X - (margins[0] + size[0]) * (2 * level + 1)) / 2, (Y - (margins[1] + size[1]) * 4) / 2]
-        g = MatchingScreen(level, self.image_list, self.screen)
-        pairs = g.generate_pairs(size, margins, offset)
         word = pg.font.SysFont('Comic Sans MS', 20)
         time = 0
         correct_matches = 0
         f = [0]
-        close_time = pg.time.get_ticks()
+        time_start, close_time = pg.time.get_ticks()
+        g = MatchingScreen(level, self.image_list, self.screen, time_start)
+        pairs = g.generate_pairs(size, margins, offset)
         while matches or close_time + delay[0] > pg.time.get_ticks():
             if not pairs:
                 pairs = g.generate_pairs(size, margins, offset)
@@ -117,14 +118,22 @@ class MatchingScreen:
         return correct_matches
 
 
-# X = 1280
-# Y = 720
-# size = (80, 120)
-# margins = (20, 30)
-# surface = pg.display.set_mode((X, Y))
-# image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
-#              [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
-# background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
-# f = MatchingScreen(1, image_list, surface)
-# level = 3
-# f.run(level, X, Y,  size, margins, 2 + level, (500, 500), background)
+def move_screen(in_out, time_start, current_time):
+    if in_out:
+        pos = 800/(1+5**(-((current_time-time_start)*1/100)+10))
+    else:
+        pos = 800 - 800*(1+5**(-((current_time-time_start)*1/100)+3))
+    return pos
+
+
+X = 1280
+Y = 720
+size = (80, 120)
+margins = (20, 30)
+surface = pg.display.set_mode((X, Y))
+image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
+             [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
+background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
+f = MatchingScreen(1, image_list, surface, 0)
+level = 3
+f.run(level, X, Y,  size, margins, 2 + level, (500, 500), background)
