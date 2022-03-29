@@ -3,11 +3,12 @@ import sys
 import time
 
 from bin.classes.level import Level
+from bin.classes.card_pair import *
 
 
 class Game(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
 
     def run(self):
         while True:

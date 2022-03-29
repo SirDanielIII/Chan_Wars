@@ -4,6 +4,7 @@ Fight your way through the bosses with this unique memory game, loosely based on
 Dependencies
 * Python 3.10.X and up
 * Pygame
+* PyYAML
 
 Bosses
 1. Devil Chan

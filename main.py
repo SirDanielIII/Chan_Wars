@@ -7,6 +7,7 @@ import time
 import pygame as pg
 
 from bin.classes.audio import Audio
+from bin.classes.config_manager import Config
 from bin.levels.credits import Credits
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
@@ -33,19 +34,22 @@ class Main(object):
         # pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/glitch/vhs_glitch_00021.png").convert_alpha())  # Caption Icon
         # Audio System
         self.audio = Audio()
-        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
-        self.lvl_matching_game = Game(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
-        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
-        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
-        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
-        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time)
+        # Config File
+        self.config = Config()
+        # Levels
+        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_matching_game = Game(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_settings = None
         self.lvl_pause = None
         self.lvl_credits = None
         self.lvl_how_to_play = None
         self.lvl = 0
 
-    # ------------------------------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------------------------------
     def handler(self):
         running = True
         # --------------------------------------------------------------------------------------------------------------
@@ -61,9 +65,6 @@ class Main(object):
                     pg.quit()
                     sys.exit()
             self.surface.fill((255, 255, 0, 0))
-            # ----------------------------------------------------------------------------------------------------------
-            # self.config = j.read_json("config.json")  # Update Config File
-            # self.last_phase = self.config.get("phase", "")
             # ----------------------------------------------------------------------------------------------------------
             match self.lvl:
                 case 0:  # Boot Screen

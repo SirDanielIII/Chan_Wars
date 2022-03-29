@@ -6,7 +6,7 @@ from ..tools.colours import *
 
 
 class Level(ABC):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time):
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         self.width = width
         self.height = height
         self.surface = surface
@@ -14,6 +14,7 @@ class Level(ABC):
         self.clock = clock
         self.FPS = fps
         self.last_time = last_time
+        self.config = config
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         self.alpha_game = 255
         self.alpha_text = 255
