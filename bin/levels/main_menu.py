@@ -24,7 +24,6 @@ class MainMenu(Level):
         self.b_credits = Button(self.text_canvas, 100, 750, 300, 100, blue, "Credits", self.f_regular, white)
         self.b_quit = Button(self.text_canvas, 450, 750, 300, 100, blue, "Quit", self.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
-        self.test = pg.Surface((1280, 720), flags=pg.HWACCEL and pg.DOUBLEBUF)
 
     def run(self):
         while True:
@@ -43,27 +42,32 @@ class MainMenu(Level):
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
-
+            # ------------------------------------------------------------------------------------------------------------------
+            self.transition_lvl("game", self.game_canvas, dt)
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.test.fill((0, 255, 255))
-            self.surface.blit(self.test, ((self.width - self.test.get_width()) / 2, (self.height - self.test.get_height()) / 2))
             # ------------------------------------------------------------------------------------------------------------------
             for i in self.buttons:
                 i.draw_button(mx, my)
                 if i.check_click(mx, my, self.click):
                     print("done")
             if self.b_play_game.check_click(mx, my, self.click):
-                return 2
+                self.next_level = 2
+                self.transition = 2
             if self.b_options.check_click(mx, my, self.click):
-                return 3
+                self.next_level = 3
+                self.transition = 2
             if self.b_help.check_click(mx, my, self.click):
-                return 4
+                self.next_level = 4
+                self.transition = 2
             if self.b_credits.check_click(mx, my, self.click):
-                return 5
+                self.next_level = 5
+                self.transition = 2
             if self.b_quit.check_click(mx, my, self.click):
-                return 6
+                self.next_level = 6
+                self.transition = 2
             # ------------------------------------------------------------------------------------------------------------------
+            # print(self.alpha_game)
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

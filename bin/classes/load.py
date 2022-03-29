@@ -51,7 +51,7 @@ class Load(object):
         return image_list
 
     @staticmethod
-    def load_images_alpha_resize_900p(path_to_directory, size):
+    def load_images_alpha_resize(path_to_directory, size):
         """
         Args:
             path_to_directory:string:
@@ -67,7 +67,23 @@ class Load(object):
         return image_list
 
     @staticmethod
-    def resize_player(images, size):
+    def load_images_resize(path_to_directory, size):
+        """
+        Args:
+            path_to_directory:string:
+                Directory of images
+            size::tuple:
+                Desired new resolution
+        """
+        image_list = []
+        for filename in os.listdir(path_to_directory):
+            if filename.endswith('.png'):
+                path = os.path.join(path_to_directory, filename)
+                image_list.append(pg.transform.scale(pg.image.load(path), size).convert())
+        return image_list
+
+    @staticmethod
+    def resize_images(images, size):
         """
         Args:
             images:list:
@@ -75,7 +91,7 @@ class Load(object):
             size:tuple:
                 Resolution to resize image list to
         """
-        sprite = []
+        lst = []
         for idx, i in enumerate(images):
-            sprite.append(pg.transform.scale(i, size).convert_alpha())
-        return sprite
+            lst.append(pg.transform.scale(i, size).convert_alpha())
+        return lst

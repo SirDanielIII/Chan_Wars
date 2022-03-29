@@ -16,8 +16,11 @@ class Level(ABC):
         self.last_time = last_time
         self.config = config
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
-        self.alpha_game = 255
+        self.alpha_game = 0
         self.alpha_text = 255
+        self.transition = 1  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
+        self.transition_speed = 3  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
+        self.next_level = None
         self.click = False
         self.screen_offset = [0, 0]
 
@@ -53,14 +56,18 @@ class Level(ABC):
                 screen.set_alpha(self.alpha_game)
                 if self.alpha_game < 255:
                     self.alpha_game += speed * dt
+                    return False
                 else:
                     self.alpha_game = 255
+                    return True
             case "text":
                 screen.set_alpha(self.alpha_text)
                 if self.alpha_text < 255:
                     self.alpha_text += speed * dt
+                    return False
                 else:
                     self.alpha_text = 255
+                    return True
 
     def fade_screen_out(self, screen_type, screen, speed, dt):
         """Screen fade manager - out
@@ -79,14 +86,27 @@ class Level(ABC):
                 screen.set_alpha(self.alpha_game)
                 if self.alpha_game > 0:
                     self.alpha_game -= speed * dt
+                    return False
                 else:
                     self.alpha_game = 0
+                    return True
             case "text":
                 screen.set_alpha(self.alpha_text)
                 if self.alpha_text > 0:
                     self.alpha_text -= speed * dt
+                    return False
                 else:
                     self.alpha_text = 0
+                    return True
+
+    def transition_lvl(self, screen_type, screen, dt):
+        if self.transition == 1:
+            if self.fade_screen_in(screen_type, screen, self.transition_speed, dt):
+                self.transition = 0
+        elif self.transition == 2:
+            if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
+                self.transition = 0
+                return self.next_level
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod
