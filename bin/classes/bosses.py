@@ -17,16 +17,16 @@ class Boss:
 
     def act(self):
         match self.trigger[0]:
-            case "Attack":
+            case "attack":
                 self.action = 0
                 return self.attack_action()
-            case "Quote":
+            case "quote":
                 self.action = 1
                 return self.talk()
-            case "Die":
+            case "die":
                 self.action = 2
                 return self.death()
-            case "Special":
+            case "special":
                 self.action = 3
                 return self.special_action()
         if "Death":
@@ -45,7 +45,7 @@ class Boss:
         return "Death"
 
 
-class Mrs.G(Boss):
+class Ms_G(Boss):
     def __init__(self):
         self.siberia = True
         self.attack_power =
