@@ -6,6 +6,7 @@ Featured Bosses
 2. Ms. G
 3. Mr. Phone
 
+
 Dependencies
 * Python 3.10.X and up
 * PyGame
@@ -18,7 +19,8 @@ pip install pyyaml
 ```
 - or run "install_dependencies.bat"
 
-** Images**
+
+**Images**
 ![image](https://user-images.githubusercontent.com/75279704/160659515-7b0cea4c-f7d3-401a-a4b1-2419392fdc5a.png)
 
 **The Original**
