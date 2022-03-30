@@ -125,7 +125,7 @@ class MrPhone(Boss):
     def trigger(self):
         if self.acting:
             self.trigger = "attack"
-            if not self.trun_counter % 4:
+            if not self.turn_count % 4:
                 self.trigger = "special"
             if not self.damaged:
                 self.trigger = "kill"
