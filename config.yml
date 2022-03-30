@@ -1,5 +1,6 @@
 player:
   hp: 50
+# The first element in the basic, special or kill keys is the name of the act. The second is the effect on the game.
 bosses:
   devil_chan:
     name: "Devil Chan"
@@ -7,50 +8,80 @@ bosses:
     rows: 3
     columns: 4
     hp: 50
-    basic: "devilish_stab"
-    special: "neat_hack"
+    basic:
+      - "devilish_stab", 10
+    special:
+      - "neat_hack", (10, 10)
     phrases:
-      - "Here's a neat little hack."
+      opening:
+        - "Did you write your TQPs?"
+      attack:
+        - "You need to touch grass."
+        - "My son could beat you at this game."
+        - "Easy choices hard life, hard choices easy life."
+        - "It's only awkward if you make it awkward."
+        - "You have to build capacity."
+        - "You chose that? Come on, that's ct!!!"
+      special:
+        - "That's a neat litttle hack."
+        - "Reflect, reflect, REFLECT HARDER!!!"
+        - "Face the monster... ME!"
+        - "Keep your head on a swivel!"
+      kill:
+        - "Next time, practice perfectly."
+        - "My record just increased."
   ms_g:
     name: "Ms. G"
     energy: 4
     rows: 5
     columns: 4
     hp: 100
-    basic: "roast"
-    special: "siberia"
+    basic:
+      - "roast", 15
+    special:
+      - "siberia", "siberia"
     phrases:
-      - "Sean!"
-      - "One of them is a woman, the other has an Indian accent if you're into it."
-      - "I'll only give you 100% if you’re one of my favourite students."
-      - "Do it on Repl."
-      - "Go to Siberia!"
-      - "Don't ask me, use your brain."
-      - "Troubleshoot it."
-      - "Gosh."
+     opening:
+       - "Sean! Wait, you're not Sean!"
+     attack:
+       - "For Sean!"
+       - "One of them is a woman, the other has an Indian accent if you're into it."
+       - "I'll only give you 100% if you’re one of my favourite students."
+       - "Do it on Repl."
+       - "Don't ask me, use your brain."
+     special:
+       - "You! Go to Siberia!"
+       - "You deserve to go to Siberia!"
   mr_phone:
     name: "Mr. Phone"
     energy: 5
     rows: 7
     columns: 4
     hp: 200
-    basic: "disappointment"
-    special: "emotional_damage"
-    kill: "thinking_question"
+    basic:
+      - "disappointment", 0
+    special:
+      - "emotional_damage", 0
+    kill:
+      - "thinking_question", 9999
     phrases:
-      - "You need to touch grass."
-      - "My son could beat you at this game."
-      - "Easy choices hard life, hard choices easy life."
-      - "It's only awkward if you make it awkward."
-      - "Almost everything is a choice.. .including breathing!"
-      - "Reflect, reflect, REFLECT HARDER!!!"
-      - "Face the monster... ME!"
-      - "Keep your head on a swivel!"
-      - "You have to build capacity."
-      - "Practice perfectly."
-      - "My record just increased."
-      - "Did you write your TQPs?"
-      - "You chose that? Come on, that's such a crazy talk!!!"
+      opening:
+        - "Did you write your TQPs?"
+      attack:
+        - "You need to touch grass."
+        - "My son could beat you at this game."
+        - "Easy choices hard life, hard choices easy life."
+        - "It's only awkward if you make it awkward."
+        - "You have to build capacity."
+        - "You chose that? Come on, that's ct!!!"
+      special:
+        - "Almost everything is a choice.. .including breathing!"
+        - "Reflect, reflect, REFLECT HARDER!!!"
+        - "Face the monster... ME!"
+        - "Keep your head on a swivel!"
+      kill:
+        - "Next time, practice perfectly."
+        - "My record just increased."
 settings:
   fps:
     show: false
