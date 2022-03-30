@@ -17,7 +17,7 @@ class GameMenu(Level):
         margins = (20, 30)
         image_list = load.Load.load_images_resize(os.getcwd() + "/resources/chans", size) + \
                      [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back_PNG.png"), size)]
-        background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/background.jpg"), (self.width, self.height))
+        background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/background.jpg"), (self.width, self.height))
         f = MatchingScreen(1, image_list, self.surface)
         level = 1
 

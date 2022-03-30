@@ -11,7 +11,7 @@ from bin.colours import *
 class Boot(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.image.load(os.getcwd() + "/resources/boot_menu.png").convert()
+        self.background = pg.image.load(os.getcwd() + "/resources/menus/boot_menu.png").convert()
 
     def run(self):
         while True:

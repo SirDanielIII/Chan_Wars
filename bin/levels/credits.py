@@ -10,7 +10,7 @@ from bin.colours import *
 class Credits(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/credits_menu.png"), (self.width, self.height))
+        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/credits_menu.png"), (self.width, self.height))
 
     def run(self):
         while True:

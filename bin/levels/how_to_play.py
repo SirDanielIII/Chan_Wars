@@ -10,7 +10,7 @@ from bin.colours import *
 class HowToPlay(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.image.load(os.getcwd() + "/resources/help_menu.png").convert()
+        self.background = pg.image.load(os.getcwd() + "/resources/menus/help_menu.png").convert()
 
     def run(self):
         while True:

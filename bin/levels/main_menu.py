@@ -24,7 +24,7 @@ class MainMenu(Level):
         self.b_credits = Button(self.text_canvas, 100, 750, 300, 100, cw_blue, "Credits", self.f_regular, white)
         self.b_quit = Button(self.text_canvas, 450, 750, 300, 100, cw_blue, "Quit", self.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
-        self.background = pg.image.load(os.getcwd() + "/resources/main_menu.png").convert()
+        self.background = pg.image.load(os.getcwd() + "/resources/menus/main_menu.png").convert()
 
     def run(self):
         while True:
