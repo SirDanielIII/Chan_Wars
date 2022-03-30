@@ -12,7 +12,7 @@ class GameMenu(Level):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/level select ui demo.png").convert()
-        self.play_button = ButtonRect(self.text_canvas, 230, 670, 100, 570, cw_blue, "FIGHT!", self.f_regular, white)
+        self.play_button = ButtonRect(self.text_canvas, 225, 670, 350, 100, cw_blue, "FIGHT!", self.f_regular, white)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.left_button = ButtonTriangle(self.text_canvas, cw_gold, 100, 720)
         self.right_button = ButtonTriangle(self.text_canvas, cw_gold, 690, 720, "right")
@@ -61,7 +61,7 @@ class GameMenu(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            self.game_canvas.blit(self.background, (0, 0))
+            # self.game_canvas.blit(self.background, (0, 0))
             # self.game_canvas.blit(self.choose_boss_img[self.choose_boss_img], (0, 0))
 
             print(mx, my, self.choose_lvl)
