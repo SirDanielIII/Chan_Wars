@@ -1,4 +1,6 @@
 import bin.blit_tools as blit
+from abc import ABC, abstractmethod
+
 
 class Boss:
     def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
@@ -11,7 +13,6 @@ class Boss:
         self.trigger = None
         self.screen = screen
         self.run = True
-
 
     def act(self):
         match self.trigger[0]:
@@ -30,6 +31,22 @@ class Boss:
         if "death":
             self.run = False
 
+    @abstractmethod
+    def trigger(self):
+        pass
+
+    @abstractmethod
+    def basic_action(self):
+        pass
+
+    @abstractmethod
+    def special_action(self):
+        pass
+
+    @abstractmethod
+    def quote(self):
+        pass
+
 
 class Ms_G(Boss):
     def __init__(self):
@@ -38,4 +55,3 @@ class Ms_G(Boss):
 
     def attack_action(self):
         self.attack
-

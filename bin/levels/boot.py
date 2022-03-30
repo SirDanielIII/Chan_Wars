@@ -12,6 +12,7 @@ class Boot(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.background = pg.image.load(os.getcwd() + "/resources/menus/boot_menu.png").convert()
+        self.phase = 0
 
     def run(self):
         while True:
@@ -41,10 +42,14 @@ class Boot(Level):
             self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             # Loading Files
-            self.config.load_config()
-            if self.click:
-                self.fade_out = True
-                self.next_level = 1
+            if self.phase == 0:
+                self.config.load_config()
+                self.phase = 1
+            elif self.phase == 1:
+                print(self.config.get_config())
+                if self.click:
+                    self.fade_out = True
+                    self.next_level = 1
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
