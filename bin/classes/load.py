@@ -67,7 +67,7 @@ class Load(object):
         return image_list
 
     @staticmethod
-    def load_images_resize(ath_to_directory, size):
+    def load_images_resize(path_to_directory, size):
         """
         Args:
             path_to_directory:string:
