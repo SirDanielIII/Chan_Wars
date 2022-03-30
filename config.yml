@@ -1,5 +1,5 @@
 bosses:
-  devil_chan:
+  DevilChan:
     basic:
     - devilish_stab
     - 10
@@ -28,7 +28,7 @@ bosses:
     - neat_hack
     - 10
     - 10
-  mr_phone:
+  MrPhone:
     basic:
     - disappointment
     - 0
@@ -63,7 +63,7 @@ bosses:
     special:
     - emotional_damage
     - 0
-  ms_g:
+  MsG:
     basic:
     - roast
     - 15
