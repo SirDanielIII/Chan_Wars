@@ -33,7 +33,7 @@ class Main(object):
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
         # Pygame Window Caption
         pg.display.set_caption("Chan Wars")  # Sets Caption Text
-        pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/mr_phone/phone_thinking_question.png").convert_alpha())  # Caption Icon
+        pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/icon.png").convert_alpha())  # Caption Icon
         # Audio System
         self.audio = Audio()
         # Config File
