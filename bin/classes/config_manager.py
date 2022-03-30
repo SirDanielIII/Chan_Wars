@@ -11,9 +11,9 @@ class Config(object):
     def load_config(self):
         if not os.path.exists(os.getcwd() + "config.yml"):
             print("[CW] Config file does not exist, generating a new one")
-        with open(os.getcwd() + "/config.yml", "r") as f:
-            self.data = yaml.safe_load(f)
-        print(self.data)
+        with open(os.getcwd() + "/config_copy.yml", "w") as f:
+            self.data = f
+        print(yaml.load(f, Loader=yaml.FullLoader))
 
     def get_config(self):
         return self.data
@@ -29,5 +29,7 @@ class Config(object):
 
 # # Test
 yeet = Config()
+yeet.load_config()
+print(yeet.get_config())
 # # yeet.return_boss_info("mr_phone")
 # print(yeet.data.)
