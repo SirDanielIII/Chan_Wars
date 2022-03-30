@@ -21,6 +21,8 @@ cw_tan = pg.Color("#ffffb9")
 cw_gold = pg.Color("#ffaa00")
 cw_light_blue = pg.Color("#01baef")
 cw_blue = pg.Color("#0784b5")
+cw_grey = pg.Color("#333333")
+cw_dark_grey = pg.Color("#222222")
 
 # Basic Colours
 Black = (0, 0, 0)

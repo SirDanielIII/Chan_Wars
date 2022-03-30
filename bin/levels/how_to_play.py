@@ -3,6 +3,7 @@ import sys
 import time
 import os
 
+from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
 
@@ -10,7 +11,8 @@ from bin.colours import *
 class HowToPlay(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.image.load(os.getcwd() + "/resources/menus/help_menu.png").convert()
+        self.background = pg.image.load(os.getcwd() + "/resources/menus/06_help_menu.png").convert()
+        self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
     def run(self):
         while True:
@@ -39,7 +41,7 @@ class HowToPlay(Level):
             self.game_canvas.fill(white)
             self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click:
+            if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
                 self.next_level = 1
             # --------------------------------------------------------------------------------------------------------------

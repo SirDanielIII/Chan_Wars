@@ -27,13 +27,13 @@ class Main(object):
         self.width = 1600
         self.height = 900
         self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
-        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA)
+        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.SRCALPHA)
         self.clock = pg.time.Clock()
         self.FPS = 165
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
         # Pygame Window Caption
         pg.display.set_caption("Chan Wars")  # Sets Caption Text
-        pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/mr_phone/phone_thinking_question.png").convert_alpha())  # Caption Icon
+        pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/icon.png").convert_alpha())  # Caption Icon
         # Audio System
         self.audio = Audio()
         # Config File
@@ -49,7 +49,6 @@ class Main(object):
         self.lvl = 0
 
         # ------------------------------------------------------------------------------------------------------------------
-
     def handler(self):
         running = True
         # --------------------------------------------------------------------------------------------------------------
@@ -69,6 +68,7 @@ class Main(object):
             match self.lvl:
                 case 0:  # Boot Screen
                     self.lvl = self.lvl_boot.run()
+                    print(self.config.get_config())
                 case 1:  # Main Menu
                     self.lvl = self.lvl_main_menu.run()
                 case 2:  # Game Menu
