@@ -15,7 +15,7 @@ class Boss:
         self.run = True
 
     def act(self):
-        match self.trigger[0]:
+        match self.trigger:
             case "attack":
                 self.action = 0
                 return self.attack_action()
@@ -28,30 +28,63 @@ class Boss:
             case "special":
                 self.action = 3
                 return self.special_action()
+            case "kill":
+                self.action = 4
+                    return self.kill()
         if "death":
             self.run = False
 
-    @abstractmethod
-    def trigger(self):
-        pass
 
-    @abstractmethod
+class DevilChan(Boss):
+    def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
+        super().init(name, rows, columns, hp, basic, special, phrases, screen)
+
     def basic_action(self):
-        pass
 
-    @abstractmethod
+    def trigger(self):
+        if self.acting:
+            trigger = "attack"
+        if self.health <
+
     def special_action(self):
-        pass
 
-    @abstractmethod
+    def basic_action(self):
+
     def quote(self):
-        pass
 
 
-class Ms_G(Boss):
-    def __init__(self):
-        self.siberia = True
-        self.attack_power =
+class MsG(Boss):
+    def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
+        super().init(name, rows, columns, hp, basic, special, phrases, screen)
 
-    def attack_action(self):
-        self.attack
+    def basic_action(self):
+
+    def trigger(self):
+        if self.acting:
+            trigger = "attack"
+        if self.health <
+
+    def special_action(self):
+
+    def basic_action(self):
+
+    def quote(self):
+
+
+
+class MrPhone(Boss):
+    def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
+        super().init(name, rows, columns, hp, basic, special, phrases, screen)
+
+    def basic_action(self):
+
+    def trigger(self):
+        if self.acting:
+            trigger = "attack"
+        if self.health <
+
+    def special_action(self):
+
+    def basic_action(self):
+
+    def quote(self):
