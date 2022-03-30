@@ -35,7 +35,7 @@ class Boss:
             self.run = False
 
 
-class devil_chan(Boss):
+class DevilChan(Boss):
     def __init__(self):
         pass
 
@@ -51,15 +51,26 @@ class devil_chan(Boss):
     def quote(self):
 
 
-class ms_g(Boss):
+class MsG(Boss):
     def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
         super().init(name, rows, columns, hp, basic, special, phrases, screen)
 
     def basic_action(self):
 
+    def trigger(self):
+        if self.acting:
+            trigger = "attack"
+        if self.health <
+
+    def special_action(self):
+
+    def basic_action(self):
+
+    def quote(self):
 
 
-class mr_phone(Boss):
+
+class MrPhone(Boss):
     def __init__(self):
         pass
 
