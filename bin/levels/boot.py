@@ -61,7 +61,7 @@ class Boot(Level):
                     rect_width += 2
                 elif seconds < 1.6:
                     loading_render = f_boot.render("Gathering the Chans", True, white)
-                    self.load_all()
+                    self.config.load_media()
                     self.game_canvas.blit(loading_render, (140, 610))
                     rect_width += 2
                 elif seconds < 2:
