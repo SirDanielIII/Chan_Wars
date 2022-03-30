@@ -16,7 +16,7 @@ class GameMenu(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.left_button = ButtonTriangle(self.text_canvas, cw_gold, 100, 720)
         self.right_button = ButtonTriangle(self.text_canvas, cw_gold, 690, 720, "right")
-        self.choose_lvl = 1
+        self.choose_lvl = 0
 
     def run(self):
         while True:
@@ -46,10 +46,10 @@ class GameMenu(Level):
                 self.fade_out = True
                 self.next_level = 1
             # ------------------------------------------------------------------------------------------------------------------
-            if self.choose_lvl > 1:
+            if self.choose_lvl > 0:
                 if self.left_button.run(mx, my, white, self.click):
                     self.choose_lvl -= 1
-            if self.choose_lvl < 3:
+            if self.choose_lvl < 2:
                 if self.right_button.run(mx, my, white, self.click):
                     self.choose_lvl += 1
             if self.play_button.check_click(mx, my, self.click):
@@ -61,10 +61,7 @@ class GameMenu(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            # self.game_canvas.blit(self.background, (0, 0))
-            # self.game_canvas.blit(self.choose_boss_img[self.choose_boss_img], (0, 0))
-
-            print(mx, my, self.choose_lvl)
+            self.game_canvas.blit(self.config.boss_card[self.choose_lvl], (0, 0))
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

@@ -3,7 +3,7 @@ bosses:
     basic:
     - devilish_stab
     - 10
-    columns: 4
+    columns: 3
     energy: 3
     hp: 50
     name: Devil Chan
@@ -26,7 +26,7 @@ bosses:
       - With this hack, I'll steal your health for myself.
       - I hope you're prepared for this.
       - You know, I'm something of a scientist myself.
-    rows: 3
+    rows: 4
     special:
     - neat_hack
     - 10
@@ -73,7 +73,7 @@ bosses:
     basic:
     - roast
     - 15
-    columns: 4
+    columns: 5
     energy: 4
     hp: 100
     name: Ms. G
@@ -94,9 +94,7 @@ bosses:
       special:
       - You! Go to Siberia!
       - You deserve to go to Siberia!
-        out:
-          - You- How did you leave!?
-    rows: 5
+    rows: 4
     special:
     - siberia
     - siberia
