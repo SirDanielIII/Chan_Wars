@@ -3,6 +3,7 @@ import sys
 import time
 import os
 
+from bin.classes.buttons import BackButton
 from bin.classes.level import Level
 from bin.colours import *
 
@@ -11,6 +12,7 @@ class Credits(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/credits_menu.png"), (self.width, self.height))
+        self.back_button = BackButton(self.text_canvas, cw_blue)
 
     def run(self):
         while True:
@@ -39,7 +41,7 @@ class Credits(Level):
             self.game_canvas.fill(white)
             self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click:
+            if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
                 self.next_level = 1
             # --------------------------------------------------------------------------------------------------------------

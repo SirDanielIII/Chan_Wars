@@ -5,7 +5,7 @@ import time
 
 from ..classes.level import Level
 from bin.colours import *
-from ..classes.button import Button
+from ..classes.buttons import Button
 
 gameOn = False
 
@@ -84,4 +84,5 @@ class MainMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            # print(self.clock.get_fps())
             pg.display.update()

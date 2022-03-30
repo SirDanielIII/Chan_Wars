@@ -7,7 +7,6 @@ pg.font.init()
 def redraw_screen(surface, pos_mod, background=None):
     pg.display.update()
     surface.fill((255, 255, 255))
-
     if background:
         surface.blit(background, (0, pos_mod))
 

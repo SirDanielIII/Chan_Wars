@@ -27,7 +27,7 @@ class Main(object):
         self.width = 1600
         self.height = 900
         self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
-        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA)
+        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.SRCALPHA)
         self.clock = pg.time.Clock()
         self.FPS = 165
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
@@ -49,7 +49,6 @@ class Main(object):
         self.lvl = 0
 
         # ------------------------------------------------------------------------------------------------------------------
-
     def handler(self):
         running = True
         # --------------------------------------------------------------------------------------------------------------
