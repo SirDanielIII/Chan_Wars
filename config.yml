@@ -94,6 +94,8 @@ bosses:
       special:
       - You! Go to Siberia!
       - You deserve to go to Siberia!
+        out:
+          - You- How did you leave!?
     rows: 5
     special:
     - siberia
