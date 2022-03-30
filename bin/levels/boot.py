@@ -44,9 +44,9 @@ class Boot(Level):
             # Loading Files
             if self.phase == 0:
                 self.config.load_config()
+                print("Loaded Configuration File (config.yml)\n" + str(self.config.get_config()))
                 self.phase = 1
             elif self.phase == 1:
-                print(self.config.get_config())
                 if self.click:
                     self.fade_out = True
                     self.next_level = 1
