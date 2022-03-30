@@ -1,6 +1,5 @@
 player:
   hp: 50
-# The first element in the basic, special or kill keys is the name of the act. The second is the effect on the game.
 bosses:
   devil_chan:
     name: "Devil Chan"
@@ -14,22 +13,19 @@ bosses:
       - "neat_hack", (10, 10)
     phrases:
       opening:
-        - "Did you write your TQPs?"
+        - "Angel Chan... I loved you! How could you do this?!"
       attack:
-        - "You need to touch grass."
-        - "My son could beat you at this game."
-        - "Easy choices hard life, hard choices easy life."
-        - "It's only awkward if you make it awkward."
-        - "You have to build capacity."
-        - "You chose that? Come on, that's ct!!!"
+        - "For My Lost Love!"
+        - "World Shaking Explosion Fist!"
+        - "North Star Spear!"
+        - "Million Soul Bomb!"
+        - "Burning Sun Beam!"
       special:
-        - "That's a neat litttle hack."
-        - "Reflect, reflect, REFLECT HARDER!!!"
-        - "Face the monster... ME!"
-        - "Keep your head on a swivel!"
-      kill:
-        - "Next time, practice perfectly."
-        - "My record just increased."
+        - "That's a neat little hack."
+        - "With this hack, I'll steal your health for myself."
+        - "I hope you're prepared for this."
+      death:
+        - "Ihave resigned myself. You have won. To one warrior to another, beware of the thinking question."
   ms_g:
     name: "Ms. G"
     energy: 4
@@ -52,6 +48,8 @@ bosses:
      special:
        - "You! Go to Siberia!"
        - "You deserve to go to Siberia!"
+     death:
+       - "Very well. you have bested me. As a warning, beware the thinking question. It will spell your doom."
   mr_phone:
     name: "Mr. Phone"
     energy: 5
@@ -82,6 +80,8 @@ bosses:
       kill:
         - "Next time, practice perfectly."
         - "My record just increased."
+      death:
+        - "Huh. Looks like you did practice perfectly."
 settings:
   fps:
     show: false

@@ -36,8 +36,10 @@ class Boss:
 
 
 class DevilChan(Boss):
-    def __init__(self):
-        pass
+    def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
+        super().init(name, rows, columns, hp, basic, special, phrases, screen)
+
+    def basic_action(self):
 
     def trigger(self):
         if self.acting:
@@ -71,10 +73,15 @@ class MsG(Boss):
 
 
 class MrPhone(Boss):
-    def __init__(self):
-        pass
+    def __init__(self, name, rows, columns, hp, basic, special, phrases, screen):
+        super().init(name, rows, columns, hp, basic, special, phrases, screen)
+
+    def basic_action(self):
 
     def trigger(self):
+        if self.acting:
+            trigger = "attack"
+        if self.health <
 
     def special_action(self):
 
