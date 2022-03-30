@@ -3,7 +3,7 @@ import sys
 import time
 import os
 
-from bin.classes.buttons import BackButton
+from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
 
@@ -11,8 +11,8 @@ from bin.colours import *
 class Credits(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/credits_menu.png"), (self.width, self.height))
-        self.back_button = BackButton(self.text_canvas, cw_blue)
+        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/05_credits_menu.png"), (self.width, self.height))
+        self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
     def run(self):
         while True:

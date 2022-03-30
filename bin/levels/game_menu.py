@@ -2,18 +2,21 @@ import sys
 import time
 import os
 
-from bin.classes.buttons import BackButton
+from bin.classes.buttons import ButtonTriangle, ButtonRect
 from bin.classes.level import Level
-import bin.classes.load as load
-from bin.classes.card_pair import MatchingScreen
 from bin.colours import *
 
 
 class GameMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.back_button = BackButton(self.text_canvas, cw_blue)
+        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/level select ui demo.png").convert()
+        self.play_button = ButtonRect(self.text_canvas, 230, 670, 100, 570, cw_blue, "FIGHT!", self.f_regular, white)
+        self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
+        self.left_button = ButtonTriangle(self.text_canvas, cw_gold, 100, 720)
+        self.right_button = ButtonTriangle(self.text_canvas, cw_gold, 690, 720, "right")
+        self.choose_lvl = 1
 
     def run(self):
         while True:
@@ -42,12 +45,26 @@ class GameMenu(Level):
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
                 self.next_level = 1
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.choose_lvl > 1:
+                if self.left_button.run(mx, my, white, self.click):
+                    self.choose_lvl -= 1
+            if self.choose_lvl < 3:
+                if self.right_button.run(mx, my, white, self.click):
+                    self.choose_lvl += 1
+            if self.play_button.check_click(mx, my, self.click):
+                self.fade_out = True
+                self.next_level = 3
+            self.play_button.draw_button(mx, my)
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.game_canvas.blit(self.background, (0, 0))
+            # self.game_canvas.blit(self.choose_boss_img[self.choose_boss_img], (0, 0))
+
+            print(mx, my, self.choose_lvl)
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

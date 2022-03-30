@@ -10,7 +10,6 @@ from bin.colours import *
 class Boot(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.image.load(os.getcwd() + "/resources/menus/boot_menu.png").convert()
         self.phase = 0
         self.alpha_game = 255
         self.fade_in = False
@@ -25,9 +24,9 @@ class Boot(Level):
         play_sfx = 0
         rect_width = 0
         f_boot = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 75)
-        boot_sound = pg.mixer.Sound(os.getcwd() + "/resources/boot/boot_bootup.mp3")
+        boot_sound = pg.mixer.Sound(os.getcwd() + "/resources/boot_sfx/boot_bootup.mp3")
         boot_sound.set_volume(0.3)
-        boot_finished = pg.mixer.Sound(os.getcwd() + "/resources/boot/boot_confirm.mp3")
+        boot_finished = pg.mixer.Sound(os.getcwd() + "/resources/boot_sfx/boot_confirm.mp3")
         boot_finished.set_volume(0.4)
         while True:
             # Framerate Independence
@@ -62,6 +61,7 @@ class Boot(Level):
                     rect_width += 2
                 elif seconds < 1.6:
                     loading_render = f_boot.render("Gathering the Chans", True, white)
+                    self.load_all()
                     self.game_canvas.blit(loading_render, (140, 610))
                     rect_width += 2
                 elif seconds < 2:

@@ -4,7 +4,12 @@ import pygame as pg
 
 class Load(object):
     def __init__(self):
-        pass
+        self.menu_img = None
+        self.choose_boss_img = None
+
+    def load_all(self):
+        self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
+        self.choose_boss_img = self.load_images_resize(os.getcwd() + "/resources/menus/choose_boss", (1600, 900))
 
     @staticmethod
     def load_audio_set(path_to_directory, extension):

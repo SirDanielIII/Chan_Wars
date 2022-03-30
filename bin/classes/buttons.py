@@ -6,7 +6,7 @@ from bin.colours import *
 from pygame import gfxdraw
 
 
-class Button(object):
+class ButtonRect(object):
     def __init__(self, canvas, x, y, w, h, clr, text, text_font, text_clr, stroke1=0, stroke2=0):
         self.canvas = canvas
         self.x = x
@@ -50,20 +50,28 @@ class Button(object):
 
 
 # ------------------------------------------------------------------------------------------------------------------
-class BackButton(object):
-    def __init__(self, canvas, clr_filled, tri_x1=20, tri_y1=50):
+class ButtonTriangle(object):
+    def __init__(self, canvas, clr_filled, tri_x1=20, tri_y1=50, pointing="left"):
         self.canvas = canvas
         self.clr = white
         self.clr_filled = clr_filled
-        # Left Point
+        # Pointy Part
         self.tri_x1 = tri_x1
         self.tri_y1 = tri_y1
-        # Bottom Right
-        self.tri_x2 = tri_x1 + 55
-        self.tri_y2 = tri_y1 - 35
-        # Top Right
-        self.tri_x3 = tri_x1 + 55
-        self.tri_y3 = tri_y1 + 35
+        if pointing == "left":
+            # Bottom Right
+            self.tri_x2 = tri_x1 + 55
+            self.tri_y2 = tri_y1 - 35
+            # Top Right
+            self.tri_x3 = tri_x1 + 55
+            self.tri_y3 = tri_y1 + 35
+        elif pointing == "right":
+            # Bottom Left
+            self.tri_x2 = tri_x1 - 55
+            self.tri_y2 = tri_y1 + 35
+            # Top Left
+            self.tri_x3 = tri_x1 - 55
+            self.tri_y3 = tri_y1 - 35
 
     def run(self, mx, my, clr, click):
         """Function to run Credits menu
@@ -72,6 +80,10 @@ class BackButton(object):
                 x position of mouse
             my:int:
                 y position of mouse
+            clr:tuple:
+                Colour
+            click:bool:
+                Detect mouse click
         """
         # Draw Triangle
         button = pg.draw.polygon(self.canvas, self.clr, [[self.tri_x1, self.tri_y1], [self.tri_x2, self.tri_y2], [self.tri_x3, self.tri_y3]])

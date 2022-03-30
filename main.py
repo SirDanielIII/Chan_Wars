@@ -68,6 +68,7 @@ class Main(object):
             match self.lvl:
                 case 0:  # Boot Screen
                     self.lvl = self.lvl_boot.run()
+                    print(self.config.get_config())
                 case 1:  # Main Menu
                     self.lvl = self.lvl_main_menu.run()
                 case 2:  # Game Menu
