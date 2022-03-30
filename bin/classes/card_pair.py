@@ -42,9 +42,9 @@ class CardPair:
 
 
 class MatchingScreen:
-    def __init__(self, lvl, images, screen):
+    def __init__(self, columns, images, screen):
         self.rows = 4
-        self.columns = 2 * lvl + 1
+        self.columns = columns
         self.image_list = images
         self.card_set = []
         self.screen = screen
@@ -80,21 +80,20 @@ class MatchingScreen:
             a.chosen1 = 0
             a.chosen2 = 0
 
-    def run(self, level, X, Y, size, margins, matches, delay, background):
+    def run(self, X, Y, size, margins, matches, delay, background):
         clock = pg.time.Clock()
-        offset = [(X - (margins[0] + size[0]) * (2 * level + 1)) / 2, (Y - (margins[1] + size[1]) * 4) / 2]
+        offset = [(X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * self.rows) / 2]
         word = pg.font.SysFont('Comic Sans MS', 20)
         time = 0
         correct_matches = 0
         f = [0]
         time_start = close_time = pg.time.get_ticks()
-        g = MatchingScreen(level, self.image_list, self.screen)
-        pairs = g.generate_pairs(size, margins, offset)
+        pairs = self.generate_pairs(size, margins, offset)
         s = 1
         while matches or close_time + delay[0] > pg.time.get_ticks():
             pos_mod = move_screen(s, time_start, pg.time.get_ticks(), Y)
             if not pairs:
-                pairs = g.generate_pairs(size, margins, offset)
+                pairs = self.generate_pairs(size, margins, offset)
             mouse_pos = [0, 0]
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
@@ -102,8 +101,8 @@ class MatchingScreen:
                     mouse_pos = list(pg.mouse.get_pos())
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
                     matches = 0
-            g.draw_cards(mouse_pos, f[0], background, pos_mod)
-            f = g.complete()
+            self.draw_cards(mouse_pos, f[0], background, pos_mod)
+            f = self.complete()
             if f[0] == 2:
                 if not time:
                     time = pg.time.get_ticks()
@@ -123,9 +122,9 @@ class MatchingScreen:
 
 def move_screen(in_out, time_start, current_time, Y):
     if in_out:
-        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
+        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 5))
     else:
-        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 3))
+        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 5))
     return pos
 
 # X = 1280
