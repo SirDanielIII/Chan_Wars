@@ -35,12 +35,10 @@ class Config(object):
 
     def load_config(self):
         if not os.path.exists(os.getcwd() + "config.yml"):
-            print("[CW] Config file does not exist, generating a new one")
+            print("[CW] Config file does not exist! Generating a new one :D")
             with open(os.getcwd() + "/config.yml", "w") as f:
-                f.dump(self.default, f)
+                yaml.dump(self.default, f)
                 self.default = None
-            print
-
         with open(os.getcwd() + "/config.yml", "r") as f:
             self.data = yaml.safe_load(f)
 
@@ -54,6 +52,18 @@ class Config(object):
         # name: str | energy: int | rows: int | columns: int | hp: int
         # basic: str | special: str | kill: str | phrases: []
         return self.data.get("bosses").get(boss).get(header)
+
+    def get_player_dict(self, name):
+        return self.data.get("player").get(name)
+
+    def get_player_stat(self, key, header):
+        return self.data.get("player").get(key).get(header)
+
+    def get_settings_dict(self, name):
+        return self.data.get("settings").get(name)
+
+    def get_settings_stat(self, key, header):
+        return self.data.get("settings").get(key).get(header)
 
 # # Test
 # yeet = Config()
