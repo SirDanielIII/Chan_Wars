@@ -8,7 +8,7 @@ class Config(object):
     def __init__(self):
         self.data = None
         self.default = {'player': {'hp': 50},
-                        'bosses': {'devil_chan':
+                        'bosses': {'DevilChan':
                                        {'name': 'Devil Chan',
                                         'energy': 3,
                                         'rows': 3,
@@ -24,7 +24,8 @@ class Config(object):
                                                          "I hope you're prepared for this."],
                                              'death': ['Ihave resigned myself. '
                                                        'You have won. To one warrior to another, beware of the thinking question.']}},
-                                   'ms_g': {'name': 'Ms. G',
+                                   'MsG':
+                                       {'name': 'Ms. G',
                                             'energy': 4,
                                             'rows': 5,
                                             'columns': 4,
@@ -34,12 +35,13 @@ class Config(object):
                                             'phrases':
                                                 {'opening': ['Sean!', "Wait, you're not Sean!"],
                                                  'attack': ['For Sean!', "One of them is a woman, the other has an Indian accent if you're into it.",
-                                                            "I'll only give you 100% if youâ€™re one of my favourite students.",
+                                                            "I'll only give you 100% if you're one of my favourite students.",
                                                             'Do it on Repl.', "Don't ask me, use your brain."],
                                                  'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!'],
                                                  'death': ['Very well. you have bested me. As a warning, beware the thinking question. '
                                                            'It will spell your doom.']}},
-                                   'mr_phone': {'name': 'Mr. Phone',
+                                   'MrPhone':
+                                       {'name': 'Mr. Phone',
                                                 'energy': 5,
                                                 'rows': 7,
                                                 'columns': 4,
@@ -93,7 +95,8 @@ class Config(object):
 
     def get_boss_stat(self, boss, header):
         # name: str | energy: int | rows: int | columns: int | hp: int
-        # basic: str | special: str | kill: str | phrases: []
+        # basic: list | special: list | kill: list | phrases: dictionary
+        # List for basic, special and kill are one element describing the act and another describing the effect of the action
         return self.data.get("bosses").get(boss).get(header)
 
     def get_player_dict(self, name):
