@@ -35,7 +35,7 @@ bosses:
     basic:
     - disappointment
     - 0
-    columns: 4
+    columns: 7
     energy: 5
     hp: 200
     kill:
@@ -65,7 +65,7 @@ bosses:
       - Reflect, reflect, REFLECT HARDER!!!
       - Face the monster... ME!
       - Keep your head on a swivel!
-    rows: 7
+    rows: 4
     special:
     - emotional_damage
     - 0
@@ -73,7 +73,7 @@ bosses:
     basic:
     - roast
     - 15
-    columns: 5
+    columns: 4
     energy: 4
     hp: 100
     name: Ms. G
@@ -94,7 +94,7 @@ bosses:
       special:
       - You! Go to Siberia!
       - You deserve to go to Siberia!
-    rows: 4
+    rows: 5
     special:
     - siberia
     - siberia
