@@ -56,7 +56,7 @@ class DevilChan(Boss):
     def special_action(self):
         self.health += self.data["special"][2]
         self.special = 1
-        self.update(0)
+        self.update(0, True)
         return self.data["special"][1], self.data["phrases"]["special"][random.randint(0, len(self.data["phrases"]["special"]) - 1)]
 
     def death(self):
