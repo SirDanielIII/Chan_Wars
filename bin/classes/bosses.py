@@ -9,7 +9,7 @@ class Boss:
         self.trigger = None
         self.config = configuration
         self.time = 0
-        self.pos_mod = 50 * math.sin(time)
+        self.pos_mod = 50 * math.sin(self.time)
 
     def act(self):
         match self.trigger:
