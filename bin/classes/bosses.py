@@ -1,15 +1,28 @@
 import random
-import math
+from abc import ABC, abstractmethod
 
 
-class Boss:
+class Boss(ABC):
     def __init__(self, surface, configuration):
         self.data = None
         self.screen = surface
         self.trigger = None
         self.config = configuration
-        self.time = 0
-        self.pos_mod = 50 * math.sin(time)
+
+    @abstractmethod
+    def update(self, damage):
+        pass
+
+    @abstractmethod
+    def trigger(self):
+        pass
+
+    @abstractmethod
+    def special_action(self):
+        pass
+
+    def death(self):
+        pass
 
     def act(self):
         match self.trigger:
@@ -28,7 +41,7 @@ class Boss:
 
 class DevilChan(Boss):
     def __init__(self, surface, configuration):
-        super().init(surface, configuration)
+        super().__init__(surface, configuration)
         self.data = self.config["DevilChan"]
         self.special = 0
         self.health = self.data["hp"]
@@ -36,12 +49,10 @@ class DevilChan(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage, time):
+    def update(self, damage):
         self.health -= damage
         self.energy = self.data["energy"]
-        self.time = time
-        self.pos_mod = 50 * math.sin(time)
-        return self.health, self.energy, self.pos_mod
+        return self.health, self.energy
 
     def trigger(self):
         if self.acting:
@@ -72,15 +83,13 @@ class MsG(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage, time):
+    def update(self, damage):
         self.health -= damage
         if self.siberia:
             self.energy = self.data["energy"] - 1
         else:
             self.energy = self.data["energy"]
-        self.time = time
-        self.pos_mod = 50 * math.sin(time)
-        return self.health, self.energy, self.siberia, self.pos_mod
+        return self.health, self.energy, self.siberia
 
     def trigger(self):
         if self.acting:
@@ -118,16 +127,14 @@ class MrPhone(Boss):
         self.damaged = True
         self.turn_count = 1
 
-    def update(self, damage, turn_counter, time):
+    def update(self, damage, turn_counter):
         self.health -= damage
         self.damaged = False
         if damage:
             self.damaged = True
         self.turn_count = turn_counter
         self.energy = self.data["energy"]
-        self.time = time
-        self.pos_mod = 50 * math.sin(time)
-        return self.health, self.energy, self.pos_mod
+        return self.health, self.energy
 
     def trigger(self):
         if self.acting:
