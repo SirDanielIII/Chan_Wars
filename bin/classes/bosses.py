@@ -7,21 +7,18 @@ class Boss:
         self.data = None
         self.screen = surface
         self.trigger = None
-        self.alive = True
         self.config = configuration
 
     def act(self):
         match self.trigger:
             case "attack":
-                return basic, self.basic_action()
+                return self.trigger, self.basic_action()
             case "die":
-                return death, self.death()
+                return self.trigger, self.death()
             case "special":
-                return special, self.special_action()
+                return self.trigger, self.special_action()
             case "kill":
-                return kill, self.kill()
-        if "death":
-            self.alive = False
+                return self.trigger, self.kill()
 
     def basic_action(self):
         return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
@@ -53,10 +50,10 @@ class DevilChan(Boss):
     def special_action(self):
         self.health += self.data["special"][2]
         self.special = 1
-        return self.data["special"][1], self.data["phrases"]["special"][random.randint(0, len(self.data["phrases"]["special"]) - 1)], self.health
+        self.update(0)
+        return self.data["special"][1], self.data["phrases"]["special"][random.randint(0, len(self.data["phrases"]["special"]) - 1)]
 
     def death(self):
-        self.alive = False
         return self.data["phrases"]["death"]
 
 
@@ -135,10 +132,10 @@ class MrPhone(Boss):
                 self.trigger = "die"
 
     def special_action(self):
-        return self.data["phrases"]["special"][random.randint(0, len(self.data["phrases"]["special"]) - 1)]
+        return self.data["special"][1], self.data["phrases"]["special"][random.randint(0, len(self.data["phrases"]["special"]) - 1)]
 
     def kill(self):
-        return self.data["kill"]["1"], self.data["phrases"]["kill"][random.randint(0, len(self.data["phrases"]["kill"]) - 1)]
+        return self.data["kill"][1], self.data["phrases"]["kill"][random.randint(0, len(self.data["phrases"]["kill"]) - 1)]
 
     def death(self):
         return self.data["phrases"]["death"]
