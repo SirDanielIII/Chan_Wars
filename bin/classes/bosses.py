@@ -1,17 +1,27 @@
 import random
 import math
-import pygame as pg
-
-
-class Boss:
+import pygame as pgclass Boss(ABC):
     def __init__(self, surface, configuration):
         self.data = None
         self.screen = surface
         self.trigger = None
         self.config = configuration
-        self.time = 0
-        self.pos_mod = 50 * math.sin(self.time)
-        self.acting = True
+
+    @abstractmethod
+    def update(self, damage):
+        pass
+
+    @abstractmethod
+    def trigger(self):
+        pass
+
+    @abstractmethod
+    def special_action(self):
+        pass
+
+    @abstractmethod
+    def death(self):
+        pass
 
     def act(self):
         match self.trigger:
@@ -26,6 +36,7 @@ class Boss:
 
     def basic_action(self):
         return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
+
 
 
 class DevilChan(Boss):
