@@ -85,27 +85,6 @@ class Config(object):
         #       self.fps_show, self.fps_30, self.fps_60, self.fps_75, self.fps_165)
         return self.data
 
-    def get_boss_dict(self, name):
-        return self.data.get("bosses").get(name)
-
-    def get_boss_stat(self, boss, header):
-        # name: str | energy: int | rows: int | columns: int | hp: int
-        # basic: list | special: list | kill: list | phrases: dictionary
-        # List for basic, special and kill are one element describing the act and another describing the effect of the action
-        return self.data.get("bosses").get(boss).get(header)
-
-    def get_player_dict(self, name):
-        return self.data.get("player").get(name)
-
-    def get_player_stat(self, key, header):
-        return self.data.get("player").get(key).get(header)
-
-    def get_settings_dict(self, name):
-        return self.data.get("settings").get(name)
-
-    def get_settings_stat(self, key, header):
-        return self.data.get("settings").get(key).get(header)
-
     @staticmethod
     def load_audio_set(path_to_directory, extension):
         """
