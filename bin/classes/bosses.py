@@ -1,6 +1,8 @@
 import random
 import math
 import pygame as pg
+from abc import ABC, abstractmethod
+
 
 class Boss(ABC):
     def __init__(self, surface, configuration):
@@ -10,6 +12,22 @@ class Boss(ABC):
         self.config = configuration   
         self.time = 0
         self.pos_mod = 50 * math.sin(time)
+        self.config = configuration
+
+    @abstractmethod
+    def update(self, damage):
+        pass
+
+    @abstractmethod
+    def trigger(self):
+        pass
+
+    @abstractmethod
+    def special_action(self):
+        pass
+
+    def death(self):
+        pass
 
     @abstractmethod
     def update(self, damage):
@@ -45,7 +63,7 @@ class Boss(ABC):
 
 class DevilChan(Boss):
     def __init__(self, surface, configuration):
-        super().init(surface, configuration)
+        super().__init__(surface, configuration)
         self.data = self.config["DevilChan"]
         self.special = 0
         self.health = self.data["hp"]
@@ -97,9 +115,7 @@ class MsG(Boss):
             self.energy = self.data["energy"] - 1
         else:
             self.energy = self.data["energy"]
-        self.time = time
-        self.pos_mod = 50 * math.sin(time)
-        return self.health, self.energy, self.siberia, self.pos_mod
+        return self.health, self.energy, self.siberia
 
     def trigger(self):
         if self.acting:
@@ -145,9 +161,7 @@ class MrPhone(Boss):
             self.damaged = True
         self.turn_count = turn_counter
         self.energy = self.data["energy"]
-        self.time = time
-        self.pos_mod = 50 * math.sin(time)
-        return self.health, self.energy, self.pos_mod
+        return self.health, self.energy
 
     def trigger(self):
         if self.acting:
