@@ -10,6 +10,7 @@ class Boss:
         self.config = configuration
         self.time = 0
         self.pos_mod = 50 * math.sin(self.time)
+        self.acting = True
 
     def act(self):
         match self.trigger:
@@ -36,9 +37,10 @@ class DevilChan(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage, time):
+    def update(self, damage, time, boss_turn):
         self.health -= damage
         self.energy = self.data["energy"]
+        self.acting = boss_turn
         self.time = time
         self.pos_mod = 50 * math.sin(time)
         return self.health, self.energy, self.pos_mod
@@ -72,8 +74,9 @@ class MsG(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage, time):
+    def update(self, damage, time, boss_turn):
         self.health -= damage
+        self.acting = boss_turn
         if self.siberia:
             self.energy = self.data["energy"] - 1
         else:
@@ -118,8 +121,9 @@ class MrPhone(Boss):
         self.damaged = True
         self.turn_count = 1
 
-    def update(self, damage, turn_counter, time):
+    def update(self, damage, turn_counter, time, boss_turn):
         self.health -= damage
+        self.acting = boss_turn
         self.damaged = False
         if damage:
             self.damaged = True
