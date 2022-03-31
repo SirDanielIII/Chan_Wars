@@ -1,11 +1,15 @@
 import random
 import math
-import pygame as pgclass Boss(ABC):
+import pygame as pg
+
+class Boss(ABC):
     def __init__(self, surface, configuration):
         self.data = None
         self.screen = surface
         self.trigger = None
-        self.config = configuration
+        self.config = configuration   
+        self.time = 0
+        self.pos_mod = 50 * math.sin(time)
 
     @abstractmethod
     def update(self, damage):
