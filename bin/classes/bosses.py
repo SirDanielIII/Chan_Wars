@@ -1,5 +1,5 @@
 import random
-
+import math
 
 
 class Boss:
@@ -8,6 +8,8 @@ class Boss:
         self.screen = surface
         self.trigger = None
         self.config = configuration
+        self.time = 0
+        self.pos_mod = 50 * math.sin(time)
 
     def act(self):
         match self.trigger:
@@ -34,10 +36,12 @@ class DevilChan(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage):
+    def update(self, damage, time):
         self.health -= damage
         self.energy = self.data["energy"]
-        return self.health, self.energy
+        self.time = time
+        self.pos_mod = 50 * math.sin(time)
+        return self.health, self.energy, self.pos_mod
 
     def trigger(self):
         if self.acting:
@@ -68,13 +72,15 @@ class MsG(Boss):
         self.basic_power = self.data["basic"][1]
         self.attack_phrases = self.data["phrases"]["basic"]
 
-    def update(self, damage):
+    def update(self, damage, time):
         self.health -= damage
         if self.siberia:
             self.energy = self.data["energy"] - 1
         else:
             self.energy = self.data["energy"]
-        return self.health, self.energy, self.siberia
+        self.time = time
+        self.pos_mod = 50 * math.sin(time)
+        return self.health, self.energy, self.siberia, self.pos_mod
 
     def trigger(self):
         if self.acting:
@@ -112,14 +118,16 @@ class MrPhone(Boss):
         self.damaged = True
         self.turn_count = 1
 
-    def update(self, damage, turn_counter):
+    def update(self, damage, turn_counter, time):
         self.health -= damage
         self.damaged = False
         if damage:
             self.damaged = True
         self.turn_count = turn_counter
         self.energy = self.data["energy"]
-        return self.health, self.energy
+        self.time = time
+        self.pos_mod = 50 * math.sin(time)
+        return self.health, self.energy, self.pos_mod
 
     def trigger(self):
         if self.acting:
