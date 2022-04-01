@@ -6,7 +6,6 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.bosses import DevilChan as dchan
-import bin.classes.config_manager as cmanager
 
 
 class BossDevilChan(Level):
@@ -15,10 +14,7 @@ class BossDevilChan(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
     def run(self):
-        configuration_object = cmanager.Config()
-        print(configuration_object)
-        configuration = configuration_object.get_config()["bosses"] # replace with method later
-        print(configuration)
+        configuration = self.config.get_config()["bosses"]
         devil_chan_boss = dchan(self.surface, configuration)
         while True:
             damage_taken = 0
