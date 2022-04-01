@@ -6,6 +6,8 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.bosses import DevilChan as DChan
+from bin.classes.card_pair import MatchingScreen as MScreen
+import bin.classes.config_manager as load
 
 
 class BossDevilChan(Level):
@@ -16,6 +18,12 @@ class BossDevilChan(Level):
     def run(self):
         configuration = self.config.get_config()["bosses"]
         devil_chan_boss = DChan(self.surface, configuration)
+        size = (80, 120)
+        margins = (20, 30)
+        image_list = load.Config.load_images_resize(os.getcwd() + "/resources/chans", size) + \
+                     [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), size)]
+        background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (self.width, self.height))
+        player = MScreen(3, image_list, self.surface)
         boss_turn = False
         while True:
             damage_taken = 0
@@ -28,9 +36,10 @@ class BossDevilChan(Level):
             # ------------------------------------------------------------------------------------------------------------------
             image = pg.image.load(r"C:\Users\massi\IdeaProjects\Chan_Wars\resources\boss_01-devil_chan\devil_chan.png")
             image = pg.transform.smoothscale(image, (500, 500)).convert_alpha()
-            devil_chan_boss.run(0, 0, True, self.surface, image)
-
-
+            if boss_turn:
+                devil_chan_boss.run(0, True, self.surface, image)
+            else:
+                player.run(self.width, self.height, size, margins, devil_chan_boss.energy, (750, 500), background)
 #
 # CHANGE BOSS METHODS TO INDIVIDUAL RUN METHODS
 #

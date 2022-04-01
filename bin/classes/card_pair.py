@@ -109,7 +109,7 @@ class MatchingScreen:
                 if pg.time.get_ticks() > time + delay[1]:
                     correct_matches += f[2]
                     matches -= f[1]
-                    g.reset()
+                    self.reset()
                     time = 0
                     if not matches:
                         s = 0
