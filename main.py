@@ -49,7 +49,8 @@ class Main(object):
         self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time,
+                                            self.config)
         self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl = 0

@@ -50,10 +50,17 @@ class BossMsG(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             print(mx, my)
-            # self.game_canvas.blit(self.background, (0, 0))
-            center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
+            self.game_canvas.blit(self.background, (0, 0))
+            # center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
             pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(90, 650, self.width - 90 * 2, 175))
             draw_rect_outline(self.game_canvas, white, pg.Rect(90, 650, self.width - 90 * 2, 175), 10)
+            pg.draw.rect(self.game_canvas, cw_green, pg.Rect(100, 545, 330, 35))
+            pg.draw.rect(self.game_canvas, cw_green, pg.Rect(1170, 545, 330, 35))
+
+
+
+
+            # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()

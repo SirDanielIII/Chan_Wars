@@ -117,6 +117,26 @@ class Level(ABC):
             if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
                 return True
 
+    @staticmethod
+    def bar_percentage(pos, r, percent=True):
+        if percent:
+            return (pos / r) * 100
+        else:
+            return pos / r
+
+    @staticmethod
+    def bar_pos(p, r, percent=True):
+        if percent:
+            return (p / 100) * r
+        else:
+            return p * r
+
+    @staticmethod
+    def draw_bar(screen, anchor_pos_x, anchor_pos_y, height, length, clr_main, clr_stroke, highlight=False, clr_highlight=pg.Color("#FFFF55")):
+        bar_main = pg.Rect(anchor_pos_x, anchor_pos_y, length, height)
+        pg.draw.rect(screen, clr_main, bar_main)
+
+
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod
     def run(self):
