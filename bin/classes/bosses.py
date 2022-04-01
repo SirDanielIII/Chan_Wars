@@ -17,7 +17,7 @@ class Boss(ABC):
         pass
 
     @abstractmethod
-    def trigger(self):
+    def trigger_method(self):
         pass
 
     @abstractmethod
@@ -41,7 +41,7 @@ class DevilChan(Boss):
         self.trigger = None
         self.acting = True  # Whether or not it's the boss's turn
         self.time = 0
-        self.pos_mod = 50 * math.sin(self.time)
+        self.pos_mod = 25 * math.sin(self.time)
         self.special = 0
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
@@ -56,7 +56,7 @@ class DevilChan(Boss):
         self.pos_mod = 50 * math.sin(time)
         return self.health, self.energy, self.pos_mod
 
-    def trigger(self):
+    def trigger_method(self):
         if self.acting:
             self.trigger = "attack"
             if self.health < self.metadata["hp"] // 2 and not self.special:
@@ -95,7 +95,7 @@ class MsG(Boss):
         self.trigger = None
         self.acting = True  # Whether or not it's the boss's turn
         self.time = 0
-        self.pos_mod = 50 * math.sin(self.time)
+        self.pos_mod = 25 * math.sin(self.time)
         self.special = 0
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
@@ -112,7 +112,7 @@ class MsG(Boss):
             self.energy = self.metadata["energy"]
         return self.health, self.energy, self.siberia
 
-    def trigger(self):
+    def trigger_method(self):
         if self.acting:
             self.trigger = "attack"
             if self.health != self.metadata["hp"] and self.health > self.metadata["hp"] // 2:
@@ -153,11 +153,11 @@ class MrPhone(Boss):
     def __init__(self, surface, config):
         super().__init__()
         self.screen = surface
-        self.metadata = config["DevilChan"]
+        self.metadata = config["MrPhone"]
         self.trigger = None
         self.acting = True  # Whether or not it's the boss's turn
         self.time = 0
-        self.pos_mod = 50 * math.sin(self.time)
+        self.pos_mod = 25 * math.sin(self.time)
         self.special = 0
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
@@ -176,7 +176,7 @@ class MrPhone(Boss):
         self.energy = self.metadata["energy"]
         return self.health, self.energy
 
-    def trigger(self):
+    def trigger_method(self):
         if self.acting:
             self.trigger = "attack"
             if not self.turn_count % 4:
