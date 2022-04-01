@@ -2,6 +2,7 @@ import sys
 import time
 import os
 
+from bin.blit_tools import center_blit_image, draw_rect_outline
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
@@ -12,7 +13,7 @@ class BossMsG(Level):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
-        self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (600, 600))
+        self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (500, 500))
 
     def run(self):
         while True:
@@ -49,7 +50,10 @@ class BossMsG(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             print(mx, my)
-            self.game_canvas.blit(self.face, (0, 0))
+            # self.game_canvas.blit(self.background, (0, 0))
+            center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
+            pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(90, 650, self.width - 90 * 2, 175))
+            draw_rect_outline(self.game_canvas, white, pg.Rect(90, 650, self.width - 90 * 2, 175), 10)
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
