@@ -11,6 +11,7 @@ class BossMsG(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
+        self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
 
     def run(self):
         while True:

@@ -86,3 +86,9 @@ def generate_string(num):
     letters = string.ascii_letters
     var = ''.join(random.choice(letters) for i in range(num))
     return var
+
+
+def center_blit_image(screen, img, x, y):
+    r = img.get_rect()
+    r.center = (x, y)
+    screen.blit(img, r)
