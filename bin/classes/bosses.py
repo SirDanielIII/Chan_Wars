@@ -102,7 +102,6 @@ class DevilChan(Boss):
 
 
 
-
 class MsG(Boss):
     def __init__(self, surface, config):
         super().__init__()

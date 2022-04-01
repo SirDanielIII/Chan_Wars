@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from bin.blit_tools import draw_rect_outline
 from bin.colours import *
 
 
@@ -116,6 +117,31 @@ class Level(ABC):
         if self.fade_out:
             if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
                 return True
+
+    @staticmethod
+    def bar_percentage(pos, min_pos, max_pos, percent=True):
+        if percent:
+            return ((pos - min_pos) / max_pos) * 100
+        else:
+            return (pos - min_pos) / max_pos
+
+    @staticmethod
+    def bar_pos(pos, min_pos, max_pos, percent=True):
+        if percent:
+            return ((pos - min_pos) / 100) * max_pos
+        else:
+            return (pos - min_pos) * max_pos
+
+    @staticmethod
+    def draw_bar(screen, anchor_pos_x, anchor_pos_y, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False,
+                 clr_highlight=pg.Color("#FFFF55")):
+        if highlight:
+            bar_highlight = pg.Rect(anchor_pos_x, anchor_pos_y, length, height)
+            pg.draw.rect(screen, clr_highlight, bar_highlight)
+        bar_main = pg.Rect(anchor_pos_x, anchor_pos_y, length, height)
+        pg.draw.rect(screen, clr_main, bar_main)
+        draw_rect_outline(screen, clr_stroke,
+                          pg.Rect(anchor_pos_x - stroke_size, anchor_pos_y - stroke_size, length + stroke_size * 2, height + stroke_size * 2))
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod
