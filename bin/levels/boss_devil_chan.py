@@ -5,7 +5,7 @@ import os
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.bosses import DevilChan as dchan
+from bin.classes.bosses import DevilChan as DChan
 
 
 class BossDevilChan(Level):
@@ -15,7 +15,7 @@ class BossDevilChan(Level):
 
     def run(self):
         configuration = self.config.get_config()["bosses"]
-        devil_chan_boss = dchan(self.surface, configuration)
+        devil_chan_boss = DChan(self.surface, configuration)
         boss_turn = False
         while True:
             damage_taken = 0
@@ -26,14 +26,10 @@ class BossDevilChan(Level):
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ------------------------------------------------------------------------------------------------------------------
-            if boss_turn:
-                boss_state = devil_chan_boss.update(damage_taken, pg.time.get_ticks(), boss_turn)
-                devil_chan_boss.trigger_method()
-                action = devil_chan_boss.act()
-                action_type = action[0]
-                action_quote = action[1][1]
-                attack_damage = action[1][0]
-                boss_turn = False
+            image = pg.image.load(r"C:\Users\massi\IdeaProjects\Chan_Wars\resources\boss_01-devil_chan\devil_chan.png")
+            image = pg.transform.smoothscale(image, (500, 500)).convert_alpha()
+            devil_chan_boss.run(0, 0, True, self.surface, image)
+
 
 #
 # CHANGE BOSS METHODS TO INDIVIDUAL RUN METHODS

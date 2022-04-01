@@ -4,6 +4,13 @@ import pygame as pg
 from abc import ABC, abstractmethod
 
 
+def redraw_screen(surface, pos_mod, background=None):
+    pg.display.update()
+    surface.fill((255, 255, 255))
+    if background:
+        surface.blit(background, (0, pos_mod))
+
+
 class Boss(ABC):
     def __init__(self):
         pass
@@ -40,7 +47,7 @@ class DevilChan(Boss):
         self.metadata = config["DevilChan"]
         self.trigger = None
         self.time = 0
-        self.pos_mod = 25 * math.sin(self.time)
+        self.pos_mod = 15 * math.sin(self.time/500)
         self.special = 0
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
@@ -51,7 +58,7 @@ class DevilChan(Boss):
         self.health -= damage
         self.time = time
         self.energy = self.metadata["energy"]
-        self.pos_mod = 50 * math.sin(time)
+        self.pos_mod = 15 * math.sin(time/500)
         return self.health, self.energy, self.pos_mod
 
     def trigger_method(self):
@@ -82,7 +89,7 @@ class DevilChan(Boss):
         self.update(0, pg.time.get_ticks(), True)
         return self.metadata["special"][1], self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)]
 
-    def run(self, damage, time, boss_turn):
+    def run(self, damage, boss_turn, surface, image):
         while boss_turn:
             boss_state = self.update(damage, pg.time.get_ticks())
             self.trigger_method()
@@ -90,6 +97,9 @@ class DevilChan(Boss):
             action_type = action[0]
             action_quote = action[1][1]
             attack_damage = action[1][0]
+            surface.blit(image, (100, 100 + self.pos_mod))
+            redraw_screen(surface, 0)
+
 
 
 
