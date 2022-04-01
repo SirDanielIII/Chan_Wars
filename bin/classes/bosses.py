@@ -48,15 +48,6 @@ class DevilChan(Boss):
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["basic"]
 
-    def act(self):
-        match self.trigger:
-            case "attack":
-                return self.trigger, self.basic_action()
-            case "die":
-                return self.trigger, self.death()
-            case "special":
-                return self.trigger, self.special_action()
-
     def update(self, damage, time, boss_turn):
         self.health -= damage
         self.acting = boss_turn
@@ -72,6 +63,16 @@ class DevilChan(Boss):
                 self.trigger = "special"
             if self.health <= 0:
                 self.trigger = "die"
+
+    def act(self):
+        if self.acting:
+            match self.trigger:
+                case "attack":
+                    return self.trigger, self.basic_action()
+                case "die":
+                    return self.trigger, self.death()
+                case "special":
+                    return self.trigger, self.special_action()
 
     def death(self):
         return self.metadata["phrases"]["death"]
@@ -102,15 +103,6 @@ class MsG(Boss):
         self.attack_phrases = self.metadata["phrases"]["basic"]
         self.siberia = False
 
-    def act(self):
-        match self.trigger:
-            case "attack":
-                return self.trigger, self.basic_action()
-            case "die":
-                return self.trigger, self.death()
-            case "special":
-                return self.trigger, self.special_action()
-
     def update(self, damage, time, boss_turn):
         self.health -= damage
         self.acting = boss_turn
@@ -129,6 +121,16 @@ class MsG(Boss):
                 self.trigger = "special"
             if self.health <= 0:
                 self.trigger = "die"
+
+    def act(self):
+        if self.acting:
+            match self.trigger:
+                case "attack":
+                    return self.trigger, self.basic_action()
+                case "die":
+                    return self.trigger, self.death()
+                case "special":
+                    return self.trigger, self.special_action()
 
     def death(self):
         return self.metadata["phrases"]["death"]
@@ -164,17 +166,6 @@ class MrPhone(Boss):
         self.damaged = True
         self.turn_count = 1
 
-    def act(self):
-        match self.trigger:
-            case "attack":
-                return self.trigger, self.basic_action()
-            case "die":
-                return self.trigger, self.death()
-            case "special":
-                return self.trigger, self.special_action()
-            case "kill":
-                return self.trigger, self.kill()
-
     def update(self, damage, turn_counter, time, boss_turn):
         self.health -= damage
         self.acting = boss_turn
@@ -194,6 +185,17 @@ class MrPhone(Boss):
                 self.trigger = "kill"
             if self.health <= 0:
                 self.trigger = "die"
+
+    def act(self):
+        match self.trigger:
+            case "attack":
+                return self.trigger, self.basic_action()
+            case "die":
+                return self.trigger, self.death()
+            case "special":
+                return self.trigger, self.special_action()
+            case "kill":
+                return self.trigger, self.kill()
 
     def kill(self):
         return self.metadata["kill"][1], self.metadata["phrases"]["kill"][random.randint(0, len(self.metadata["phrases"]["kill"]) - 1)]
