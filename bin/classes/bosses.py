@@ -39,7 +39,6 @@ class DevilChan(Boss):
         self.screen = surface
         self.metadata = config["DevilChan"]
         self.trigger = None
-        self.acting = True  # Whether or not it's the boss's turn
         self.time = 0
         self.pos_mod = 25 * math.sin(self.time)
         self.special = 0
@@ -48,31 +47,28 @@ class DevilChan(Boss):
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
 
-    def update(self, damage, time, boss_turn):
+    def update(self, damage, time):
         self.health -= damage
-        self.acting = boss_turn
         self.time = time
         self.energy = self.metadata["energy"]
         self.pos_mod = 50 * math.sin(time)
         return self.health, self.energy, self.pos_mod
 
     def trigger_method(self):
-        if self.acting:
-            self.trigger = "attack"
-            if self.health < self.metadata["hp"] // 2 and not self.special:
-                self.trigger = "special"
-            if self.health <= 0:
-                self.trigger = "die"
+        self.trigger = "attack"
+        if self.health < self.metadata["hp"] // 2 and not self.special:
+            self.trigger = "special"
+        if self.health <= 0:
+            self.trigger = "die"
 
     def act(self):
-        if self.acting:
-            match self.trigger:
-                case "attack":
-                    return self.trigger, self.basic_action()
-                case "die":
-                    return self.trigger, self.death()
-                case "special":
-                    return self.trigger, self.special_action()
+        match self.trigger:
+            case "attack":
+                return self.trigger, self.basic_action()
+            case "die":
+                return self.trigger, self.death()
+            case "special":
+                return self.trigger, self.special_action()
 
     def death(self):
         return self.metadata["phrases"]["death"]
@@ -88,6 +84,12 @@ class DevilChan(Boss):
 
     def run(self, damage, time, boss_turn):
         while boss_turn:
+            boss_state = self.update(damage, pg.time.get_ticks())
+            self.trigger_method()
+            action = self.act()
+            action_type = action[0]
+            action_quote = action[1][1]
+            attack_damage = action[1][0]
 
 
 
