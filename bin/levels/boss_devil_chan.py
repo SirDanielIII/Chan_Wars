@@ -5,6 +5,8 @@ import os
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
+from bin.classes.bosses import DevilChan as dchan
+import bin.classes.config_manager as cmanager
 
 
 class BossDevilChan(Level):
@@ -13,14 +15,23 @@ class BossDevilChan(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
     def run(self):
+        configuration_object = cmanager.Config()
+        configuration = configuration_object.get_config()
+        devil_chan_boss = dchan(self.surface, configuration)
         while True:
+            damage_taken = 0
+            boss_turn = True
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
             self.last_time = time.time()
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
-            # ----------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------------------------------------------------------------------
+            devil_chan_boss.update(damage_taken, pg.time.get_ticks(), boss_turn)
+            state = devil_chan_boss.trigger()
+            devil_chan_boss.act()
+            # ------------------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
@@ -41,7 +52,7 @@ class BossDevilChan(Level):
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
                 self.next_level = 1
-            # --------------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 return self.next_level
