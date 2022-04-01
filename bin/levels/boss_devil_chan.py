@@ -27,7 +27,7 @@ class BossDevilChan(Level):
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ------------------------------------------------------------------------------------------------------------------
             boss_state = devil_chan_boss.update(damage_taken, pg.time.get_ticks(), boss_turn)
-            devil_chan_boss.trigger()
+            devil_chan_boss.trigger_method()
             action = devil_chan_boss.act()
             action_type = action[0]
             action_quote = action[1][1]
