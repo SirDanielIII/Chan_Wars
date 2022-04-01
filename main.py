@@ -10,11 +10,14 @@ import os
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 from bin.levels.boot import Boot
+from bin.levels.boss_ms_g import BossMsG
 from bin.levels.credits import Credits
+from bin.levels.boss_devil_chan import BossDevilChan
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
 from bin.levels.matching_game import Game
+from bin.levels.boss_mr_phone import BossMrPhone
 from bin.levels.options import Options
 
 pg.init()
@@ -46,9 +49,13 @@ class Main(object):
         self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl = 0
 
         # ------------------------------------------------------------------------------------------------------------------
+
     def handler(self):
         running = True
         # --------------------------------------------------------------------------------------------------------------
@@ -84,6 +91,12 @@ class Main(object):
                 case 7:  # Quit
                     pg.quit()
                     sys.exit()
+                case 10:  # Devil Chan Boss
+                    self.lvl = self.lvl_devil_chan.run()
+                case 11:  # Ms.G Boss
+                    self.lvl = self.lvl_ms_g.run()
+                case 12:  # Mr. Phone Boss
+                    self.lvl = self.lvl_mr_phone.run()
             # ----------------------------------------------------------------------------------------------------------
             pg.display.update()
             self.clock.tick(self.FPS)
