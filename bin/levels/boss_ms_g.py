@@ -39,7 +39,7 @@ class BossMsG(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.fill((0, 255, 0))
+            self.game_canvas.fill(black)
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -50,15 +50,16 @@ class BossMsG(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             print(mx, my)
-            self.game_canvas.blit(self.background, (0, 0))
+            # self.game_canvas.blit(self.background, (0, 0))
             # center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
-            pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(90, 650, self.width - 90 * 2, 175))
-            draw_rect_outline(self.game_canvas, white, pg.Rect(90, 650, self.width - 90 * 2, 175), 10)
-            pg.draw.rect(self.game_canvas, cw_green, pg.Rect(100, 545, 330, 35))
-            pg.draw.rect(self.game_canvas, cw_green, pg.Rect(1170, 545, 330, 35))
-
-
-
+            # Textbox
+            pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
+            draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
+            # Bars
+            self.draw_bar(self.game_canvas, 100, 545, 330, 35, cw_green, white, 5, True)
+            self.draw_bar(self.game_canvas, 1170, 545, 330, 35, cw_green, white, 5, True)
+            pg.draw.line(self.game_canvas, red, (95, 0), (95, 1000))
+            pg.draw.line(self.game_canvas, red, (1505, 0), (1505, 1000))
 
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

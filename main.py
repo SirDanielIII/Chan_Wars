@@ -53,7 +53,7 @@ class Main(object):
                                             self.config)
         self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl = 0
+        self.lvl = 11
 
         # ------------------------------------------------------------------------------------------------------------------
 
