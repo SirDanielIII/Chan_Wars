@@ -16,9 +16,9 @@ class BossDevilChan(Level):
     def run(self):
         configuration = self.config.get_config()["bosses"]
         devil_chan_boss = dchan(self.surface, configuration)
+        boss_turn = False
         while True:
             damage_taken = 0
-            boss_turn = True
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -26,13 +26,17 @@ class BossDevilChan(Level):
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ------------------------------------------------------------------------------------------------------------------
-            boss_state = devil_chan_boss.update(damage_taken, pg.time.get_ticks(), boss_turn)
-            devil_chan_boss.trigger_method()
-            action = devil_chan_boss.act()
-            action_type = action[0]
-            action_quote = action[1][1]
-            attack_damage = action[1][0]
-            print(boss_state, action, action_type, action_quote, attack_damage)
+            if boss_turn:
+                boss_state = devil_chan_boss.update(damage_taken, pg.time.get_ticks(), boss_turn)
+                devil_chan_boss.trigger_method()
+                action = devil_chan_boss.act()
+                action_type = action[0]
+                action_quote = action[1][1]
+                attack_damage = action[1][0]
+                boss_turn = False
+            # ------------------------------------------------------------------------------------------------------------------
+            if not boss_turn:
+
             # ------------------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
