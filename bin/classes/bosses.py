@@ -46,7 +46,7 @@ class DevilChan(Boss):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["basic"]
+        self.attack_phrases = self.metadata["phrases"]["attack"]
 
     def update(self, damage, time, boss_turn):
         self.health -= damage
@@ -100,7 +100,7 @@ class MsG(Boss):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["basic"]
+        self.attack_phrases = self.metadata["phrases"]["attack"]
         self.siberia = False
 
     def update(self, damage, time, boss_turn):
@@ -162,7 +162,7 @@ class MrPhone(Boss):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["basic"]
+        self.attack_phrases = self.metadata["phrases"]["attack"]
         self.damaged = True
         self.turn_count = 1
 
