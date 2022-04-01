@@ -34,9 +34,14 @@ class BossDevilChan(Level):
                 action_quote = action[1][1]
                 attack_damage = action[1][0]
                 boss_turn = False
+
+#
+# CHANGE BOSS METHODS TO INDIVIDUAL RUN METHODS
+#
+
             # ------------------------------------------------------------------------------------------------------------------
             if not boss_turn:
-
+                pass
             # ------------------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed

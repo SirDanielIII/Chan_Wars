@@ -86,6 +86,10 @@ class DevilChan(Boss):
         self.update(0, pg.time.get_ticks(), True)
         return self.metadata["special"][1], self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)]
 
+    def run(self, damage, time, boss_turn):
+        while boss_turn:
+
+
 
 class MsG(Boss):
     def __init__(self, surface, config):
