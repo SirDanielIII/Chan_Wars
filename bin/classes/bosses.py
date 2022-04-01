@@ -92,7 +92,6 @@ class DevilChan(Boss):
             attack_damage = action[1][0]
 
 
-
 class MsG(Boss):
     def __init__(self, surface, config):
         super().__init__()

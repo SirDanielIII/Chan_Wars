@@ -5,7 +5,7 @@ import os
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.bosses import DevilChan as dchan
+from bin.classes.bosses import DevilChan as DChan
 
 
 class BossDevilChan(Level):
@@ -15,7 +15,7 @@ class BossDevilChan(Level):
 
     def run(self):
         configuration = self.config.get_config()["bosses"]
-        devil_chan_boss = dchan(self.surface, configuration)
+        devil_chan_boss = DChan(self.surface, configuration)
         boss_turn = False
         while True:
             damage_taken = 0
