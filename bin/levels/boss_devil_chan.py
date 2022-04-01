@@ -14,7 +14,7 @@ class BossDevilChan(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
     def run(self):
-        configuration = self.config.get_config()["bosses"]
+        configuration = self.config.get_config()["bosses"]["DevilChan"]
         devil_chan_boss = dchan(self.surface, configuration)
         while True:
             damage_taken = 0
