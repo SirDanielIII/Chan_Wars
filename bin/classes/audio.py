@@ -1,11 +1,11 @@
 import os
 
 import pygame as pg
+from .config_manager import Config as c
 
 # Initialize pg.mixer.init() first
 # Then pg.mixer.pre_init(48000, -16, 2, 256)
 # This ensures any audio playback isn't heavily delayed
-from bin.load import load_audio_set
 
 
 class Audio(object):
@@ -59,7 +59,7 @@ class Audio(object):
             extension:string:
                 File extension of audio files
         """
-        self.music_set = load_audio_set(path, extension)
+        self.music_set = c.load_audio_set(path, extension)
 
     def load_glitch(self, path, extension):
         """ Loads glitch sound effects into one list
@@ -69,7 +69,7 @@ class Audio(object):
             extension:string:
                 File extension of audio files
         """
-        self.glitch_set = load_audio_set(path, extension)
+        self.glitch_set = c.load_audio_set(path, extension)
 
     def song_switch(self, song):
         """ Switch statement to replace if statements - Background ambience manager

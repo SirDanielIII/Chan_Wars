@@ -12,6 +12,7 @@ class BossMsG(Level):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
+        self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (600, 600))
 
     def run(self):
         while True:
@@ -47,6 +48,8 @@ class BossMsG(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
+            print(mx, my)
+            self.game_canvas.blit(self.face, (0, 0))
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
