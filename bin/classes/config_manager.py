@@ -76,6 +76,9 @@ class Config(object):
         #       self.fps_show, self.fps_30, self.fps_60, self.fps_75, self.fps_165)
         return self.data
 
+    def get_config_boss(self, name):
+        return self.data["bosses"][name]
+
     @staticmethod
     def load_audio_set(path_to_directory, extension):
         """
