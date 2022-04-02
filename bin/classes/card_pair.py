@@ -5,11 +5,19 @@ from bin.classes.level import Level
 pg.font.init()
 
 
-def redraw_screen(surface, pos_mod, background=None):
+def redraw_screen(surface, game_canvas, pos_mod, background=None):
     pg.display.update()
-    surface.fill((0, 0, 0))
+    surface.blit(game_canvas, (0, 0))
     if background:
         surface.blit(background, (0, pos_mod))
+
+
+def move_screen(in_out, time_start, current_time, Y):
+    if in_out:
+        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
+    else:
+        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
+    return pos
 
 
 class CardPair():
@@ -58,8 +66,8 @@ class MatchingScreen:
                          for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         return self.card_set
 
-    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
-        redraw_screen(self.screen, pos_mod, background)
+    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean, game_canvas):
+        redraw_screen(self.screen, game_canvas, pos_mod, background)
         if chosen_cards < 2:
             for pair in self.card_set:
                 pair.choose(m_pos, choose_boolean)
@@ -84,25 +92,22 @@ class MatchingScreen:
 
     def run(self, X, Y, size, margins, matches, delay, background):
         clock = pg.time.Clock()
-        offset = [(X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * self.rows) / 2]
         word = pg.font.SysFont('Comic Sans MS', 20)
         time = 0
         correct_matches = 0
         f = [0]
-        time_start = close_time = pg.time.get_ticks()
-        pairs = self.generate_pairs(size, margins, offset)
+        close_time = pg.time.get_ticks()
+        pairs = 0
         s = 1
         while matches or close_time + delay[0] > pg.time.get_ticks():
-            pos_mod = move_screen(s, time_start, pg.time.get_ticks(), Y)
+            pos_mod = move_screen(s, close_time, pg.time.get_ticks(), Y)
             if not pairs:
-                pairs = self.generate_pairs(size, margins, offset)
+                pairs = self.generate_pairs(size, margins, ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * self.rows) / 2))
             mouse_pos = [0, 0]
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.MOUSEBUTTONDOWN:
                     mouse_pos = list(pg.mouse.get_pos())
-                if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    matches = 0
             self.draw_cards(mouse_pos, f[0], background, pos_mod, matches and not close_time + delay[0] > pg.time.get_ticks())
             f = self.complete()
             if f[0] == 2:
@@ -115,16 +120,10 @@ class MatchingScreen:
                     time = 0
                     if not matches:
                         s = 0
-                        close_time = time_start = pg.time.get_ticks()
+                        close_time = pg.time.get_ticks()
             text = word.render("Energy: " + str(matches), True, (255, 0, 0))
             self.screen.blit(text, (20, 10 + pos_mod))
             clock.tick(60)
         return correct_matches, True
 
 
-def move_screen(in_out, time_start, current_time, Y):
-    if in_out:
-        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
-    else:
-        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
-    return pos
