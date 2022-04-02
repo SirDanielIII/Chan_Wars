@@ -135,7 +135,16 @@ class Level(ABC):
             return (pos - min_pos) * max_pos
 
     @staticmethod
-    def draw_bar(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
+    def draw_bar_left(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
+        if highlight:
+            bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
+            pg.draw.rect(screen, clr_highlight, bar_highlight)
+        bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
+        pg.draw.rect(screen, clr_main, bar_main)
+        draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
+
+    @staticmethod
+    def draw_bar_right(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
         if highlight:
             bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
             pg.draw.rect(screen, clr_highlight, bar_highlight)
