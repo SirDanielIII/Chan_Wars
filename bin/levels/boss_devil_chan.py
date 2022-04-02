@@ -27,7 +27,7 @@ class BossDevilChan(Level):
         sprite_size = (250, 250)
         boss_image = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png"), sprite_size)
         devil_chan_boss = DChan(configuration)
-        player = card_pair.MatchingScreen(3, image_list, self.card_canvas)
+        player = card_pair.MatchingScreen(3, image_list, self.surface)
         player_damage = 0
         offset = [(self.width - (margins[0] + size[0]) * 3) / 2, (self.height - (margins[1] + size[1]) * 4) / 2]
         word = pg.font.SysFont('Comic Sans MS', 20)
@@ -62,30 +62,7 @@ class BossDevilChan(Level):
                         boss_turn = False
             # ------------------------------------------------------------------------------------------------------------------
             else:
-                pos_mod = card_pair.move_screen(s, time_start, pg.time.get_ticks(), self.height)
-                if not pairs:
-                    pairs = player.generate_pairs(size, margins, offset)
-                for event in pg.event.get():
-                    pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
-                    if event.type == pg.MOUSEBUTTONDOWN:
-                        mouse_pos = (mx, my)
-                    if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                        matches = 0
-                player.draw_cards(mouse_pos, f[0], background, pos_mod, matches and not close_time + delay[0] > pg.time.get_ticks())
-                f = player.complete()
-                if f[0] == 2:
-                    if not time:
-                        current_time = pg.time.get_ticks()
-                    if pg.time.get_ticks() > current_time + delay[1]:
-                        correct_matches += f[2]
-                        matches -= f[1]
-                        player.reset()
-                        current_time = 0
-                        if not matches:
-                            s = 0
-                            close_time = time_start = pg.time.get_ticks()
-                text = word.render("Energy: " + str(matches), True, (255, 0, 0))
-                player.screen.blit(text, (20, 10 + pos_mod))
+                player.run(self.width, self.height, size, margins, matches, delay, background)
 
 # def run(self):
 #     attack_damage = 0
@@ -130,6 +107,6 @@ class BossDevilChan(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            self.blit_screens(self.card_canvas)
+            self.blit_screens(not boss_turn, self.card_canvas)
             self.clock.tick(self.FPS)
             pg.display.update()
