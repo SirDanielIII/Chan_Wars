@@ -6,8 +6,6 @@ pg.font.init()
 
 
 def redraw_screen(surface, pos_mod, background=None):
-    pg.display.update()
-    surface.fill((255, 255, 255))
     if background:
         surface.blit(background, (0, pos_mod))
 
@@ -59,12 +57,12 @@ class MatchingScreen:
         return self.card_set
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+        redraw_screen(self.screen, pos_mod, background)
         if chosen_cards < 2:
             for pair in self.card_set:
                 pair.choose(m_pos, choose_boolean)
         for pair in self.card_set:
             pair.draw_matching(self.image_list[-1], self.screen, pos_mod)
-        redraw_screen(self.screen, pos_mod, background)
 
     def complete(self):
         count = 0
@@ -124,7 +122,7 @@ class MatchingScreen:
 
 def move_screen(in_out, time_start, current_time, Y):
     if in_out:
-        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 5))
+        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
     else:
-        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 5))
+        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
     return pos

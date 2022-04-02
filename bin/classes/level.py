@@ -41,11 +41,11 @@ class Level(ABC):
         if self.alpha_text != 0:
             self.text_canvas.fill((0, 0, 0, 0))
 
-    def blit_screens(self, card_screen=False, card_canvas=None):
+    def blit_screens(self, card_canvas=None):
         """Blit the surfaces; don't blit text_canvas if it's not visible"""
         if self.alpha_text != 0:
             self.game_canvas.blit(self.text_canvas, (0, 0))
-        if card_screen:
+        if card_canvas:
             self.game_canvas.blit(card_canvas, (0, 0))
         self.surface.blit(self.game_canvas, (0 + self.screen_offset[0], 0 + self.screen_offset[1]))
 
