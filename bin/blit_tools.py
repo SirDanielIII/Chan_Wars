@@ -30,6 +30,29 @@ def draw_text_center(text, colour, font_type, screen, x, y):  # Draws Centered T
     screen.blit(text_obj, text_rect)
 
 
+def draw_text_left(text, colour, font_type, screen, x, y):  # Draws Centered Text
+    """Function that centers text in Pygame
+    Args:
+        text::str
+            String text to be centered
+        colour::tuple
+            Pretty self explanatory
+        font_type::pg.font.SysFont("string", int)
+            Specify which font to use
+        screen::surface
+            Specify which surface to blit centered text on
+        x::float
+            The x value of centered text
+        y::float
+            The y value of centered text
+    """
+    text_obj = font_type.render(text, True, colour)
+    text_rect = text_obj.get_rect()
+    text_rect.left = x
+    text_rect.bottom = y
+    screen.blit(text_obj, text_rect)
+
+
 def draw_text_right(text, colour, font_type, screen, x, y):  # Draws Centered Text
     """Function that centers text in Pygame
     Args:
@@ -50,7 +73,6 @@ def draw_text_right(text, colour, font_type, screen, x, y):  # Draws Centered Te
     text_rect = text_obj.get_rect()
     text_rect.right = x
     text_rect.bottom = y
-    print(text_rect.right)
     screen.blit(text_obj, text_rect)
 
 

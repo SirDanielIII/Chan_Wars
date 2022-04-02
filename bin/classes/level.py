@@ -26,6 +26,7 @@ class Level(ABC):
         self.screen_offset = [0, 0]
         self.freeze = True
 
+    # ------------------------------------------------------------------------------------------------------------------
     def restore(self):
         self.fade_in = True
         self.fade_out = False
@@ -33,6 +34,7 @@ class Level(ABC):
         self.alpha_text = 255
         self.freeze = True
 
+    # ------------------------------------------------------------------------------------------------------------------
     def fill_screens(self):
         """Fill the surfaces to avoid smudging"""
         self.surface.fill(black)
@@ -41,6 +43,7 @@ class Level(ABC):
         if self.alpha_text != 0:
             self.text_canvas.fill((0, 0, 0, 0))
 
+    # ------------------------------------------------------------------------------------------------------------------
     def blit_screens(self, card_screen_up=False, card_canvas=None):
         """Blit the surfaces; don't blit text_canvas if it's not visible"""
         if self.alpha_text != 0:
@@ -80,6 +83,7 @@ class Level(ABC):
                     self.alpha_text = 255
                     return True
 
+    # ------------------------------------------------------------------------------------------------------------------
     def fade_screen_out(self, screen_type, screen, speed, dt):
         """Screen fade manager - out
         Args:
@@ -110,16 +114,19 @@ class Level(ABC):
                     self.alpha_text = 0
                     return True
 
+    # ------------------------------------------------------------------------------------------------------------------
     def transition_in(self, screen_type, screen, dt):
         if self.fade_in:
             if self.fade_screen_in(screen_type, screen, self.transition_speed, dt):
                 self.fade_in = False
 
+    # ------------------------------------------------------------------------------------------------------------------
     def transition_out(self, screen_type, screen, dt):
         if self.fade_out:
             if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
                 return True
 
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def bar_percentage(pos, max_pos, percent=True):
         if percent:
@@ -127,6 +134,12 @@ class Level(ABC):
         else:
             return pos / max_pos
 
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def bar_percentage_of(total, pos, max_pos):
+        return total * (pos / max_pos)
+
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def bar_pos(pos, min_pos, max_pos, percent=True):
         if percent:
@@ -134,6 +147,7 @@ class Level(ABC):
         else:
             return (pos - min_pos) * max_pos
 
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def draw_bar_left(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
         if highlight:
@@ -143,14 +157,28 @@ class Level(ABC):
         pg.draw.rect(screen, clr_main, bar_main)
         draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
 
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def draw_bar_right(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
+    def draw_bar_value_left(screen, max_current, current, rectangle, clr_main, clr_stroke, stroke_size=3,
+                            back=False, clr_back=(255, 0, 0),
+                            highlight=False, last_current=0, clr_highlight=pg.Color("#FFFF55")):
+        if back:
+            pg.draw.rect(screen, clr_back, pg.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3]))
         if highlight:
-            bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
+            bar_highlight = pg.Rect(rectangle[0], rectangle[1], rectangle[2] * (last_current / max_current), rectangle[3])
             pg.draw.rect(screen, clr_highlight, bar_highlight)
-        bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
-        pg.draw.rect(screen, clr_main, bar_main)
-        draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
+        new_w = rectangle[2] * (current / max_current)  # The width of the bar is tied to the percentage loss of the current value compared to the max value
+        pg.draw.rect(screen, clr_main, pg.Rect(rectangle[0], rectangle[1], new_w, rectangle[3]))
+        draw_rect_outline(screen, clr_stroke, pg.Rect(rectangle[0] - stroke_size, rectangle[1] - stroke_size, rectangle[2] + stroke_size * 2, rectangle[3] + stroke_size * 2))
+
+    # @staticmethod
+    # def draw_bar_right(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
+    #     if highlight:
+    #         bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
+    #         pg.draw.rect(screen, clr_highlight, bar_highlight)
+    #     # bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
+    #     # pg.draw.rect(screen, clr_main, bar_main)
+    #     draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod

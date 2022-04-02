@@ -45,7 +45,8 @@ class Config(object):
                                        'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5, 'special': ['siberia', 'siberia']}}, 'player': {'hp': 50},
                         'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
                                      'fps': {'show': False, 30: False, 60: False, 75: False, 165: True}, 'fullscreen': False}}
-
+        self.f_hp_bar_hp = None
+        self.f_hp_bar_name = None
         # Add line about broomstick for Ms. G
         # Add levels beaten
 
@@ -70,6 +71,8 @@ class Config(object):
     def load_media(self):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
+        self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
+        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
