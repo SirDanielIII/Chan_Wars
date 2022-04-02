@@ -1,5 +1,6 @@
 import random
 import pygame as pg
+from bin.classes.level import Level
 
 pg.font.init()
 
@@ -11,7 +12,7 @@ def redraw_screen(surface, pos_mod, background=None):
         surface.blit(background, (0, pos_mod))
 
 
-class CardPair:
+class CardPair():
     def __init__(self, image, pos, size, m, columns, o_set):
         self.size = size
         self.position1 = [o_set[0] - columns + (size[0] + m[0]) * pos[0][0],
@@ -44,11 +45,11 @@ class CardPair:
 
 class MatchingScreen:
     def __init__(self, columns, images, screen):
+        self.screen = screen
         self.rows = 4
         self.columns = columns
         self.image_list = images
         self.card_set = []
-        self.screen = screen
 
     def generate_pairs(self, size, m, o_set):
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
@@ -127,15 +128,3 @@ def move_screen(in_out, time_start, current_time, Y):
     else:
         pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 5))
     return pos
-
-# X = 1280
-# Y = 720
-# size = (80, 120)
-# margins = (20, 30)
-# surface = pg.display.set_mode((X, Y))
-# image_list = load.Load.load_images_resize("C:/Users/massi/IdeaProjects/Chan_Wars/resources/chans", size) + \
-#              [pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/card_back_PNG.png"), size)]
-# background = pg.transform.scale(pg.image.load("C:/Users/massi/IdeaProjects/Chan_Wars/resources/background.jpg"), (X, Y))
-# f = MatchingScreen(1, image_list, surface)
-# level = 1
-# f.run(level, X, Y,  size, margins, 2 + level, (750, 500), background)
