@@ -14,6 +14,14 @@ class BossMsG(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
         self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (500, 500))
+        self.hp_bar_player = [100, 545, 330, 35]  # [x, y, width, height]
+        self.hp_bar_player_x = 330
+        self.hp_bar_player_y = 35
+        self.hp_player = None
+        self.hp_bar_boss = [1170, 545, 330, 35]
+        self.hp_bar_boss_x = 330
+        self.hp_bar_boss_y = 35
+        self.hp_boss = None
 
     def run(self):
         while True:
@@ -49,15 +57,21 @@ class BossMsG(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            print(mx, my)
+            print(mx, my, self.hp_player, self.hp_boss)
+            if self.hp_bar_player_x > 10:
+                self.hp_bar_player_x -= 1 * dt
+                self.hp_bar_boss_x -= 1 * dt
+            self.hp_player = Level.bar_percentage(self.hp_bar_player_x, self.hp_bar_player[2])
+            self.hp_boss = Level.bar_percentage(self.hp_bar_boss_x, self.hp_bar_boss[2])
             # self.game_canvas.blit(self.background, (0, 0))
             # center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
             # Textbox
             pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
             draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             # Bars
-            self.draw_bar(self.game_canvas, 100, 545, 330, 35, cw_green, white, 5, True)
-            self.draw_bar(self.game_canvas, 1170, 545, 330, 35, cw_green, white, 5, True)
+            # self.hp_bar_player_x -= 1 * dt
+            self.draw_bar(self.game_canvas, self.hp_bar_player, self.hp_bar_player_x, self.hp_bar_player_y, cw_green, white, 5, True)
+            self.draw_bar(self.game_canvas, self.hp_bar_boss, self.hp_bar_boss_x, self.hp_bar_boss_y, cw_green, white, 5, True)
             pg.draw.line(self.game_canvas, red, (95, 0), (95, 1000))
             pg.draw.line(self.game_canvas, red, (1505, 0), (1505, 1000))
 
