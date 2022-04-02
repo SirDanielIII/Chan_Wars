@@ -22,13 +22,14 @@ class CardPair:
         self.chosen1 = 0
         self.chosen2 = 0
 
-    def choose(self, m_pos):
-        if self.position1[0] < m_pos[0] < self.position1[0] + self.size[0] and self.position1[1] < m_pos[1] < \
-                self.position1[1] + self.size[1]:
-            self.chosen1 = 1
-        if self.position2[0] < m_pos[0] < self.position2[0] + self.size[0] and self.position2[1] < m_pos[1] < \
-                self.position2[1] + self.size[1]:
-            self.chosen2 = 1
+    def choose(self, m_pos, choose_boolean):
+        if choose_boolean:
+            if self.position1[0] < m_pos[0] < self.position1[0] + self.size[0] and self.position1[1] < m_pos[1] < \
+                    self.position1[1] + self.size[1]:
+                self.chosen1 = 1
+            if self.position2[0] < m_pos[0] < self.position2[0] + self.size[0] and self.position2[1] < m_pos[1] < \
+                    self.position2[1] + self.size[1]:
+                self.chosen2 = 1
 
     def draw_matching(self, default, screen, pos_mod):
         if self.chosen1:
@@ -56,10 +57,10 @@ class MatchingScreen:
                          for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         return self.card_set
 
-    def draw_cards(self, m_pos, chosen_cards, background, pos_mod):
+    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         if chosen_cards < 2:
             for pair in self.card_set:
-                pair.choose(m_pos)
+                pair.choose(m_pos, choose_boolean)
         for pair in self.card_set:
             pair.draw_matching(self.image_list[-1], self.screen, pos_mod)
         redraw_screen(self.screen, pos_mod, background)
@@ -101,7 +102,7 @@ class MatchingScreen:
                     mouse_pos = list(pg.mouse.get_pos())
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
                     matches = 0
-            self.draw_cards(mouse_pos, f[0], background, pos_mod)
+            self.draw_cards(mouse_pos, f[0], background, pos_mod, matches and not close_time + delay[0] > pg.time.get_ticks())
             f = self.complete()
             if f[0] == 2:
                 if not time:
