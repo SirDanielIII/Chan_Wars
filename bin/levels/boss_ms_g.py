@@ -1,8 +1,9 @@
 import sys
 import time
 import os
+from math import ceil
 
-from bin.blit_tools import center_blit_image, draw_rect_outline
+from bin.blit_tools import center_blit_image, draw_rect_outline, draw_text_right
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
@@ -14,6 +15,8 @@ class BossMsG(Level):
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
         self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (500, 500))
+        self.f_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
+        self.f_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.hp_bar_player = [100, 545, 330, 35]  # [x, y, width, height]
         self.hp_bar_player_x = 330
         self.hp_bar_player_y = 35
@@ -61,20 +64,24 @@ class BossMsG(Level):
             if self.hp_bar_player_x > 10:
                 self.hp_bar_player_x -= 1 * dt
                 self.hp_bar_boss_x -= 1 * dt
+            # ------------------------------------------------------------------------------------------------------------------
             self.hp_player = Level.bar_percentage(self.hp_bar_player_x, self.hp_bar_player[2])
             self.hp_boss = Level.bar_percentage(self.hp_bar_boss_x, self.hp_bar_boss[2])
-            # self.game_canvas.blit(self.background, (0, 0))
-            # center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100)
+            # ------------------------------------------------------------------------------------------------------------------
+            player_hp = self.f_hp.render(str(ceil(self.hp_player)) + "HP", True, white)
+            self.text_canvas.blit(player_hp, (self.hp_bar_player[0] - 5, self.hp_bar_player[1] - 110))
+            # ------------------------------------------------------------------------------------------------------------------
+            draw_text_right(str(ceil(self.hp_boss)) + "HP", white, self.f_hp, self.text_canvas, self.hp_bar_boss[0] + self.hp_bar_boss[2] + 10, self.hp_bar_boss[1])
+            # ------------------------------------------------------------------------------------------------------------------
             # Textbox
             pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
             draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
+            # ------------------------------------------------------------------------------------------------------------------
             # Bars
-            # self.hp_bar_player_x -= 1 * dt
-            self.draw_bar(self.game_canvas, self.hp_bar_player, self.hp_bar_player_x, self.hp_bar_player_y, cw_green, white, 5, True)
-            self.draw_bar(self.game_canvas, self.hp_bar_boss, self.hp_bar_boss_x, self.hp_bar_boss_y, cw_green, white, 5, True)
+            self.draw_bar_left(self.game_canvas, self.hp_bar_player, self.hp_bar_player_x, self.hp_bar_player_y, cw_green, white, 5, True)
+            self.draw_bar_right(self.game_canvas, self.hp_bar_boss, self.hp_bar_boss_x, self.hp_bar_boss_y, cw_green, white, 5, True)
             pg.draw.line(self.game_canvas, red, (95, 0), (95, 1000))
             pg.draw.line(self.game_canvas, red, (1505, 0), (1505, 1000))
-
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)

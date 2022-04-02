@@ -1,7 +1,7 @@
 # Daniel Zhuo
 # Module - Button
 
-from bin.blit_tools import draw_text
+from bin.blit_tools import draw_text_center
 from bin.colours import *
 from pygame import gfxdraw
 
@@ -46,7 +46,7 @@ class ButtonRect(object):
             self.overlay.fill((255, 255, 255, 50))
         # Draw
         self.canvas.blit(self.overlay, (self.x, self.y))
-        draw_text(self.text, self.text_clr, self.text_font, self.canvas, self.rect.x + self.rect.w / 2, self.rect.y + self.rect.h / 2 - 2)
+        draw_text_center(self.text, self.text_clr, self.text_font, self.canvas, self.rect.x + self.rect.w / 2, self.rect.y + self.rect.h / 2 - 2)
 
 
 # ------------------------------------------------------------------------------------------------------------------
