@@ -18,13 +18,15 @@ class BossDevilChan(Level):
     def run(self):
         configuration = self.config.get_config()["bosses"]
         devil_chan_boss = DChan(self.surface, configuration)
-        size = (80, 120)
+        size = (120, 180)
         margins = (20, 30)
         image_list = load.Config.load_images_resize(os.getcwd() + "/resources/chans", size) + \
                      [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), size)]
         background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (self.width, self.height))
         player = MScreen(3, image_list, self.surface)
-        boss_turn = False
+        boss_turn = True
+        sprite_size = (500, 500)
+        damage = 0
         while True:
             damage_taken = 0
             # Framerate Independence
@@ -34,12 +36,15 @@ class BossDevilChan(Level):
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ------------------------------------------------------------------------------------------------------------------
-            image = pg.image.load(r"C:\Users\massi\IdeaProjects\Chan_Wars\resources\boss_01-devil_chan\devil_chan.png")
-            image = pg.transform.smoothscale(image, (500, 500)).convert_alpha()
+            print(boss_turn)
             if boss_turn:
-                devil_chan_boss.run(0, True, self.surface, image)
+                boss_return = devil_chan_boss.run(damage, True, self.surface, sprite_size, self.width)
+                boss_turn = boss_return[1]
+                boss_damage = boss_return[0]
             else:
-                player.run(self.width, self.height, size, margins, devil_chan_boss.energy, (750, 500), background)
+                player_return = player.run(self.width, self.height, size, margins, devil_chan_boss.energy, (750, 500), background)
+                boss_turn = player_return[1]
+                player_damage = player_return[0]
 #
 # CHANGE BOSS METHODS TO INDIVIDUAL RUN METHODS
 #
