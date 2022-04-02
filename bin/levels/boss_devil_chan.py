@@ -27,20 +27,18 @@ class BossDevilChan(Level):
         sprite_size = (250, 250)
         boss_image = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png"), sprite_size)
         devil_chan_boss = DChan(configuration)
-        player = card_pair.MatchingScreen(3, image_list, self.surface)
+        player = card_pair.MatchingScreen(3, image_list, self.card_canvas)
+        pairs = 0
         player_damage = 0
-        offset = [(self.width - (margins[0] + size[0]) * 3) / 2, (self.height - (margins[1] + size[1]) * 4) / 2]
-        word = pg.font.SysFont('Comic Sans MS', 20)
-        current_time = 0
-        matches = 3
+        time_break = 0
         correct_matches = 0
         f = [0]
-        time_start = close_time = pg.time.get_ticks()
-        pairs = player.generate_pairs(size, margins, offset)
+        close_time = pg.time.get_ticks()
         s = 1
+        energy = 3
         delay = (750, 500)
-        mouse_pos = (0, 0)
         while True:
+            self.game_canvas.fill((255, 255, 0))
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -48,9 +46,11 @@ class BossDevilChan(Level):
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ------------------------------------------------------------------------------------------------------------------
+            position_modifier = 15 * math.sin(pg.time.get_ticks() / 1000)
+            self.game_canvas.blit(boss_image, (self.width // 2 - sprite_size[0] // 2, self.height // 2 - sprite_size[1] // 2 + position_modifier))
             if boss_turn:
                 boss_state = devil_chan_boss.update(player_damage)
-                matches = boss_state[1]
+                energy = boss_state[1]
                 devil_chan_boss.trigger_method()
                 action = devil_chan_boss.act()
                 action_type = action[0]
@@ -60,10 +60,32 @@ class BossDevilChan(Level):
                     pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                     if event.type == pg.MOUSEBUTTONDOWN:
                         boss_turn = False
+                        s = 1
             # ------------------------------------------------------------------------------------------------------------------
             else:
-                player.run(self.width, self.height, size, margins, matches, delay, background)
-
+                pos_mod = card_pair.move_screen(s, close_time, pg.time.get_ticks(), self.height)
+                if not pairs:
+                    pairs = player.generate_pairs(size, margins, ((self.width - (margins[0] + size[0]) * 3) / 2, (self.height - (margins[1] + size[1]) * 4) / 2))
+                mouse_pos = [0, 0]
+                for event in pg.event.get():
+                    pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
+                    if event.type == pg.MOUSEBUTTONDOWN:
+                        mouse_pos = list(pg.mouse.get_pos())
+                player.draw_cards(mouse_pos, f[0], background, pos_mod, energy and not close_time + delay[0] > pg.time.get_ticks(), self.game_canvas)
+                f = player.complete()
+                if f[0] == 2:
+                    if not time_break:
+                        time_break = pg.time.get_ticks()
+                    if pg.time.get_ticks() > time_break + delay[1]:
+                        correct_matches += f[2]
+                        energy -= f[1]
+                        player.reset()
+                        time_break = 0
+                        if not energy:
+                            s = 0
+                            close_time = pg.time.get_ticks()
+                if pos_mod > self.height - 1 and s == 0:
+                    boss_turn = True
 # def run(self):
 #     attack_damage = 0
 #     while boss_turn:
@@ -83,7 +105,6 @@ class BossDevilChan(Level):
 #         attack_damage = action[1][0]
 #         redraw_screen(surface, 0)
 #     return attack_damage, boss_turn
-            self.game_canvas.blit(boss_image, (self.width // 2 - sprite_size[0] // 2, self.height // 2 - sprite_size[1] // 2))
             # ------------------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
