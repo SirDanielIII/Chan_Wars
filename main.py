@@ -7,6 +7,8 @@ import time
 import pygame as pg
 import os
 
+from bin.classes.bosses import DevilChan
+from bin.classes.card_pair import MatchingScreen
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 from bin.levels.boot import Boot
@@ -53,7 +55,7 @@ class Main(object):
                                             self.config)
         self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl = 11
+        self.lvl = 0
 
         # ------------------------------------------------------------------------------------------------------------------
 
