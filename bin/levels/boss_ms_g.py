@@ -63,11 +63,6 @@ class BossMsG(Level):
             if self.click:
                 self.hp_player -= random.randint(1, 12)
 
-            if self.hp_player_last > self.hp_player:
-                self.hp_player_last -= 0.2 * dt
-            elif self.hp_player_last < self.hp_player:
-                self.hp_player_last = self.hp_player
-            print(self.hp_player_last)
 
             self.draw_bars()
             # ------------------------------------------------------------------------------------------------------------------

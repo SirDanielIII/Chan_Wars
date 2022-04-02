@@ -1,28 +1,45 @@
 import pygame as pg
 
+from bin.blit_tools import draw_rect_outline
 
-class HealthBar(object):
-    def __init__(self, dimensions, max_hp, config, clr_main, clr_stroke, stroke_size=3,
+
+class HealthBarLeft(object):
+    def __init__(self, screen, dimensions, max_hp, config, clr_main, clr_stroke, stroke_size=3,
                  back_rect=False, clr_back_rect=(255, 0, 0),
                  highlight=False, clr_highlight=pg.Color("#FFFF55")):
+        self.screen = screen
         self.x = dimensions.x
         self.y = dimensions.y
         self.w = dimensions.w
         self.h = dimensions.h
         self.max_hp = self.hp = self.hp_last = max_hp
         self.config = config
+        self.clr_main = clr_main
+        self.clr_stroke = clr_stroke
+        self.stroke_size = stroke_size
+        self.back_rect = back_rect
+        self.clr_back_rect = clr_back_rect
+        self.highlight = highlight
+        self.clr_highlight = clr_highlight
 
-    def render(self):
-        pass
+    def render_back(self):
+        if self.back_rect:
+            pg.draw.rect(self.screen, self.clr_back_rect, pg.Rect(self.x, self.y, self.w, self.h))
 
-    # def draw_bar_value_left(screen, max_current, current, rectangle, clr_main, clr_stroke, stroke_size=3,
-    #                         back=False, clr_back=(255, 0, 0),
-    #                         highlight=False, last_current=0, clr_highlight=pg.Color("#FFFF55")):
-    #     if back:
-    #         pg.draw.rect(screen, clr_back, pg.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3]))
-    #     if highlight:
-    #         bar_highlight = pg.Rect(rectangle[0], rectangle[1], rectangle[2] * (last_current / max_current), rectangle[3])
-    #         pg.draw.rect(screen, clr_highlight, bar_highlight)
-    #     new_w = rectangle[2] * (current / max_current)  # The width of the bar is tied to the percentage loss of the current value compared to the max value
-    #     pg.draw.rect(screen, clr_main, pg.Rect(rectangle[0], rectangle[1], new_w, rectangle[3]))
-    #     draw_rect_outline(screen, clr_stroke, pg.Rect(rectangle[0] - stroke_size, rectangle[1] - stroke_size, rectangle[2] + stroke_size * 2, rectangle[3] + stroke_size * 2))
+    def render_highlight(self, speed, dt):
+        if self.highlight:
+            if self.hp_last > self.hp:
+                self.hp_last -= speed * dt
+            elif self.hp_last < self.hp:
+                self.hp_last = self.hp
+            pg.draw.rect(self.screen, self.clr_highlight, pg.Rect((self.x, self.y, self.w * (self.hp_last / self.max_hp), self.h)))
+
+    def width_proportional(self):
+        # The width of the bar is tied to the percentage loss of the current value compared to the max value
+        return self.w * (self.hp / self.max_hp)
+
+    def render(self, speed, dt):
+        self.render_back()
+        self.render_highlight(speed, dt)
+        pg.draw.rect(self.screen, self.clr_main, pg.Rect(self.x, self.y, self.width_proportional(), self.h))
+        draw_rect_outline(self.screen, self.clr_stroke, pg.Rect(self.x - self.stroke_size, self.y - self.stroke_size, self.w + self.stroke_size * 2, self.h + self.stroke_size * 2))
