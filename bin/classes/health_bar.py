@@ -33,14 +33,14 @@ class HealthBar(object):
                 self.hp_last -= speed * dt
             elif self.hp_last < self.hp:
                 self.hp_last = self.hp
-        # ------------------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------------------------------------------------------------------
             if not right:
                 pg.draw.rect(self.screen, self.clr_highlight,
                              pg.Rect((self.x,
                                       self.y,
                                       self.w * (self.hp_last / self.max_hp),
                                       self.h)))
-        # ------------------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------------------------------------------------------------------
             else:
                 pg.draw.rect(self.screen, self.clr_highlight,
                              pg.Rect((self.x + (self.w - self.width_proportional(self.hp_last, self.max_hp)),
@@ -73,6 +73,7 @@ class HealthBar(object):
                                  self.h))
         # ------------------------------------------------------------------------------------------------------------------
         else:
+            # BUG: Due to rounding errors, a bit of red shows up on the right side
             pg.draw.rect(self.screen, self.clr_main,
                          pg.Rect(self.x + (self.w - self.width_proportional(self.hp, self.max_hp)),  # Offset by MAX WIDTH - LOST WIDTH
                                  self.y,

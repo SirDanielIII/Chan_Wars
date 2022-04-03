@@ -10,6 +10,15 @@ class Config(object):
         # Images
         self.menu_img = None
         self.boss_card = None
+        self.DEVIL_CHAN_face = None
+        self.MS_G_faces = None
+        self.MR_PHONE_faces = None
+        # Fonts
+        self.f_hp_bar_hp = None
+        self.f_hp_bar_name = None
+        # Other
+        self.highest_level_beat = None
+        self.boss_face_size = None
         # Settings
         self.player_hp = None
         self.enable_music = None
@@ -44,13 +53,8 @@ class Config(object):
                                        'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"],
                                        'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5, 'special': ['siberia', 'siberia']}}, 'player': {'hp': 50},
                         'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
-                                     'fps': {'show': False, 30: False, 60: False, 75: False, 165: True}, 'fullscreen': False}}
-        self.f_hp_bar_hp = None
-        self.f_hp_bar_name = None
-        # Bosses
-        self.MS_G_hp = None
-        # Add line about broomstick for Ms. G
-        # Add levels beaten
+                                     'fps': {'show': False, 30: False, 60: False, 75: False, 165: True}, 'fullscreen': False},
+                        'other': {'highest_level_beat': 0, 'boss_face_size': [500, 500]}}
 
     def load_config(self):
         if not os.path.exists(os.getcwd() + "/config.yml"):
@@ -69,12 +73,15 @@ class Config(object):
             self.fps_60 = self.data["settings"]["fps"][60]
             self.fps_75 = self.data["settings"]["fps"][75]
             self.fps_165 = self.data["settings"]["fps"][165]
+            self.highest_level_beat = self.data["other"]["highest_level_beat"]
+            self.boss_face_size = self.data["other"]["boss_face_size"]
 
     def load_media(self):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
+        self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
