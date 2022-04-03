@@ -7,8 +7,6 @@ import time
 import pygame as pg
 import os
 
-from bin.classes.bosses import DevilChan
-from bin.classes.card_pair import MatchingScreen
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 from bin.levels.boot import Boot
