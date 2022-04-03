@@ -69,8 +69,8 @@ class BossMsG(Level):
             '''
 
     def draw_boss(self, dt):
-        # center_blit_image(self.game_canvas, INSERT FACES HERE + Other Logic Below, self.width / 2, self.height / 2 - 100)
-        pass
+        offset = 0 * dt  # VELOCITY FUNCTION HERE (SLOPE)
+        # center_blit_image(self.game_canvas, INSERT FACES HERE + Other Logic Below, self.width / 2, self.height / 2 - 100 + offset)
 
     def run(self):
         self.reload()

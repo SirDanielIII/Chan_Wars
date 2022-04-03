@@ -58,7 +58,8 @@ class BossDevilChan(Level):
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
     def draw_boss(self, dt):
-        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100)
+        offset = 0 * dt  # VELOCITY FUNCTION HERE (SLOPE)
+        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click, dt):
         if self.card_canvas_y != self.height:
