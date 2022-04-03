@@ -47,6 +47,8 @@ class Config(object):
                                      'fps': {'show': False, 30: False, 60: False, 75: False, 165: True}, 'fullscreen': False}}
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
+        # Bosses
+        self.MS_G_hp = None
         # Add line about broomstick for Ms. G
         # Add levels beaten
 

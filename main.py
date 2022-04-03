@@ -30,7 +30,7 @@ class Main(object):
         self.width = 1600
         self.height = 900
         self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
-        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.SRCALPHA)
+        self.game_canvas = pg.Surface((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
         self.clock = pg.time.Clock()
         self.FPS = 165
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
@@ -42,6 +42,7 @@ class Main(object):
         # Config File
         self.config = Config()
         # Levels
+        self.lvl = 0
         self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
@@ -49,12 +50,9 @@ class Main(object):
         self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time,
-                                            self.config)
+        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl = 0
-
         # ------------------------------------------------------------------------------------------------------------------
 
     def handler(self):

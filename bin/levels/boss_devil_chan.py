@@ -103,5 +103,6 @@ class BossDevilChan(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens(card_pos_mod < self.height - 1, self.card_canvas)
+            self.blit_screens(True, self.card_canvas)
             self.clock.tick(self.FPS)
             pg.display.update()
