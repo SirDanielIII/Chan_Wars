@@ -135,7 +135,7 @@ class BossMsG(Level):
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
             # ------------------------------------------------------------------------------------------------------------------
-            if not self.card_game:
+            if not self.card_game:  # Don't render if the card game is fully up
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(dt)  # Draw Boss' Image (See Method Above)
                 # Textbox
