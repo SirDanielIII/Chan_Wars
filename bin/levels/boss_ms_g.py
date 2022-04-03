@@ -5,6 +5,7 @@ from math import ceil
 
 from bin.blit_tools import *
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
 
@@ -16,17 +17,36 @@ class BossMsG(Level):
         self.background = pg.image.load(os.getcwd() + "\\resources\\Testing_Resources\\ui_demo.png").convert()
         self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\boss_02-ms_g\\ms_g_siberia-02.png").convert_alpha(), (500, 500))
         # ------------------------------------------------------------------------------------------------------------------
-        self.hp_bar_player = [100, 545, 330, 35]  # [x, y, width, height]
-        self.hp_player_max = 50
-        self.hp_player = self.hp_player_max
-        self.hp_player_last = self.hp_player_max
+        # Player Attributes
+        self.hp_player_rect = pg.Rect(100, 545, 330, 35)
+        self.hp_player = None
+        self.hp_bar_player = None
         # ------------------------------------------------------------------------------------------------------------------
-        self.hp_bar_boss = [1170, 545, 330, 35]
-        self.hp_bar_boss_x = 330
-        self.hp_bar_boss_y = 35
+        # Boss Attributes
+        self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
+        self.hp_bar_boss = None
+
+    def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+        self.hp_player = self.config.player_hp
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_boss = self.config.get_config()["bosses"]["MsG"]["hp"]
+        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+
+    def draw_bars(self, dt):  # Draw Health bars
+        # Player Text & Health Bar
+        draw_text_left(str(ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y)
+        draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
+        self.hp_bar_player.render(self.hp_player, 0.3, dt)
+        # ------------------------------------------------------------------------------------------------------------------
+        # Boss Text & Health Bar
+        draw_text_right(str(ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+                        self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
+        draw_text_right("Ms. G", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
+        self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
     def run(self):
+        self.reload()
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -62,29 +82,14 @@ class BossMsG(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.click:
                 self.hp_player -= random.randint(1, 12)
-
-
-            self.draw_bars()
+                self.hp_boss -= random.randint(1, 12)
+            # ------------------------------------------------------------------------------------------------------------------
+            self.draw_bars(dt)  # Draw Health Bars (See Method Above)
             # ------------------------------------------------------------------------------------------------------------------
             # Textbox
             pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
             draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             # ------------------------------------------------------------------------------------------------------------------
-            # pg.draw.line(self.game_canvas, red, (95, 0), (95, 1000))
-            # pg.draw.line(self.game_canvas, red, (1505, 0), (1505, 1000))
-            # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
-            # print(mx, my, self.hp_player, self.hp_boss)
-
-    def draw_bars(self):
-        # Bars
-        self.draw_bar_value_left(self.game_canvas, self.hp_player_max, self.hp_player, self.hp_bar_player, cw_green, white, 5, True, cw_dark_red, True, self.hp_player_last)
-        # self.draw_bar_right(self.game_canvas, self.hp_bar_boss, self.hp_bar_boss_x, self.hp_bar_boss_y, cw_green, white, 5, True)
-        # Player Text
-        draw_text_left("You", white, self.f_name, self.text_canvas, self.hp_bar_player[0], self.hp_bar_player[1] + self.hp_bar_player[3] * 2 + 5)
-        draw_text_left(str(ceil(self.hp_player)) + "HP", white, self.f_hp, self.text_canvas, self.hp_bar_player[0], self.hp_bar_player[1])
-        # Boss Text
-        # draw_text_right("Ms. G", white, self.f_name, self.text_canvas, self.hp_bar_boss[0] + self.hp_bar_boss[2] + 5, self.hp_bar_boss[1] + self.hp_bar_boss[3] * 2 + 5)
-        # draw_text_right(str(ceil(self.hp_boss)) + "HP", white, self.f_hp, self.text_canvas, self.hp_bar_boss[0] + self.hp_bar_boss[2] + 10, self.hp_bar_boss[1])
