@@ -37,7 +37,6 @@ class CardPair():
                 self.chosen1 = 1
             if rect_pair[1].collidepoint(m_pos):
                 self.chosen2 = 1
-            print(self.chosen1, self.chosen2)
 
     def draw_matching(self, default, screen, pos_mod):
         if self.chosen1:
@@ -83,6 +82,7 @@ class MatchingScreen:
                 return 2, 1, 1
             else:
                 count += a.chosen1 + a.chosen2
+        print(count)
         return count, 1, 0
 
     def reset(self):
