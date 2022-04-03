@@ -40,6 +40,7 @@ class BossDevilChan(Level):
             self.last_time = time.time()
             self.click = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
+            print(self.clock.get_fps())
             # ------------------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
@@ -101,6 +102,6 @@ class BossDevilChan(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            self.blit_screens(True, self.card_canvas)
+            self.blit_screens(card_pos_mod < self.height - 1, self.card_canvas)
             self.clock.tick(self.FPS)
             pg.display.update()
