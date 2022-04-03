@@ -14,9 +14,9 @@ def redraw_screen(surface, game_canvas, pos_mod, background=None):
 
 def move_screen(in_out, time_start, current_time, Y):
     if in_out:
-        pos = Y - Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
+        pos = Y - Y / (1 + 5 ** (((time_start - current_time) / 100) + 7))
     else:
-        pos = Y / (1 + 5 ** (-((current_time - time_start) * 1 / 100) + 7))
+        pos = Y / (1 + 5 ** (((time_start - current_time) / 100) + 7))
     return pos
 
 
@@ -89,41 +89,3 @@ class MatchingScreen:
                 self.card_set.pop(m)
             a.chosen1 = 0
             a.chosen2 = 0
-
-    def run(self, X, Y, size, margins, matches, delay, background):
-        clock = pg.time.Clock()
-        word = pg.font.SysFont('Comic Sans MS', 20)
-        time = 0
-        correct_matches = 0
-        f = [0]
-        close_time = pg.time.get_ticks()
-        pairs = 0
-        s = 1
-        while matches or close_time + delay[0] > pg.time.get_ticks():
-            pos_mod = move_screen(s, close_time, pg.time.get_ticks(), Y)
-            if not pairs:
-                pairs = self.generate_pairs(size, margins, ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * self.rows) / 2))
-            mouse_pos = [0, 0]
-            for event in pg.event.get():
-                pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    mouse_pos = list(pg.mouse.get_pos())
-            self.draw_cards(mouse_pos, f[0], background, pos_mod, matches and not close_time + delay[0] > pg.time.get_ticks())
-            f = self.complete()
-            if f[0] == 2:
-                if not time:
-                    time = pg.time.get_ticks()
-                if pg.time.get_ticks() > time + delay[1]:
-                    correct_matches += f[2]
-                    matches -= f[1]
-                    self.reset()
-                    time = 0
-                    if not matches:
-                        s = 0
-                        close_time = pg.time.get_ticks()
-            text = word.render("Energy: " + str(matches), True, (255, 0, 0))
-            self.screen.blit(text, (20, 10 + pos_mod))
-            clock.tick(60)
-        return correct_matches, True
-
-
