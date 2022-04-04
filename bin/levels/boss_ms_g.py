@@ -14,8 +14,8 @@ class BossMsG(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
-        self.background = pg.image.load(os.getcwd() + "\\resources\\Testing_Resources\\ui_demo.png").convert()
-        self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\boss_02-ms_g\\ms_g_siberia-02.png").convert_alpha(), (500, 500))
+        self.background = pg.image.load(os.getcwd() + "/resources/Testing_Resources/ui_demo.png").convert()
+        self.face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia-02.png").convert_alpha(), (500, 500))
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
         self.card_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()

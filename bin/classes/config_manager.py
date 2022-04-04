@@ -79,8 +79,8 @@ class Config(object):
     def load_media(self):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
-        self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
-        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
+        self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
+        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
 
     def get_config(self):

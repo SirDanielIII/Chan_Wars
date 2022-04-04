@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9168df90-ddc8-437a-8e15-6f9bb216cc3d" name="Changes" comment="">
+    <list default="true" id="9168df90-ddc8-437a-8e15-6f9bb216cc3d" name="Changes" comment="Comit">
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,6 +66,29 @@
       <option name="presentableId" value="Default" />
       <updated>1648780359020</updated>
     </task>
+    <task id="LOCAL-00001" summary="Comit">
+      <created>1648822827613</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1648822827613</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Comit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Comit" />
   </component>
 </project>
