@@ -4,12 +4,6 @@ import pygame as pg
 pg.font.init()
 
 
-def redraw_screen(surface, game_canvas, pos_mod, background=None):
-    # Here, Daniel removed the update to get rid of that flickering
-    if background:
-        surface.blit(background, (0, pos_mod))
-
-
 def move_screen(in_out, elapsed_time, Y):
     if in_out:
         pos = Y - Y / (1 + 5 ** (-(elapsed_time * 10) + 7))
@@ -70,8 +64,8 @@ class MatchingScreen:
         # Here Daniel unified the card set and teh rect set to make sure that neither order spontaneously changed while the program ran
         return self.set
 
-    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean, game_canvas):
-        redraw_screen(self.screen, game_canvas, pos_mod, background)
+    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+        self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for pair in self.set:
                 pair[0].choose(m_pos, choose_boolean, pair[1])
@@ -91,7 +85,6 @@ class MatchingScreen:
         for m, a in enumerate(self.set):
             if a[0].chosen1 + a[0].chosen2 == 2:
                 self.set.pop(m)
-                print(self.set)
             a[0].chosen1 = 0
             a[0].chosen2 = 0
 

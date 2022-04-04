@@ -18,6 +18,10 @@ class Boss(ABC):
         pass
 
     @abstractmethod
+    def load_boss_info(self):
+        pass
+
+    @abstractmethod
     def act(self):
         pass
 
@@ -45,9 +49,15 @@ class Boss(ABC):
 class DevilChan(Boss):
     def __init__(self, config):
         super().__init__()
-        self.metadata = config["DevilChan"]
+        self.metadata = config
         self.trigger = None
         self.special = 0
+        self.health = None
+        self.energy = None
+        self.basic_power = None
+        self.attack_phrases = None
+
+    def load_boss_info(self):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
@@ -56,7 +66,6 @@ class DevilChan(Boss):
     def update(self, damage):
         self.health -= damage
         self.energy = self.metadata["energy"]
-        return self.health, self.energy
 
     def trigger_method(self):
         self.trigger = "attack"

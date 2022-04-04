@@ -5,8 +5,8 @@ import os
 import math
 
 import bin.classes.config_manager as load
-import bin.classes.stopwatch as stopwatch
 
+from bin.classes.stopwatch import Timer
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
@@ -29,16 +29,6 @@ class Test(Level):
         self.game_transition_out = False  # Use this to stop the game\
         self.energy = 3
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.card_size
-        self.margins = (20, 30)
-        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
-        self.pairs = None
-        self.damage = 0
-        self.card_stopwatch = stopwatch.Timer()
-        self.transition_stopwatch = stopwatch.Timer()
-        self.card_complete = [0]
-        # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
-        # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.hp_player = None
@@ -49,11 +39,25 @@ class Test(Level):
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
         self.hp_bar_boss = None
+        # ------------------------------------------------------------------------------------------------------------------
+        self.size = self.config.card_size
+        self.margins = (20, 30)
+        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
+        self.pairs = None
+        self.damage = 0
+        self.action_stopwatch = Timer()
+        self.update_stopwatch = Timer()
+        self.transition_stopwatch = Timer()
+        self.card_stopwatch = Timer()
+        self.card_complete = [0]
+        self.devil_chan_boss = DChan(self.boss_data)
+        # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
         self.player.columns = 3
         self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
+        self.devil_chan_boss.metadata = self.boss_data
         self.hp_player = self.config.player_hp
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
@@ -76,7 +80,7 @@ class Test(Level):
         offset = 0 * dt  # VELOCITY FUNCTION HERE (SLOPE)
         center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
 
-    def run_card_game(self, click, dt):
+    def run_card_game(self, click):
         mouse_pos = (0, 0)
         if self.card_canvas_y != self.height:
             self.card_canvas.fill((255, 255, 255))
@@ -97,7 +101,7 @@ class Test(Level):
                         self.card_stopwatch.time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.card_stopwatch.seconds > 500, self.game_canvas)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.card_stopwatch.seconds > 500)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
@@ -113,6 +117,10 @@ class Test(Level):
 
     def run(self):
         self.reload()
+        self.devil_chan_boss.load_boss_info()
+        acted = None
+        completed = None
+        updated = None
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -147,19 +155,14 @@ class Test(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.click:
-                self.hp_player -= random.randint(1, 12)
-                # self.hp_boss -= random.randint(1, 12)
                 if not self.card_game and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
                     self.game_transition_out = False
-                    self.energy = 3
-                    self.damage = 0
                 elif self.card_game and self.energy == 0 and not self.game_transition_in and not self.game_transition_out:
                     # There should probably be a unified transitioning variable to shorten these if statements and the one above in run_card_game
                     self.game_transition_in = False
                     self.game_transition_out = True
-                    self.hp_boss -= self.damage
             # Added energy and damage counter reset and only pulls down the card screen when energy is equal to 0
             # ------------------------------------------------------------------------------------------------------------------
             # Card Game Display Driver
@@ -188,21 +191,49 @@ class Test(Level):
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
+                    acted = False
+                    completed = False
+                    updated = False
                     self.transition_stopwatch.time_reset()
             # The stopwatch was used to do the transitions
             # I chose to just use fixed values because the impact of the framerate is practically negligible and it is so much easier to code with just the fixed values
             # Taking the derivative of the function is already a nightmare, let alone trying to implement it into the game.
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
+                if not self.update_stopwatch.activate_timer and not updated:
+                    self.update_stopwatch.time_start()
+                self.update_stopwatch.stopwatch()
+                if self.update_stopwatch.seconds > 2:
+                    self.devil_chan_boss.update(self.damage)
+                    self.hp_boss = self.devil_chan_boss.health
+                    self.energy = self.devil_chan_boss.energy
+                    self.damage = 0
+                    updated = True
+                    self.update_stopwatch.time_reset()
+                if not self.action_stopwatch.activate_timer and not completed:
+                    self.action_stopwatch.time_start()
+                self.action_stopwatch.stopwatch()
+                print(self.action_stopwatch.seconds)
+                if self.action_stopwatch.seconds > 5 and not acted:
+                    self.devil_chan_boss.trigger_method()
+                    action = self.devil_chan_boss.act()
+                    self.hp_player -= action[1][0]
+                    self.hp_boss = self.devil_chan_boss.health
+                    acted = True
+                elif self.action_stopwatch.seconds > 7:
+                    self.game_transition_in = True
+                    self.game_transition_out = False
+                    self.action_stopwatch.time_reset()
+                    completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(dt)  # Draw Boss' Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             # ------------------------------------------------------------------------------------------------------------------
-            self.run_card_game(self.click, dt)
+            self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
-            print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)
+            # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)
