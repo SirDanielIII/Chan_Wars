@@ -34,33 +34,70 @@ class Test(Level):
         self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
         self.pairs = None
         self.damage = 0
-        self.stopwatch = stopwatch.Timer()
+        self.card_stopwatch = stopwatch.Timer()
+        self.transition_stopwatch = stopwatch.Timer()
+        self.card_complete = [0]
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
+        # ------------------------------------------------------------------------------------------------------------------
+        # Player Attributes
+        self.hp_player_rect = pg.Rect(100, 545, 330, 35)
+        self.hp_player = None
+        self.hp_bar_player = None
+        # ------------------------------------------------------------------------------------------------------------------
+        # Boss Attributes
+        self.boss_data = None
+        self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
+        self.hp_boss = None
+        self.hp_bar_boss = None
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
         self.player.columns = 3
+        self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
+        self.hp_player = self.config.player_hp
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_boss = self.boss_data["hp"]
+        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+
+    def draw_bars(self, dt):  # Draw Health bars
+        # Player Text & Health Bar
+        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y)
+        draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
+        self.hp_bar_player.render(self.hp_player, 0.3, dt)
+        # ------------------------------------------------------------------------------------------------------------------
+        # Boss Text & Health Bar
+        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+                        self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
+        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
+        self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
+
+    def draw_boss(self, dt):
+        offset = 0 * dt  # VELOCITY FUNCTION HERE (SLOPE)
+        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click, dt):
         mouse_pos = (0, 0)
         if self.card_canvas_y != self.height:
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
-            if not self.pairs:
-                self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-            card_complete = self.player.complete()
-            if card_complete[0] == 2:
-                if not self.stopwatch.activate_timer:
-                    self.stopwatch.time_start()
-                self.stopwatch.stopwatch()
-                if self.stopwatch.seconds > 1:
-                    self.damage += card_complete[2] * 10
-                    self.energy -= card_complete[1]
-                    self.player.reset()
-                    self.stopwatch.time_reset()
-            if click:
-                mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, card_complete[0], self.config.background, 0, self.energy and not self.stopwatch.seconds > 500, self.game_canvas)
+            if self.energy and not self.game_transition_in and not self.game_transition_out:
+                # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
+                if not self.pairs:
+                    self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+                self.card_complete = self.player.complete()
+                if self.card_complete[0] == 2:
+                    if not self.card_stopwatch.activate_timer:
+                        self.card_stopwatch.time_start()
+                    self.card_stopwatch.stopwatch()
+                    if self.card_stopwatch.seconds > 0.25:
+                        self.damage += self.card_complete[2] * 10
+                        self.energy -= self.card_complete[1]
+                        self.player.reset()
+                        self.card_stopwatch.time_reset()
+                if click:
+                    mouse_pos = tuple(pg.mouse.get_pos())
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.card_stopwatch.seconds > 500, self.game_canvas)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
@@ -109,86 +146,63 @@ class Test(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
+            if self.click:
+                self.hp_player -= random.randint(1, 12)
+                # self.hp_boss -= random.randint(1, 12)
+                if not self.card_game and not self.game_transition_in and not self.game_transition_out:
+                    # Daniel made it so that clicking won't interrupt the transitioning process
+                    self.game_transition_in = True
+                    self.game_transition_out = False
+                    self.energy = 3
+                    self.damage = 0
+                elif self.card_game and self.energy == 0 and not self.game_transition_in and not self.game_transition_out:
+                    # There should probably be a unified transitioning variable to shorten these if statements and the one above in run_card_game
+                    self.game_transition_in = False
+                    self.game_transition_out = True
+                    self.hp_boss -= self.damage
+            # Added energy and damage counter reset and only pulls down the card screen when energy is equal to 0
+            # ------------------------------------------------------------------------------------------------------------------
+            # Card Game Display Driver
+            # Transition In
+            if self.game_transition_in:
+                if not self.transition_stopwatch.activate_timer:
+                    self.transition_stopwatch.time_start()
+                self.transition_stopwatch.stopwatch()
+                if self.card_canvas_y > 1:
+                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height)
+                    # Here, Daniel rejected velocity and returned to fixed values
+                elif self.card_canvas_y <= 1:
+                    self.card_canvas_y = 0
+                    self.game_transition_in = False
+                    self.card_game = True
+                    self.transition_stopwatch.time_reset()
             # Transition Out
             if self.game_transition_out:
-                if self.card_canvas_y < self.height:
-                    self.card_canvas_y += 2 * dt  # INSERT VELOCITY FUNCTION HERE
+                if not self.transition_stopwatch.activate_timer:
+                    self.transition_stopwatch.time_start()
+                self.transition_stopwatch.stopwatch()
+                if self.card_canvas_y < self.height - 1:
+                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height)
+                    # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
-                elif self.card_canvas_y >= self.height:
+                elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
+                    self.transition_stopwatch.time_reset()
+            # The stopwatch was used to do the transitions
+            # I chose to just use fixed values because the impact of the framerate is practically negligible and it is so much easier to code with just the fixed values
+            # Taking the derivative of the function is already a nightmare, let alone trying to implement it into the game.
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.card_game:  # Don't render if the card game is fully up
+                self.draw_bars(dt)  # Draw Health Bars (See Method Above)
+                self.draw_boss(dt)  # Draw Boss' Image (See Method Above)
+                # Textbox
+                pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
+                draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             # ------------------------------------------------------------------------------------------------------------------
             self.run_card_game(self.click, dt)
-            if self.energy == 0:
-                self.game_transition_out = True
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
             print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)
-
-# def run(self):
-#     self.reload()
-#     configuration = self.config.get_config()["bosses"]
-#     size = (120, 180)
-#     margins = (20, 30)
-#     image_list = load.Config.load_images_resize(os.getcwd() + "/resources/chans", size) + [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), size)]
-#     background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (self.width, self.height))
-#     boss_turn = True
-#     sprite_size = (250, 250)
-#     boss_image = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png"), sprite_size)
-#     devil_chan_boss = DChan(configuration)
-#     player = card_pair.MatchingScreen(3, image_list, self.card_canvas)
-#     s = close_time = correct_matches = card_delay = player_damage = pairs = 0
-#     f = [0]
-#     energy = 3
-#     delay = (750, 500)
-#     mouse_pos = (0, 0)
-#     while True:
-#         # ------------------------------------------------------------------------------------------------------------------
-#         for event in pg.event.get():
-#             pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
-#             if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-#                 pg.quit()
-#                 sys.exit()
-#             if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
-#                 if event.button == 1:  # Left Mouse Button
-#                     self.click = True
-#                     if boss_turn:
-#                         boss_turn = False
-#                         s = 1
-#                         close_time = 0
-#                     else:
-#                         mouse_pos = mx, my
-#         # ------------------------------------------------------------------------------------------------------------------
-#         if boss_turn:
-#             boss_state = devil_chan_boss.update(player_damage)
-#             energy = boss_state[1]
-#             devil_chan_boss.trigger_method()
-#             action = devil_chan_boss.act()
-#         # ------------------------------------------------------------------------------------------------------------------
-#         else:
-#             if not close_time:
-#                 close_time = pg.time.get_ticks()
-#             if not pairs:
-#                 pairs = player.generate_pairs(size, margins, ((self.width - (margins[0] + size[0]) * 3) / 2, (self.height - (margins[1] + size[1]) * 4) / 2))
-#             f = player.complete()
-#             if f[0] == 2:
-#                 if not card_delay:
-#                     card_delay = pg.time.get_ticks()
-#                 if pg.time.get_ticks() > card_delay + delay[1]:
-#                     correct_matches += f[2]
-#                     energy -= f[1]
-#                     player.reset()
-#                     card_delay = 0
-#                     if not energy:
-#                         s = 0
-#                         close_time = pg.time.get_ticks()
-#                         boss_turn = True
-#         # ------------------------------------------------------------------------------------------------------------------
-#         self.game_canvas.fill((255, 255, 0))
-#         boss_pos_mod = 15 * math.sin(pg.time.get_ticks() / 1000)
-#         card_pos_mod = card_pair.move_screen(s, close_time, pg.time.get_ticks(), self.height)
-#         self.game_canvas.blit(boss_image, (self.width // 2 - sprite_size[0] // 2, self.height // 2 - sprite_size[1] // 2 + boss_pos_mod))
-#         player.draw_cards(mouse_pos, f[0], background, card_pos_mod, energy and not close_time + delay[0] > pg.time.get_ticks(), self.game_canvas)
-#         mouse_pos = (0, 0)
