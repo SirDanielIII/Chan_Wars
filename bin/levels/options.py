@@ -3,6 +3,7 @@ import sys
 import time
 import os
 
+from bin.blit_tools import draw_text_center, draw_text_left
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
@@ -11,8 +12,62 @@ from bin.colours import *
 class Options(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/04_settings_menu.png"), (self.width, self.height)).convert()
+        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/04_settings_menu.png"),
+                                             (self.width, self.height)).convert()
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
+        # Options
+        self.align_01_x = 100
+        self.align_01_y = 300
+        self.button_size = 50
+
+    def draw_fps_settings(self):
+        # FPS Mode - Rectangles
+
+        video_header = self.config.f_options_title.render("Video", True, cw_yellow)
+        draw_text_left("Video", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_01_x, 265)
+        # fps_1 = pg.Rect(self.align_01_x, 300, c.square_grid, c.square_grid)
+        # pg.draw.rect(self.game_canvas, white, fps_1)
+        # fps_2 = pg.Rect(self.align_01_x, 400, c.square_grid, c.square_grid)
+        # pg.draw.rect(self.game_canvas, white, fps_2)
+        # fps_3 = pg.Rect(self.align_01_x, 500, c.square_grid, c.square_grid)
+        # pg.draw.rect(self.game_canvas, white, fps_3)
+        # fps_4 = pg.Rect(self.align_01_x, 600, c.square_grid, c.square_grid)
+        # pg.draw.rect(self.game_canvas, white, fps_4)
+        # fps_5 = pg.Rect(self.align_01_x, 700, c.square_grid, c.square_grid)
+        # pg.draw.rect(self.game_canvas, white, fps_5)
+        # # Applying Options
+        # if fps_potato:
+        #     fps_o0 = pg.Rect(100 + 5, 300 + 5, c.square_grid - 10, c.square_grid - 10)
+        #     pg.draw.rect(options_menu, c.ms_red, fps_o0)
+        # elif fps_30:
+        #     fps_o1 = pg.Rect(100 + 5, 400 + 5, c.square_grid - 10, c.square_grid - 10)
+        #     pg.draw.rect(options_menu, c.ms_red, fps_o1)
+        # elif fps_60:
+        #     fps_o2 = pg.Rect(100 + 5, 500 + 5, c.square_grid - 10, c.square_grid - 10)
+        #     pg.draw.rect(options_menu, c.ms_red, fps_o2)
+        # elif fps_75:
+        #     fps_o3 = pg.Rect(100 + 5, 600 + 5, c.square_grid - 10, c.square_grid - 10)
+        #     pg.draw.rect(options_menu, c.ms_red, fps_o3)
+        # elif fps_165:
+        #     fps_o4 = pg.Rect(100 + 5, 700 + 5, c.square_grid - 10, c.square_grid - 10)
+        #     pg.draw.rect(options_menu, c.ms_red, fps_o4)
+        # # FPS Mode - Text
+        draw_text_left("Fullscreen", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y)
+        draw_text_left("Show FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 2)
+        draw_text_left("30 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 4)
+        draw_text_left("60 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 6)
+        draw_text_left("75 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 8)
+        draw_text_left("165 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 10)
+        # fps_t1 = f_setting.render("Potato", True, white)
+        # options_menu.blit(fps_t1, (200, 300))
+        # fps_t2 = f_setting.render("30 FPS", True, white)
+        # options_menu.blit(fps_t2, (200, 400))
+        # fps_t3 = f_setting.render("60 FPS", True, white)
+        # options_menu.blit(fps_t3, (200, 500))
+        # fps_t4 = f_setting.render("75 FPS", True, white)
+        # options_menu.blit(fps_t4, (200, 600))
+        # fps_t5 = f_setting.render("165 FPS", True, white)
+        # options_menu.blit(fps_t5, (200, 700))
 
     def run(self):
         while True:
@@ -38,47 +93,9 @@ class Options(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
+            self.background.set_alpha(50)
             self.game_canvas.blit(self.background, (0, 0))
 
-            # # FPS Mode - Rectangles
-            # m_MS_extra_modules.draw_text("FPS Modes", c.ms_yellow, f_sub_menu, options_menu, 200, 250)
-            # fps_1 = pg.Rect(100, 300, c.square_grid, c.square_grid)
-            # pg.draw.rect(options_menu, white, fps_1)
-            # fps_2 = pg.Rect(100, 400, c.square_grid, c.square_grid)
-            # pg.draw.rect(options_menu, white, fps_2)
-            # fps_3 = pg.Rect(100, 500, c.square_grid, c.square_grid)
-            # pg.draw.rect(options_menu, white, fps_3)
-            # fps_4 = pg.Rect(100, 600, c.square_grid, c.square_grid)
-            # pg.draw.rect(options_menu, white, fps_4)
-            # fps_5 = pg.Rect(100, 700, c.square_grid, c.square_grid)
-            # pg.draw.rect(options_menu, white, fps_5)
-            # # Applying Options
-            # if fps_potato:
-            #     fps_o0 = pg.Rect(100 + 5, 300 + 5, c.square_grid - 10, c.square_grid - 10)
-            #     pg.draw.rect(options_menu, c.ms_red, fps_o0)
-            # elif fps_30:
-            #     fps_o1 = pg.Rect(100 + 5, 400 + 5, c.square_grid - 10, c.square_grid - 10)
-            #     pg.draw.rect(options_menu, c.ms_red, fps_o1)
-            # elif fps_60:
-            #     fps_o2 = pg.Rect(100 + 5, 500 + 5, c.square_grid - 10, c.square_grid - 10)
-            #     pg.draw.rect(options_menu, c.ms_red, fps_o2)
-            # elif fps_75:
-            #     fps_o3 = pg.Rect(100 + 5, 600 + 5, c.square_grid - 10, c.square_grid - 10)
-            #     pg.draw.rect(options_menu, c.ms_red, fps_o3)
-            # elif fps_165:
-            #     fps_o4 = pg.Rect(100 + 5, 700 + 5, c.square_grid - 10, c.square_grid - 10)
-            #     pg.draw.rect(options_menu, c.ms_red, fps_o4)
-            # # FPS Mode - Text
-            # fps_t1 = f_setting.render("Potato", True, white)
-            # options_menu.blit(fps_t1, (200, 300))
-            # fps_t2 = f_setting.render("30 FPS", True, white)
-            # options_menu.blit(fps_t2, (200, 400))
-            # fps_t3 = f_setting.render("60 FPS", True, white)
-            # options_menu.blit(fps_t3, (200, 500))
-            # fps_t4 = f_setting.render("75 FPS", True, white)
-            # options_menu.blit(fps_t4, (200, 600))
-            # fps_t5 = f_setting.render("165 FPS", True, white)
-            # options_menu.blit(fps_t5, (200, 700))
             # # ------------------------------------------------------------------------------------------------------------------
             # # Game Settings - Rectangles
             # m_MS_extra_modules.draw_text("Game Settings", c.ms_yellow, f_sub_menu, options_menu, 588, 250)
@@ -250,6 +267,9 @@ class Options(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
+            self.draw_fps_settings()
+            # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
+            print(mx, my)

@@ -16,6 +16,8 @@ class Config(object):
         # Fonts
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
+        self.f_options_title = None
+        self.f_options_sub = None
         # Other
         self.highest_level_beat = None
         self.boss_face_size = None
@@ -32,26 +34,35 @@ class Config(object):
         self.fps_165 = None
         # Data
         self.data = None
-        self.default = {'bosses': {'DevilChan': {'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 50, 'name': 'Devil Chan', 'phrases': {
-            'attack': ['For My Lost Love!', 'World Shaking Explosion Fist!', 'North Star Spear!', 'Million Soul Bomb!', 'Burning Sun Beam!', 'Point Two Electron Volts!'],
-            'death': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'], 'opening': ['Angel Chan... I loved you!', 'How could you do this!?'],
-            'special': ["That's a neat little hack that I found.", "With this hack, I'll steal your health for myself.", "I hope you're prepared for this.",
-                        "You know, I'm something of a scientist myself."]}, 'rows': 4, 'special': ['neat_hack', 10, 10]},
-                                   'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 5, 'hp': 200, 'kill': ['thinking_question', 9999], 'name': 'Mr. Phone',
-                                               'phrases': {
-                                                   'attack': ['You need to touch grass.', 'My son could beat you at this game.', 'Easy choices hard life, hard choices easy life.',
-                                                              "It's only awkward if you make it awkward.", 'You have to build capacity.',
-                                                              "You chose that? Come on, that's crazy talk!!!"],
-                                                   'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
-                                                   'kill': ['Next time, just practice perfectly.', 'My record just increased :p'], 'opening': ['Did you write your TQP?'],
-                                                   'special': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!',
-                                                               'Face the monster... ME!', 'Keep your head on a swivel!']}, 'rows': 4, 'special': ['emotional_damage', 0]},
+        self.default = {'bosses': {'DevilChan': {'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 50, 'name': 'Devil Chan',
+                                                 'phrases': {'attack': ['For My Lost Love!', 'World Shaking Explosion Fist!', 'North Star Spear!',
+                                                                        'Million Soul Bomb!', 'Burning Sun Beam!', 'Point Two Electron Volts!'],
+                                                             'death': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'],
+                                                             'opening': ['Angel Chan... I loved you!', 'How could you do this!?'],
+                                                             'special': ["That's a neat little hack that I found.",
+                                                                         "With this hack, I'll steal your health for myself.",
+                                                                         "I hope you're prepared for this.",
+                                                                         "You know, I'm something of a scientist myself."]}, 'rows': 4,
+                                                 'special': ['neat_hack', 10, 10]},
+                                   'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 5, 'hp': 200,
+                                               'kill': ['thinking_question', 9999], 'name': 'Mr. Phone', 'phrases': {
+                                           'attack': ['You need to touch grass.', 'My son could beat you at this game.',
+                                                      'Easy choices hard life, hard choices easy life.', "It's only awkward if you make it awkward.",
+                                                      'You have to build capacity.', "You chose that? Come on, that's crazy talk!!!"],
+                                           'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
+                                           'kill': ['Next time, just practice perfectly.', 'My record just increased :p'],
+                                           'opening': ['Did you write your TQP?'],
+                                           'special': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!',
+                                                       'Face the monster... ME!', 'Keep your head on a swivel!']}, 'rows': 4,
+                                               'special': ['emotional_damage', 0]},
                                    'MsG': {'basic': ['roast', 15], 'columns': 4, 'energy': 4, 'hp': 100, 'name': 'Ms. G', 'phrases': {
                                        'attack': ['For Sean!', "One of them is a woman, the other has an Indian accent if you're into it.",
-                                                  "I'll only give you 100% if youâ€™re one of my favourite students.", 'Do it on Repl.it!!!', "Don't ask me, use your brain.",
-                                                  'I have WELHpon *pulls out a meter stick*'], 'death': ['why must you use... list comphrehension... *dies*'],
+                                                  "I'll only give you 100% if youâ€™re one of my favourite students.", 'Do it on Repl.it!!!',
+                                                  "Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'],
+                                       'death': ['why must you use... list comphrehension... *dies*'],
                                        'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"],
-                                       'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5, 'special': ['siberia', 'siberia']}}, 'player': {'hp': 50},
+                                       'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5,
+                                           'special': ['siberia', 'siberia']}}, 'player': {'hp': 50},
                         'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
                                      'fps': {'show': False, 30: False, 60: False, 75: False, 165: True}, 'fullscreen': False},
                         'other': {'highest_level_beat': 0, 'boss_face_size': [500, 500]}}
@@ -81,7 +92,10 @@ class Config(object):
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
-        self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
+        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 60)
+        self.f_options_sub = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
+        self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(),
+                                                        self.boss_face_size)
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,

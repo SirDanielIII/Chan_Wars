@@ -42,16 +42,17 @@ class BossMrPhone(Level):
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
 
     def draw_bars(self, dt):  # Draw Health bars
-        # Player Text & Health Bar
-        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y)
-        draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
+        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+                       self.hp_bar_player.x, self.hp_bar_player.y - self.hp_bar_player.h * 3)
+        draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x,
+                       self.hp_bar_player.y + self.hp_bar_player.h + 5)
         self.hp_bar_player.render(self.hp_player, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
         draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.text_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
+                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
     def run_card_game(self, click, dt):

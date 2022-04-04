@@ -49,7 +49,7 @@ def draw_text_left(text, colour, font_type, screen, x, y):  # Draws Centered Tex
     text_obj = font_type.render(text, True, colour)
     text_rect = text_obj.get_rect()
     text_rect.left = x
-    text_rect.bottom = y
+    text_rect.top = y
     screen.blit(text_obj, text_rect)
 
 
