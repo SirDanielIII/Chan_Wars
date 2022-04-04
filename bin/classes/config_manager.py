@@ -11,6 +11,10 @@ class Config(object):
         self.menu_img = None
         self.boss_card = None
         self.DEVIL_CHAN_face = None
+        # ----------------------------------------------------------------------------------------------------------------------------
+        self.image_list = None
+        self.background = None
+        # Added by Daniel to load in the chan images and the card back as well as the background
         self.MS_G_faces = None
         self.MR_PHONE_faces = None
         # Fonts
@@ -19,6 +23,9 @@ class Config(object):
         # Other
         self.highest_level_beat = None
         self.boss_face_size = None
+        # ----------------------------------------------------------------------------------------------------------------------------
+        self.card_size = (120, 180)
+        # Added in by Daniel to allow for the configuring of the card sizes
         # Settings
         self.player_hp = None
         self.enable_music = None
@@ -79,6 +86,10 @@ class Config(object):
     def load_media(self):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
+        # ----------------------------------------------------------------------------------------------------------------------------
+        self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
+        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (1600, 900))
+        # Added by Daniel to load in the chan images and the card back as well as the background
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)

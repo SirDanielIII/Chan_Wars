@@ -6,8 +6,7 @@ pg.font.init()
 
 
 def redraw_screen(surface, game_canvas, pos_mod, background=None):
-    pg.display.update()
-    surface.blit(game_canvas, (0, 0))
+    # Here, Daniel removed the update to get rid of that flickering
     if background:
         surface.blit(background, (0, pos_mod))
 
@@ -58,10 +57,13 @@ class MatchingScreen:
         self.card_set = []
         self.rect_set = []
 
-    def generate_pairs(self, size, m, o_set):
+    def generate_pairs(self, size, margins, X, Y):
+        # ------------------------------------------------------------------------------------------------------------------
+        o_set = ((X - (margins[0] + size[0]) * 3) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
+        # Daniel made it so that the offset was calculated in the method and not in the parameters
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
         pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
-        self.card_set = [CardPair(self.image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, m, self.columns, o_set)
+        self.card_set = [CardPair(self.image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, margins, self.columns, o_set)
                          for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         self.rect_set = [(pg.Rect(card_pair.position1[0], card_pair.position1[1], card_pair.size[0], card_pair.size[1]),
                          pg.Rect(card_pair.position2[0], card_pair.position2[1], card_pair.size[0], card_pair.size[1])) for card_pair in self.card_set]
@@ -82,7 +84,6 @@ class MatchingScreen:
                 return 2, 1, 1
             else:
                 count += a.chosen1 + a.chosen2
-        print(count)
         return count, 1, 0
 
     def reset(self):
