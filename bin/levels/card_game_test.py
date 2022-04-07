@@ -93,7 +93,6 @@ class Test(Level):
                 if self.card_complete[0] == 2:
                     if not self.card_stopwatch.activate_timer:
                         self.card_stopwatch.time_start()
-                    self.card_stopwatch.stopwatch()
                     if self.card_stopwatch.seconds > 0.25:
                         self.damage += self.card_complete[2] * 10
                         self.energy -= self.card_complete[1]
@@ -121,6 +120,8 @@ class Test(Level):
         acted = None
         completed = None
         updated = None
+        milliseconds = pg.USEREVENT
+        pg.time.set_timer(milliseconds, 10)
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -137,6 +138,11 @@ class Test(Level):
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
+                if event.type == milliseconds:
+                    self.transition_stopwatch.stopwatch()
+                    self.update_stopwatch.stopwatch()
+                    self.action_stopwatch.stopwatch()
+                    self.card_stopwatch.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
                 self.transition_in("game", self.game_canvas, dt)
@@ -170,9 +176,8 @@ class Test(Level):
             if self.game_transition_in:
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
-                self.transition_stopwatch.stopwatch()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height)
+                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height, 50)
                     # Here, Daniel rejected velocity and returned to fixed values
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
@@ -183,9 +188,8 @@ class Test(Level):
             if self.game_transition_out:
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
-                self.transition_stopwatch.stopwatch()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height)
+                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 50)
                     # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
@@ -202,7 +206,6 @@ class Test(Level):
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.update_stopwatch.activate_timer and not updated:
                     self.update_stopwatch.time_start()
-                self.update_stopwatch.stopwatch()
                 if self.update_stopwatch.seconds > 2:
                     self.devil_chan_boss.update(self.damage)
                     self.hp_boss = self.devil_chan_boss.health
@@ -212,7 +215,6 @@ class Test(Level):
                     self.update_stopwatch.time_reset()
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
-                self.action_stopwatch.stopwatch()
                 print(self.action_stopwatch.seconds)
                 if self.action_stopwatch.seconds > 5 and not acted:
                     self.devil_chan_boss.trigger_method()

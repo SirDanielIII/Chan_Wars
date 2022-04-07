@@ -4,12 +4,13 @@ import pygame as pg
 pg.font.init()
 
 
-def move_screen(in_out, elapsed_time, Y):
+def move_screen(in_out, elapsed_time, Y, speed):
     if in_out:
-        pos = Y - Y / (1 + 5 ** (-(elapsed_time * 10) + 7))
+        pos = Y - Y / (1 + speed ** (-(elapsed_time * 10) + 7))
     else:
-        pos = Y / (1 + 5 ** (-(elapsed_time * 10) + 7))
+        pos = Y / (1 + speed ** (-(elapsed_time * 10) + 7))
     # The move screen method was edited to work with elapsed time as opposed to calculating elapsed time using the given values
+    # Time needs to be based off of milliseconds (framerate independent)
     return pos
 
 
