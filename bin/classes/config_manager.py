@@ -11,6 +11,7 @@ class Config(object):
         self.menu_img = None
         self.boss_card = None
         self.DEVIL_CHAN_face = None
+        self.DEVIL_CHAN_background = None
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_list = None
         self.background = None
@@ -88,7 +89,8 @@ class Config(object):
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
-        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (1600, 900))
+        self.background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (1600, 900))
+        self.DEVIL_CHAN_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert_alpha(), (1600, 900))
         # Added by Daniel to load in the chan images and the card back as well as the background
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)

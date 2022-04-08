@@ -23,8 +23,8 @@ class Test(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
         self.card_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
-        self.card_canvas_y = 0
-        self.card_game = True
+        self.card_canvas_y = self.height
+        self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False  # Use this to stop the game\
         self.energy = 3
@@ -117,9 +117,9 @@ class Test(Level):
     def run(self):
         self.reload()
         self.devil_chan_boss.load_boss_info()
-        acted = None
-        completed = None
-        updated = None
+        acted = True
+        completed = False
+        updated = True
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
         while True:
@@ -150,7 +150,7 @@ class Test(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.fill((random.randint(0, 50), 0, random.randint(0, 50)))
+            self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -177,7 +177,7 @@ class Test(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height, 50)
+                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
@@ -189,7 +189,7 @@ class Test(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 50)
+                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
@@ -206,7 +206,7 @@ class Test(Level):
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.update_stopwatch.activate_timer and not updated:
                     self.update_stopwatch.time_start()
-                if self.update_stopwatch.seconds > 2:
+                if self.update_stopwatch.seconds > 1:
                     self.devil_chan_boss.update(self.damage)
                     self.hp_boss = self.devil_chan_boss.health
                     self.energy = self.devil_chan_boss.energy
@@ -215,14 +215,14 @@ class Test(Level):
                     self.update_stopwatch.time_reset()
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
-                print(self.action_stopwatch.seconds)
-                if self.action_stopwatch.seconds > 5 and not acted:
+                if self.action_stopwatch.seconds > 2 and not acted:
                     self.devil_chan_boss.trigger_method()
                     action = self.devil_chan_boss.act()
-                    self.hp_player -= action[1][0]
+                    if action[1][0] != "die":
+                        self.hp_player -= action[1][0]
                     self.hp_boss = self.devil_chan_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 7:
+                elif self.action_stopwatch.seconds > 4:
                     self.game_transition_in = True
                     self.game_transition_out = False
                     self.action_stopwatch.time_reset()
