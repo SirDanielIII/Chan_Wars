@@ -119,7 +119,7 @@ class Test(Level):
         self.reload()
         self.devil_chan_boss.load_boss_info()
         acted = True
-        completed = False
+        completed = True
         updated = True
         milliseconds = pg.USEREVENT
         time_elapsed = Timer()
