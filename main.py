@@ -13,7 +13,7 @@ from bin.levels.boot import Boot
 from bin.levels.boss_ms_g import BossMsG
 from bin.levels.card_game_test import Test
 from bin.levels.credits import Credits
-from bin.levels.boss_devil_chan import BossDevilChan
+from bin.levels.card_game_test import Test as BossDevilChan
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
