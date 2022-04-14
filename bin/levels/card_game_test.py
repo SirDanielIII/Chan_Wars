@@ -49,9 +49,9 @@ class Test(Level):
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
         self.card_stopwatch = Timer()
+        self.death_stopwatch = Timer()
         self.card_complete = [0]
         self.devil_chan_boss = DChan(self.boss_data)
-        self.win = False
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
@@ -146,6 +146,7 @@ class Test(Level):
                     self.update_stopwatch.stopwatch()
                     self.action_stopwatch.stopwatch()
                     self.card_stopwatch.stopwatch()
+                    self.death_stopwatch.stopwatch()
                     time_elapsed.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
@@ -164,7 +165,7 @@ class Test(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click:
+            if self.click and self.hp_boss and self.hp_player:
                 if not self.card_game and completed and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
@@ -213,22 +214,23 @@ class Test(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1:
-                    self.devil_chan_boss.update(self.damage)
+                    self.devil_chan_boss.update(self.damage + 20)
                     self.hp_boss = self.devil_chan_boss.health
                     self.energy = self.devil_chan_boss.energy
                     self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
-                if self.action_stopwatch.seconds > 2 and not acted:
+                if self.action_stopwatch.seconds > 1.5 and not acted:
                     self.devil_chan_boss.trigger_method()
                     action = self.devil_chan_boss.act()
-                    if action[1][0] != "die":
+                    if action[0] != "die":
+                        print(action[1][0])
                         self.hp_player -= action[1][0]
                     else:
-                        self.win = True
+                        pass
                     self.hp_boss = self.devil_chan_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 4:
+                elif self.action_stopwatch.seconds > 2:
                     self.action_stopwatch.time_reset()
                     completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
@@ -236,8 +238,19 @@ class Test(Level):
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
+            if self.hp_player <= 0:
+                self.death_stopwatch.time_start()
+                if self.death_stopwatch.seconds > 1:
+                    self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.game_canvas.blit(self.config.lose_screen, (0, 0))
+            elif self.hp_boss <= 0:
+                self.death_stopwatch.time_start()
+                if self.death_stopwatch.seconds > 1:
+                    self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            self.run_card_game(self.click)
+            if self.hp_boss and self.hp_player:
+                self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
