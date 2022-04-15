@@ -158,20 +158,25 @@ class MsG(Boss):
 class MrPhone(Boss):
     def __init__(self, config):
         super().__init__()
-        self.metadata = config["MrPhone"]
+        self.metadata = config
         self.trigger = None
-        self.acting = True  # Whether or not it's the boss's turn
         self.special = 0
+        self.health = None
+        self.energy = None
+        self.basic_power = None
+        self.attack_phrases = None
+        self.special = 0
+        self.damaged = True
+        self.turn_count = 0
+
+    def load_boss_info(self):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
-        self.damaged = True
-        self.turn_count = 1
 
-    def update(self, damage, turn_counter, boss_turn):
+    def update(self, damage, turn_counter):
         self.health -= damage
-        self.acting = boss_turn
         self.damaged = False
         if damage:
             self.damaged = True
@@ -180,14 +185,13 @@ class MrPhone(Boss):
         return self.health, self.energy
 
     def trigger_method(self):
-        if self.acting:
-            self.trigger = "attack"
-            if not self.turn_count % 4:
-                self.trigger = "special"
-            if not self.damaged:
-                self.trigger = "kill"
-            if self.health <= 0:
-                self.trigger = "die"
+        self.trigger = "attack"
+        if not self.turn_count % 4:
+            self.trigger = "special"
+        if not self.damaged:
+            self.trigger = "kill"
+        if self.health <= 0:
+            self.trigger = "die"
 
     def act(self):
         match self.trigger:
@@ -201,13 +205,13 @@ class MrPhone(Boss):
                 return self.trigger, self.kill()
 
     def kill(self):
-        return self.metadata["kill"][1], self.metadata["phrases"]["kill"][random.randint(0, len(self.metadata["phrases"]["kill"]) - 1)]
+        return self.metadata["kill"][1], self.metadata["phrases"]["kill"][random.randint(0, len(self.metadata["phrases"]["kill"]) - 1)], "good_game"
 
     def death(self):
-        return self.metadata["phrases"]["death"]
+        return self.metadata["phrases"]["death"], "death"
 
     def basic_action(self):
-        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
+        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "thinking_question"
 
     def special_action(self):
-        return self.metadata["special"][1], self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)]
+        return self.metadata["special"][1], self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)], "disappointment"

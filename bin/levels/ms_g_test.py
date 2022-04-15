@@ -56,7 +56,7 @@ class BossMsG(Level):
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
-        self.player.columns = 3
+        self.player.columns = 5
         self.boss_data = self.config.get_config()["bosses"]["MsG"]
         self.ms_g_boss.metadata = self.boss_data
         self.hp_player = self.config.player_hp

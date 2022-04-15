@@ -1,4 +1,3 @@
-import random
 import sys
 import time
 import os
@@ -12,11 +11,11 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.bosses import DevilChan as DChan
+from bin.classes.bosses import MrPhone
 import bin.classes.card_pair as card_pair
 
 
-class Test(Level):
+class BossMrPhone(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
@@ -27,7 +26,7 @@ class Test(Level):
         self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False  # Use this to stop the game\
-        self.energy = 3
+        self.energy = 4
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
@@ -51,18 +50,21 @@ class Test(Level):
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
-        self.devil_chan_boss = DChan(self.boss_data)
+        self.mr_phone_boss = MrPhone(self.boss_data)
+        self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
-        self.player.columns = 3
-        self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
-        self.devil_chan_boss.metadata = self.boss_data
+        self.player.columns = 5
+        self.boss_data = self.config.get_config()["bosses"]["MrPhone"]
+        self.mr_phone_boss.metadata = self.boss_data
         self.hp_player = self.config.player_hp
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        print(self.config.MR_PHONE_faces)
+        self.face = self.config.MR_PHONE_faces["normal"]
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -79,7 +81,7 @@ class Test(Level):
 
     def draw_boss(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
-        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -117,14 +119,15 @@ class Test(Level):
 
     def run(self):
         self.reload()
-        self.devil_chan_boss.load_boss_info()
+        self.mr_phone_boss.load_boss_info()
         acted = True
-        completed = True
+        completed = False
         updated = True
         milliseconds = pg.USEREVENT
         time_elapsed = Timer()
         time_elapsed.time_start()
         pg.time.set_timer(milliseconds, 10)
+        counter = 0
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -155,7 +158,7 @@ class Test(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
+            self.game_canvas.blit(self.config.MR_PHONE_background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -213,26 +216,28 @@ class Test(Level):
                     self.update_stopwatch.time_start()
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
-                if self.update_stopwatch.seconds > 1:
-                    self.devil_chan_boss.update(self.damage + 20)
-                    self.hp_boss = self.devil_chan_boss.health
-                    self.energy = self.devil_chan_boss.energy
+                if self.update_stopwatch.seconds > 1.5:
+                    self.mr_phone_boss.update(self.damage, counter)
+                    self.hp_boss = self.mr_phone_boss.health
+                    self.energy = self.mr_phone_boss.energy
+                    if self.damage:
+                        self.face = self.config.MR_PHONE_faces["hit"]
                     self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
-                if self.action_stopwatch.seconds > 1.5 and not acted:
-                    self.devil_chan_boss.trigger_method()
-                    action = self.devil_chan_boss.act()
+                if self.action_stopwatch.seconds > 2.5 and not acted:
+                    self.mr_phone_boss.trigger_method()
+                    action = self.mr_phone_boss.act()
                     if action[0] != "die":
-                        print(action[1][0])
                         self.hp_player -= action[1][0]
-                    else:
-                        pass
-                    self.hp_boss = self.devil_chan_boss.health
+                    self.face = self.config.MR_PHONE_faces[action[1][-1]]
+                    self.hp_boss = self.mr_phone_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 2:
+                elif self.action_stopwatch.seconds > 5 or (not counter and self.action_stopwatch.seconds > 2):
                     self.action_stopwatch.time_reset()
                     completed = True
+                    self.face = self.config.MR_PHONE_faces["normal"]
+                    counter += 1
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
                 # Textbox

@@ -21,6 +21,7 @@ class Config(object):
         self.MS_G_faces = None
         self.MS_G_backgrounds = None
         self.MR_PHONE_faces = None
+        self.MR_PHONE_background = None
         # Fonts
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
@@ -105,6 +106,9 @@ class Config(object):
                            for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")}
         self.MS_G_backgrounds = [pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert_alpha(), (1600, 900)),
                                  pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert_alpha(), (1600, 900))]
+        self.MR_PHONE_faces = {filename[6:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/" + filename), self.boss_face_size).convert_alpha()
+                               for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}
+        self.MR_PHONE_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert_alpha(), (1600, 900))
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
