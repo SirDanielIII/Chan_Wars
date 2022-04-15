@@ -51,6 +51,7 @@ class BossMsG(Level):
         self.death_stopwatch = Timer()
         self.card_complete = [0]
         self.ms_g_boss = MsG(self.boss_data)
+        self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
@@ -62,6 +63,7 @@ class BossMsG(Level):
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.face = self.config.MS_G_faces["normal"]
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -78,7 +80,7 @@ class BossMsG(Level):
 
     def draw_boss(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
-        center_blit_image(self.game_canvas, self.config.MS_G_faces[0], self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -217,14 +219,16 @@ class BossMsG(Level):
                     self.update_stopwatch.time_start()
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
-                if self.update_stopwatch.seconds > 1:
+                if self.update_stopwatch.seconds > 1.5:
                     self.ms_g_boss.update(self.damage)
                     self.hp_boss = self.ms_g_boss.health
                     self.energy = self.ms_g_boss.energy
-                    self.damage = 30
+                    if self.damage:
+                        self.face = self.config.MS_G_faces["hit"]
+                    self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
-                if self.action_stopwatch.seconds > 1.5 and not acted:
+                if self.action_stopwatch.seconds > 2.5 and not acted:
                     self.ms_g_boss.trigger_method()
                     action = self.ms_g_boss.act()
                     if action[0] != "die" and action[0] != "special":
@@ -232,11 +236,13 @@ class BossMsG(Level):
                     elif action[0] == "special":
                         self.ms_g_boss.update(0)
                         self.energy = self.ms_g_boss.energy
+                    self.face = self.config.MS_G_faces[action[1][-1]]
                     self.hp_boss = self.ms_g_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 2:
+                elif self.action_stopwatch.seconds > 5:
                     self.action_stopwatch.time_reset()
                     completed = True
+                    self.face = self.config.MS_G_faces["normal"]
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
                 # Textbox

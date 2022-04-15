@@ -138,28 +138,26 @@ class MsG(Boss):
                 return self.trigger, self.special_action()
 
     def death(self):
-        return self.metadata["phrases"]["death"]
+        return self.metadata["phrases"]["death"], "death"
 
     def basic_action(self):
-        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
+        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "normal"
 
     def special_action(self):
         if not self.siberia:
             self.special = 1
             self.siberia = True
-            return self.siberia, self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)]
+            return self.siberia, self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)], "siberia-01"
         else:
             self.special = 1
             self.siberia = False
-            print(self.metadata)
-            return self.siberia, self.metadata["phrases"]["special"]
+            return self.siberia, self.metadata["phrases"]["special"], "siberia-02"
             # ["out"]
 
 
 class MrPhone(Boss):
-    def __init__(self, surface, config):
+    def __init__(self, config):
         super().__init__()
-        self.screen = surface
         self.metadata = config["MrPhone"]
         self.trigger = None
         self.acting = True  # Whether or not it's the boss's turn
