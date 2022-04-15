@@ -97,47 +97,45 @@ class DevilChan(Boss):
 
 
 class MsG(Boss):
-    def __init__(self, surface, config):
+    def __init__(self, config):
         super().__init__()
-        self.screen = surface
-        self.metadata = config["MsG"]
+        self.metadata = config
         self.trigger = None
-        self.acting = True  # Whether or not it's the boss's turn
         self.special = 0
+        self.health = None
+        self.energy = None
+        self.basic_power = None
+        self.attack_phrases = None
+        self.siberia = False
+
+    def load_boss_info(self):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
-        self.siberia = False
 
-    def update(self, damage, boss_turn):
+    def update(self, damage):
         self.health -= damage
-        self.acting = boss_turn
         if self.siberia:
             self.energy = self.metadata["energy"] - 1
         else:
             self.energy = self.metadata["energy"]
-        return self.health, self.energy, self.siberia
 
     def trigger_method(self):
-        if self.acting:
-            self.trigger = "attack"
-            if self.health != self.metadata["hp"] and self.health > self.metadata["hp"] // 2:
-                self.special = 0
-            if (self.health == self.metadata["hp"] and not self.special) or (self.health <= self.metadata["hp"] // 2 and not self.special):
-                self.trigger = "special"
-            if self.health <= 0:
-                self.trigger = "die"
+        self.trigger = "attack"
+        if (self.health == self.metadata["hp"] and not self.special) or (self.health <= self.metadata["hp"] // 2 and self.siberia):
+            self.trigger = "special"
+        if self.health <= 0:
+            self.trigger = "die"
 
     def act(self):
-        if self.acting:
-            match self.trigger:
-                case "attack":
-                    return self.trigger, self.basic_action()
-                case "die":
-                    return self.trigger, self.death()
-                case "special":
-                    return self.trigger, self.special_action()
+        match self.trigger:
+            case "attack":
+                return self.trigger, self.basic_action()
+            case "die":
+                return self.trigger, self.death()
+            case "special":
+                return self.trigger, self.special_action()
 
     def death(self):
         return self.metadata["phrases"]["death"]
@@ -146,14 +144,16 @@ class MsG(Boss):
         return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
 
     def special_action(self):
-        if self.health > self.metadata["hp"] // 2:
+        if not self.siberia:
             self.special = 1
-            self.siberia = self.metadata["special"][1]
+            self.siberia = True
             return self.siberia, self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)]
         else:
             self.special = 1
             self.siberia = False
-            return self.siberia, self.metadata["phrases"]["special"]["out"]
+            print(self.metadata)
+            return self.siberia, self.metadata["phrases"]["special"]
+            # ["out"]
 
 
 class MrPhone(Boss):

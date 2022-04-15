@@ -19,6 +19,7 @@ class Config(object):
         self.background = None
         # Added by Daniel to load in the chan images and the card back as well as the background
         self.MS_G_faces = None
+        self.MS_G_backgrounds = None
         self.MR_PHONE_faces = None
         # Fonts
         self.f_hp_bar_hp = None
@@ -90,7 +91,8 @@ class Config(object):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
-        self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
+        self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + [
+            pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
         self.background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (1600, 900))
         self.DEVIL_CHAN_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert_alpha(), (1600, 900))
         self.lose_screen = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert_alpha(), (1600, 900))
@@ -99,6 +101,9 @@ class Config(object):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
+        self.MS_G_faces = self.load_images_resize(os.getcwd() + "/resources/boss_02-ms_g", self.boss_face_size)
+        self.MS_G_backgrounds = [pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert_alpha(), (1600, 900)),
+                                 pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert_alpha(), (1600, 900))]
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
