@@ -10,14 +10,13 @@ import os
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 from bin.levels.boot import Boot
-from bin.levels.boss_ms_g import BossMsG
-from bin.levels.card_game_test import Test
+from bin.levels.ms_g_test import BossMsG
 from bin.levels.credits import Credits
-from bin.levels.card_game_test import Test as BossDevilChan
+from bin.levels.card_game_test import Test
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
-from bin.levels.boss_mr_phone import BossMrPhone
+from bin.levels.mr_phone_test import BossMrPhone
 from bin.levels.options import Options
 
 pg.init()

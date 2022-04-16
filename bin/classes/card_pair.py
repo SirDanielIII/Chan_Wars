@@ -53,7 +53,8 @@ class MatchingScreen:
 
     def generate_pairs(self, size, margins, X, Y):
         # ------------------------------------------------------------------------------------------------------------------
-        o_set = ((X - (margins[0] + size[0]) * 3) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
+        o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
+        print(o_set)
         # Daniel made it so that the offset was calculated in the method and not in the parameters
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
         pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
