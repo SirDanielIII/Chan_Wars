@@ -4,13 +4,15 @@ import pygame as pg
 pg.font.init()
 
 
-def move_screen(in_out, elapsed_time, Y, speed):
+def move_pos(in_out, elapsed_time, y, speed):
+    """
+    The move screen method was edited to work with elapsed time as opposed to calculating elapsed time using the given values
+    Time needs to be based off of milliseconds (framerate independent)
+    """
     if in_out:
-        pos = Y - Y / (1 + speed ** (-(elapsed_time * 10) + 7))
+        pos = y - y / (1 + speed ** (-(elapsed_time * 10) + 7))
     else:
-        pos = Y / (1 + speed ** (-(elapsed_time * 10) + 7))
-    # The move screen method was edited to work with elapsed time as opposed to calculating elapsed time using the given values
-    # Time needs to be based off of milliseconds (framerate independent)
+        pos = y / (1 + speed ** (-(elapsed_time * 10) + 7))
     return pos
 
 
@@ -61,9 +63,9 @@ class MatchingScreen:
         card_set = [CardPair(self.image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, margins, self.columns, o_set)
                     for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         rect_set = [(pg.Rect(card_pair.position1[0], card_pair.position1[1], card_pair.size[0], card_pair.size[1]),
-                    pg.Rect(card_pair.position2[0], card_pair.position2[1], card_pair.size[0], card_pair.size[1])) for card_pair in card_set]
+                     pg.Rect(card_pair.position2[0], card_pair.position2[1], card_pair.size[0], card_pair.size[1])) for card_pair in card_set]
         self.set = [(card_set[i], rect_set[i]) for i in range(len(rect_set))]
-        # Here Daniel unified the card set and teh rect set to make sure that neither order spontaneously changed while the program ran
+        # Here Daniel unified the card set and the rect set to make sure that neither order spontaneously changed while the program ran
         return self.set
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):

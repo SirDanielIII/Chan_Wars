@@ -1,16 +1,6 @@
 import random
-import os
-import pygame as pg
 
 from abc import ABC, abstractmethod
-from bin.classes.level import Level
-
-
-def redraw_screen(surface, background=None):
-    pg.display.update()
-    surface.fill((255, 255, 255))
-    if background:
-        surface.blit(background, (0, 0))
 
 
 class Boss(ABC):
@@ -56,12 +46,14 @@ class DevilChan(Boss):
         self.energy = None
         self.basic_power = None
         self.attack_phrases = None
+        self.opening_phrases = None
 
     def load_boss_info(self):
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
+        self.opening_phrases = self.metadata["phrases"]["opening"]
 
     def update(self, damage):
         self.health -= damage

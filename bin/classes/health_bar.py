@@ -65,6 +65,7 @@ class HealthBar(object):
                                   self.w + self.stroke_size * 2,
                                   self.h + self.stroke_size * 2))
         # ------------------------------------------------------------------------------------------------------------------
+        # Left Aligned Bar
         if not right:
             pg.draw.rect(self.screen, self.clr_main,
                          pg.Rect(self.x,
@@ -72,6 +73,7 @@ class HealthBar(object):
                                  self.width_proportional(self.hp, self.max_hp),  # Get new width based on percentage out of MAX WIDTH
                                  self.h))
         # ------------------------------------------------------------------------------------------------------------------
+        # Right Aligned Bar
         else:
             # BUG: Due to rounding errors, a bit of red shows up on the right side
             pg.draw.rect(self.screen, self.clr_main,
