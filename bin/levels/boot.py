@@ -46,7 +46,7 @@ class Boot(Level):
             seconds = (pg.time.get_ticks() - start_ticks) / 1000  # Timer
             pg.draw.rect(self.game_canvas, white, (150, self.height - 200, rect_width, 50))  # Loading Bar
             gfxdraw.rectangle(self.game_canvas, (140, self.height - 210, self.width - 280, 70), white)  # Bar Outline
-            if rect_width < 1300 and seconds < 2.5:  # Bug Fix - Timer doesn't count when dragging window; snaps to end
+            if rect_width < 1300 and seconds < 4:  # Bug Fix - Timer doesn't count when dragging window; snaps to end
                 if play_sfx == 0:  # Plays the sound effect once
                     pg.mixer.Channel(0).play(boot_sound)
                     play_sfx = 1  # Change value to avoid loop
@@ -56,20 +56,20 @@ class Boot(Level):
                     rect_width += 10
                     self.config.load_config()
                 elif seconds < 1:
-                    f_boot_render = f_boot.render("CONFIG FILE LOADED", True, white)
+                    f_boot_render = f_boot.render("Gathering the Chans", True, white)
                     self.game_canvas.blit(f_boot_render, (140, 610))
                     rect_width += 2
-                elif seconds < 1.6:
-                    loading_render = f_boot.render("Gathering the Chans", True, white)
-                    self.config.load_media()
+                elif seconds < 3:
+                    loading_render = f_boot.render("CONFIG FILE LOADED", True, white)
                     self.game_canvas.blit(loading_render, (140, 610))
                     rect_width += 2
-                elif seconds < 2:
-                    loading_render = f_boot.render("Running Away From Mr. Phone", True, white)
-                    self.game_canvas.blit(loading_render, (140, 610))
-                    rect_width += 7
-                elif seconds < 2.5:
+                    self.config.load_media()
+                elif seconds < 3.5:
                     loading_render = f_boot.render("Finishing The TQP", True, white)
+                    self.game_canvas.blit(loading_render, (140, 610))
+                    rect_width += 10
+                elif seconds < 4:
+                    loading_render = f_boot.render("Running Away From Mr. Phone", True, white)
                     self.game_canvas.blit(loading_render, (140, 610))
                     rect_width += 1
             else:

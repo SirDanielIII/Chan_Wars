@@ -106,14 +106,7 @@ class Test(Level):
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
-            '''
-            RUN THE CARD GAME CODE HERE
-            WHEN YOU RUN OUT OF ENERGY, SET GAME_TRANSITION_OUT = TRUE (and get rid of the click stuff below)
-            Essentially the card game is always blitting on top of game canvas. 
-            Due to the nature of blit_screens(), game canvas is always being blit, which impacts performance.
-            However, if we use the self.card_game boolean to stop the drawing of various UI elements in game canvas when it's true,
-            that should increase the fps by a bit. Blitting transparent filled surfaces don't impact the FPS that much anyways (did test it).
-            '''
+
 
     def run(self):
         self.reload()
@@ -195,7 +188,6 @@ class Test(Level):
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y < self.height - 1:
                     self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 25)
-                    # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height

@@ -44,10 +44,12 @@ class Level(ABC):
             self.text_canvas.fill((0, 0, 0, 0))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def blit_screens(self):
+    def blit_screens(self, overlay1=None, overlay1_x=0, overlay1_y=0):
         """Blit the surfaces; don't blit text_canvas if it's not visible"""
         if self.alpha_text != 0:
             self.game_canvas.blit(self.text_canvas, (0, 0))
+        if overlay1 is not None:
+            self.game_canvas.blit(overlay1, (overlay1_x, overlay1_y))
         self.surface.blit(self.game_canvas, (0 + self.screen_offset[0], 0 + self.screen_offset[1]))
 
     # ------------------------------------------------------------------------------------------------------------------

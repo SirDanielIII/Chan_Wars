@@ -1,16 +1,6 @@
 import random
-import os
-import pygame as pg
 
 from abc import ABC, abstractmethod
-from bin.classes.level import Level
-
-
-def redraw_screen(surface, background=None):
-    pg.display.update()
-    surface.fill((255, 255, 255))
-    if background:
-        surface.blit(background, (0, 0))
 
 
 class Boss(ABC):

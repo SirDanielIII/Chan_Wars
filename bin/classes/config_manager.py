@@ -10,18 +10,17 @@ class Config(object):
         # Images
         self.menu_img = None
         self.boss_card = None
-        self.DEVIL_CHAN_face = None
-        self.DEVIL_CHAN_background = None
         self.lose_screen = None
         self.win_screen = None
-        # ----------------------------------------------------------------------------------------------------------------------------
         self.image_list = None
         self.background = None
-        # Added by Daniel to load in the chan images and the card back as well as the background
+        self.DEVIL_CHAN_face = None
+        self.DEVIL_CHAN_background = None
         self.MS_G_faces = None
         self.MS_G_backgrounds = None
         self.MR_PHONE_faces = None
         self.MR_PHONE_background = None
+        # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
@@ -94,21 +93,21 @@ class Config(object):
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + \
                           [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
-        self.background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg"), (1600, 900))
-        self.DEVIL_CHAN_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert_alpha(), (1600, 900))
-        self.lose_screen = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert_alpha(), (1600, 900))
-        self.win_screen = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert_alpha(), (1600, 900))
+        self.background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900))
+        self.DEVIL_CHAN_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(), (1600, 900))
+        self.lose_screen = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900))
+        self.win_screen = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900))
         # Added by Daniel to load in the chan images and the card back as well as the background
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
         self.MS_G_faces = {filename[5:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/" + filename), self.boss_face_size).convert_alpha()
                            for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")}
-        self.MS_G_backgrounds = [pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert_alpha(), (1600, 900)),
-                                 pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert_alpha(), (1600, 900))]
+        self.MS_G_backgrounds = [pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert(), (1600, 900)),
+                                 pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert(), (1600, 900))]
         self.MR_PHONE_faces = {filename[6:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/" + filename), self.boss_face_size).convert_alpha()
                                for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}
-        self.MR_PHONE_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert_alpha(), (1600, 900))
+        self.MR_PHONE_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert(), (1600, 900))
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
