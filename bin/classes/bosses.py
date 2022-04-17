@@ -16,7 +16,7 @@ class Boss(ABC):
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, damage, turn_counter=0):
         pass
 
     @abstractmethod
@@ -55,7 +55,7 @@ class DevilChan(Boss):
         self.attack_phrases = self.metadata["phrases"]["attack"]
         self.opening_phrases = self.metadata["phrases"]["opening"]
 
-    def update(self, damage):
+    def update(self, damage, turn_counter=0):
         self.health -= damage
         self.energy = self.metadata["energy"]
 
@@ -106,7 +106,7 @@ class MsG(Boss):
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
 
-    def update(self, damage):
+    def update(self, damage, turn_counter=0):
         self.health -= damage
         if self.siberia:
             self.energy = self.metadata["energy"] - 1
@@ -167,7 +167,7 @@ class MrPhone(Boss):
         self.basic_power = self.metadata["basic"][1]
         self.attack_phrases = self.metadata["phrases"]["attack"]
 
-    def update(self, damage, turn_counter):
+    def update(self, damage, turn_counter=0):
         self.health -= damage
         self.damaged = False
         if damage:

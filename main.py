@@ -9,16 +9,17 @@ import os
 
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
+
 from bin.levels.boot import Boot
 from bin.levels.boss_devil_chan import BossDevilChan
 from bin.levels.ms_g_test import BossMsG
 from bin.levels.credits import Credits
-from bin.levels.card_game_test import Test
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay
 from bin.levels.main_menu import MainMenu
 from bin.levels.mr_phone_test import BossMrPhone
 from bin.levels.options import Options
+from bin.levels.death_screen import Death
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
@@ -52,9 +53,12 @@ class Main(object):
         self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         # ------------------------------------------------------------------------------------------------------------------
 
     def handler(self):
+        run = None
+        winning_state = None
         running = True
         # --------------------------------------------------------------------------------------------------------------
         while running:
@@ -99,6 +103,12 @@ class Main(object):
                     self.lvl = self.lvl_ms_g.run()
                 case 12:  # Mr. Phone Boss
                     self.lvl = self.lvl_mr_phone.run()
+                case 13:
+                    self.end_screen.set_background(13 - self.lvl)
+                    self.lvl = self.end_screen.run()
+                case 14:
+                    self.end_screen.set_background(13 - self.lvl)
+                    self.lvl = self.end_screen.run()
             # ----------------------------------------------------------------------------------------------------------
             pg.display.update()
             self.clock.tick(self.FPS)
