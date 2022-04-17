@@ -1,7 +1,8 @@
 import pygame as pg
 
 import os
-from stopwatch import Timer
+from .stopwatch import Timer
+from random import uniform
 
 pg.init()
 
@@ -17,7 +18,7 @@ class Typewriter(Timer):  # Implementation of Queue data type / structure
     def __init__(self):
         super().__init__()
         self.queue = []
-        self.update_text = False
+        self.update_text_lock = False
         self.str_to_blit = ""
         self.blit_final = ""
 
@@ -43,8 +44,10 @@ class Typewriter(Timer):  # Implementation of Queue data type / structure
         self.blit_final = ""
 
     def queue_text(self, lst):
-        for i in lst:
-            self.enqueue(i)
+        if not self.update_text_lock:
+            for i in lst:
+                self.enqueue(i)
+        self.update_text_lock = True
 
     def update_display(self, delay, boop_type):
         if self.seconds >= delay:  # Creates controlled "delay" in seconds
@@ -63,8 +66,9 @@ class Typewriter(Timer):  # Implementation of Queue data type / structure
             except IndexError:
                 pass
             self.seconds = 0  # Reset timer
+            self.update_text_lock = False  # Reset queue lock
 
-    def render(self, screen, delay, font, clr, x, y, boop_type):
+    def render(self, screen, delay, font, clr, x, y, shake, boop_type):
         self.update_display(delay, boop_type)
         self.blit_final = font.render(self.str_to_blit, True, clr)
-        screen.blit(self.blit_final, (x, y))
+        screen.blit(self.blit_final, (x + uniform(0, shake[0]), y + uniform(0, shake[1])))

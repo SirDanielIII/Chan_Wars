@@ -107,7 +107,6 @@ class Test(Level):
             # and finally blits it all after getting the mouses position if a click has been made
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
-
     def run(self):
         self.reload()
         self.devil_chan_boss.load_boss_info()

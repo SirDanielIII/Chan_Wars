@@ -9,6 +9,7 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.classes.stopwatch import Timer
+from bin.classes.typewriter import Typewriter
 from bin.colours import *
 from bin.classes.card_pair import move_pos
 from bin.classes.bosses import DevilChan as DChan
@@ -35,15 +36,21 @@ class BossDevilChan(Level):
         self.hp_bar_player = None
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
+        self.boss = None
         self.boss_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
         self.hp_bar_boss = None
         # ------------------------------------------------------------------------------------------------------------------
         self.cinematic = True
+        self.cinematic_timer = Timer()
+        self.cinematic_line = 0
+        self.typewriter = Typewriter()
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
+        self.boss = DChan(self.boss_data)
+        self.boss.load_boss_info()
         self.hp_player = self.config.player_hp
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
@@ -88,17 +95,34 @@ class BossDevilChan(Level):
 
     def game_handler(self):
         if self.cinematic:
+            print('working')
             if not self.cinematic_render():
                 self.cinematic = False
         else:
             pass
             # Put textbox code in here
 
+    def cinematic_render(self):
+        s = self.cinematic_timer.seconds
+        # E.G. [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
+        if s < 1.5:
+            self.typewriter.queue_text(self.boss.opening_phrases[0][0])
+        elif s >= 1.5:
+            self.typewriter.render(self.text_canvas, self.boss.opening_phrases[0][1], self.config.f_boss_text, white, 100, 600, self.boss.opening_phrases[0][2], 0)
+            print('working')
+        print(self.cinematic_timer.seconds, self.typewriter.queue, self.typewriter.seconds)
+        return True
+
     def run(self):
+        # ----------------------------------------------------------------------------------------------------------
         self.reload()
+        self.cinematic_timer.time_start()
+        self.typewriter.time_start()
+        # ----------------------------------------------------------------------------------------------------------
         # Custom Events
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
+        # ----------------------------------------------------------------------------------------------------------
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -117,6 +141,8 @@ class BossDevilChan(Level):
                         self.click = True
                 if event.type == milliseconds:
                     self.game_transition_time.stopwatch()
+                    self.cinematic_timer.stopwatch()
+                    self.typewriter.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
                 self.transition_in("game", self.game_canvas, dt)
@@ -179,7 +205,4 @@ class BossDevilChan(Level):
             self.blit_screens(self.card_canvas, 0, self.card_canvas_y)
             self.clock.tick(self.FPS)
             pg.display.update()
-            print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)
-
-    def cinematic_render(self):
-        pass
+            # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)

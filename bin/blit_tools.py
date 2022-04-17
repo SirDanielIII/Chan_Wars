@@ -138,3 +138,17 @@ def center_blit_image(screen, img, x, y):
     r = img.get_rect()
     r.center = (x, y)
     screen.blit(img, r)
+
+
+def shake_values(option):
+    match option:
+        case "nada":
+            return [0, 0]
+        case "smol":
+            return [random.uniform(0, 1), random.uniform(0, 1)]
+        case "big":
+            return [random.uniform(0, 5), random.uniform(0, 5)]
+        case "crazy":
+            return [random.uniform(0, 20), random.uniform(0, 20)]
+        case "wtf":
+            return [random.uniform(0, 150), random.uniform(0, 150)]
