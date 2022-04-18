@@ -16,16 +16,18 @@ class Options(Level):
                                              (self.width, self.height)).convert()
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         # Options
-        self.align_01_x = 100   # Alignment for video settings
+        self.align_01_x = 100  # Alignment for video settings
         self.align_01_y = 275
-        self.align_02_x = self.align_01_x + 375   # Alignment for game settings
+        self.align_02_x = self.align_01_x + 375  # Alignment for game settings
         self.align_02_y = 275
-        self.align_03_x = self.align_02_x + 600   # Alignment for sound settings
+        self.align_03_x = self.align_02_x + 600  # Alignment for sound settings
         self.align_03_y = 275
         self.button_size = 50
         self.title_offset = 100
         self.text_offset = 5
         self.on_buttons = []
+        self.mutually_exclusives = {"FPS": []}
+        self.options = None
         self.rect_dict = {"fullscreen": pg.Rect(self.align_01_x, self.align_01_y, self.button_size, self.button_size),
                           "FPS_30": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size),
                           "FPS_60": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 4, self.button_size, self.button_size),
@@ -41,28 +43,42 @@ class Options(Level):
                           "null21": pg.Rect(self.align_03_x, self.align_03_y, self.button_size, self.button_size),
                           "null22": pg.Rect(self.align_03_x, self.align_03_y + self.button_size * 2, self.button_size, self.button_size)}
 
+    def boot(self):
+        self.options = (("Video", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_01_x, self.align_01_y - self.title_offset),
+                        ("Fullscreen", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.text_offset),
+                        ("30 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2,
+                         self.align_01_y + self.button_size * 2 + self.text_offset),
+                        ("60 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2,
+                         self.align_01_y + self.button_size * 4 + self.text_offset),
+                        ("75 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2,
+                         self.align_01_y + self.button_size * 6 + self.text_offset),
+                        ("165 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2,
+                         self.align_01_y + self.button_size * 8 + self.text_offset),
+                        ("Show FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2,
+                         self.align_01_y + self.button_size * 10 + self.text_offset),
+                        ("Game Options", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_02_x, self.align_02_y - self.title_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2,
+                         self.align_02_y + self.button_size * 2 + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2,
+                         self.align_02_y + self.button_size * 4 + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2,
+                         self.align_02_y + self.button_size * 6 + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2,
+                         self.align_02_y + self.button_size * 8 + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2,
+                         self.align_02_y + self.button_size * 10 + self.text_offset),
+                        ("Music", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_03_x, self.align_03_y - self.title_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.text_offset),
+                        ("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2,
+                         self.align_03_y + self.button_size * 2 + self.text_offset))
+
     def draw_settings(self):
         video_header = self.config.f_options_title.render("Video", True, cw_yellow)
         # Video Settings Text Blitting
-        draw_text_left("Video", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_01_x, self.align_01_y - self.title_offset)
-        draw_text_left("Fullscreen", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.text_offset)
-        draw_text_left("30 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 2 + self.text_offset)
-        draw_text_left("60 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 4 + self.text_offset)
-        draw_text_left("75 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 6 + self.text_offset)
-        draw_text_left("165 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 8 + self.text_offset)
-        draw_text_left("Show FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 10 + self.text_offset)
-        # Game Settings Text Blitting
-        draw_text_left("Game Options", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_02_x, self.align_02_y - self.title_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 2 + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 4 + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 6 + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 8 + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 10 + self.text_offset)
-        # Music Settings Text Blitting
-        draw_text_left("Music", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_03_x, self.align_03_y - self.title_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.button_size * 2 + self.text_offset)
+        for option in self.options:
+            print(*option)
+            draw_text_left(*option)
         # Button drawing
         for button in self.rect_dict:
             pg.draw.rect(self.game_canvas, light_grey, self.rect_dict[button])
@@ -117,15 +133,15 @@ class Options(Level):
             pg.draw.rect(self.game_canvas, red, on_rect)
 
     def remove_mutually_exclusive(self):
-        fps_options = []
-        for index, button in enumerate(self.on_buttons):
-            if "FPS" in button[:3]:
-                fps_options.append((button, index))
-        if len(fps_options) > 1:
-            self.on_buttons.pop(fps_options[0][1])
+        for option in self.mutually_exclusives:
+            for index, button in enumerate(self.on_buttons):
+                if option in button[:len(option)] and (button, index) not in self.mutually_exclusives[option]:
+                    self.mutually_exclusives[option].append((button, index))
+            if len(self.mutually_exclusives[option]) > 1:
+                self.on_buttons.pop(self.mutually_exclusives[option].pop(0)[1])
 
     def run(self):
-        clicked_rect = None
+        self.boot()
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
