@@ -16,15 +16,51 @@ class Options(Level):
                                              (self.width, self.height)).convert()
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         # Options
-        self.align_01_x = 100
-        self.align_01_y = 300
+        self.align_01_x = 100   # Alignment for video settings
+        self.align_01_y = 275
+        self.align_02_x = self.align_01_x + 375   # Alignment for game settings
+        self.align_02_y = 275
+        self.align_03_x = self.align_02_x + 600   # Alignment for sound settings
+        self.align_03_y = 275
         self.button_size = 50
+        self.title_offset = 100
+        self.text_offset = 5
+        self.rect_dict = {"fullscreen": pg.Rect(self.align_01_x, self.align_01_y, self.button_size, self.button_size),
+                          "FPS_30": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size),
+                          "FPS_60": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 4, self.button_size, self.button_size),
+                          "FPS_75": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 6, self.button_size, self.button_size),
+                          "FPS_165": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 8, self.button_size, self.button_size),
+                          "show_FPS": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 10, self.button_size, self.button_size),
+                          "null11": pg.Rect(self.align_02_x, self.align_02_y, self.button_size, self.button_size),
+                          "null12": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 2, self.button_size, self.button_size),
+                          "null13": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 4, self.button_size, self.button_size),
+                          "null14": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 6, self.button_size, self.button_size),
+                          "null15": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 8, self.button_size, self.button_size),
+                          "null16": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 10, self.button_size, self.button_size),
+                          "null21": pg.Rect(self.align_03_x, self.align_03_y, self.button_size, self.button_size),
+                          "null22": pg.Rect(self.align_03_x, self.align_03_y + self.button_size * 2, self.button_size, self.button_size)}
 
     def draw_fps_settings(self):
-        # FPS Mode - Rectangles
-
         video_header = self.config.f_options_title.render("Video", True, cw_yellow)
-        draw_text_left("Video", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_01_x, 265)
+        draw_text_left("Video", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_01_x, self.align_01_y - self.title_offset)
+        draw_text_left("Fullscreen", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.text_offset)
+        draw_text_left("30 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 2 + self.text_offset)
+        draw_text_left("60 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 4 + self.text_offset)
+        draw_text_left("75 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 6 + self.text_offset)
+        draw_text_left("165 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 8 + self.text_offset)
+        draw_text_left("Show FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x + self.button_size * 2, self.align_01_y + self.button_size * 10 + self.text_offset)
+        draw_text_left("Game Options", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_02_x, self.align_02_y - self.title_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 2 + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 4 + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 6 + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 8 + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_02_x + self.button_size * 2, self.align_02_y + self.button_size * 10 + self.text_offset)
+        draw_text_left("Music", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_03_x, self.align_03_y - self.title_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.button_size * 2 + self.text_offset)
+        for button in self.rect_dict:
+            pg.draw.rect(self.game_canvas, light_grey, self.rect_dict[button])
         # fps_1 = pg.Rect(self.align_01_x, 300, c.square_grid, c.square_grid)
         # pg.draw.rect(self.game_canvas, white, fps_1)
         # fps_2 = pg.Rect(self.align_01_x, 400, c.square_grid, c.square_grid)
@@ -52,12 +88,6 @@ class Options(Level):
         #     fps_o4 = pg.Rect(100 + 5, 700 + 5, c.square_grid - 10, c.square_grid - 10)
         #     pg.draw.rect(options_menu, c.ms_red, fps_o4)
         # # FPS Mode - Text
-        draw_text_left("Fullscreen", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y)
-        draw_text_left("Show FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 2)
-        draw_text_left("30 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 4)
-        draw_text_left("60 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 6)
-        draw_text_left("75 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 8)
-        draw_text_left("165 FPS", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_01_x, self.align_01_y + self.button_size * 10)
         # fps_t1 = f_setting.render("Potato", True, white)
         # options_menu.blit(fps_t1, (200, 300))
         # fps_t2 = f_setting.render("30 FPS", True, white)
@@ -70,6 +100,7 @@ class Options(Level):
         # options_menu.blit(fps_t5, (200, 700))
 
     def run(self):
+        clicked_rect = None
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -92,9 +123,30 @@ class Options(Level):
             elif self.freeze:  # To prevent the transition from happening offscreen
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
+            if self.click:
+                for button in self.rect_dict:
+                    if self.rect_dict[button].collidepoint((mx, my)):
+                        clicked_rect = button
+            print(clicked_rect)
+            # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
             self.background.set_alpha(50)
             self.game_canvas.blit(self.background, (0, 0))
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.back_button.run(mx, my, cw_light_blue, self.click):
+                self.fade_out = True
+                self.next_level = 1
+            # --------------------------------------------------------------------------------------------------------------
+            if self.transition_out("game", self.game_canvas, dt):
+                self.restore()
+                return self.next_level
+            # ------------------------------------------------------------------------------------------------------------------
+            self.draw_fps_settings()
+            # ------------------------------------------------------------------------------------------------------------------
+            self.blit_screens()
+            self.clock.tick(self.FPS)
+            pg.display.update()
+            print(mx, my)
 
             # # ------------------------------------------------------------------------------------------------------------------
             # # Game Settings - Rectangles
@@ -258,18 +310,3 @@ class Options(Level):
             # # Functions to Calculate Volume Based on X Button Coordinates
             # c_sfx_volume(sfx_button_x + c.square_grid / 2)  # Sends Rect Center For Volume Calculation
             # c_music_volume(music_button_x + c.square_grid / 2)  # Sends Rect Center For Volume Calculation
-            # ------------------------------------------------------------------------------------------------------------------
-            if self.back_button.run(mx, my, cw_light_blue, self.click):
-                self.fade_out = True
-                self.next_level = 1
-            # --------------------------------------------------------------------------------------------------------------
-            if self.transition_out("game", self.game_canvas, dt):
-                self.restore()
-                return self.next_level
-            # ------------------------------------------------------------------------------------------------------------------
-            self.draw_fps_settings()
-            # ------------------------------------------------------------------------------------------------------------------
-            self.blit_screens()
-            self.clock.tick(self.FPS)
-            pg.display.update()
-            print(mx, my)
