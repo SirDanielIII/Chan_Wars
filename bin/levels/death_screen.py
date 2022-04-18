@@ -54,7 +54,8 @@ class Death(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.death_stopwatch.time_start()
+            if not self.death_stopwatch.started_timer:
+                self.death_stopwatch.time_start()
             if self.death_stopwatch.seconds > 1:
                 self.background.set_alpha((self.death_stopwatch.seconds - 1) * 250)
                 self.game_canvas.blit(self.background, (0, 0))

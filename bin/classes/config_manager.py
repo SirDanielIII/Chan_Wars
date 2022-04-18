@@ -24,12 +24,13 @@ class Config(object):
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
         self.f_boss_text = None
+        self.f_options_title = None
+        self.f_options_sub = None
         # Other
         self.highest_level_beat = None
         self.boss_face_size = None
         # ----------------------------------------------------------------------------------------------------------------------------
         self.card_size = (120, 180)
-        # Added in by Daniel to allow for the configuring of the card sizes
         # Settings
         self.player_hp = None
         self.enable_music = None
@@ -44,13 +45,13 @@ class Config(object):
         # Data
         self.data = None
         self.default = \
-            {'bosses': {'DevilChan': {'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 50, 'name': 'Devil Chan', 'phrases': {
+            {'bosses': {'DevilChan': {'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 60, 'name': 'Devil Chan', 'phrases': {
                 'attack': ['For My Lost Love!', 'World Shaking Explosion Fist!', 'North Star Spear!', 'Million Soul Bomb!', 'Burning Sun Beam!', 'Point Two Electron Volts!'],
                 'death': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'],
                 'opening': [['Angel Chan...', 0.02, False], ['I loved you!', 0.03, False], ['How could you do this!?', 0.02, False]],
                 'special': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.", "I hope you're prepared for this.",
                             "You know, I'm something of a scientist myself."]}, 'rows': 4, 'special': ['neat_hack', 10, 10]},
-                        'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 5, 'hp': 200, 'kill': ['thinking_question', 9999], 'name': 'Mr. Phone',
+                        'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 4, 'hp': 200, 'kill': ['thinking_question', 9999], 'name': 'Mr. Phone',
                                     'phrases': {
                                         'attack': ['You need to touch grass.', 'My son could beat you at this game.', 'Easy choices hard life, hard choices easy life.',
                                                    "It's only awkward if you make it awkward.", 'You have to build capacity.',
@@ -102,6 +103,8 @@ class Config(object):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 75)
+        self.f_options_title = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 75)
+        self.f_options_sub = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 40)
         self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
         self.MS_G_faces = {filename[5:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/" + filename), self.boss_face_size).convert_alpha()
                            for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")}
