@@ -185,7 +185,7 @@ class BossMrPhone(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(True, self.transition_stopwatch.seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
@@ -197,7 +197,7 @@ class BossMrPhone(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(False, self.transition_stopwatch.seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:

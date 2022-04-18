@@ -28,12 +28,18 @@ class BossDevilChan(Level):
         self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False
-        self.game_transition_time = Timer()
+        self.energy = None
+        self.size = self.config.card_size
+        self.margins = (20, 30)
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.hp_player = None
+        self.damage = 0
         self.hp_bar_player = None
+        self.card_complete = [0]
+        self.pairs = None
+        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
         self.boss = None
@@ -42,19 +48,38 @@ class BossDevilChan(Level):
         self.hp_boss = None
         self.hp_bar_boss = None
         # ------------------------------------------------------------------------------------------------------------------
+        # Cinematic Attributes
         self.cinematic = True
-        self.cinematic_timer = Timer()
         self.cinematic_line = 0
         self.typewriter = Typewriter()
+        # ------------------------------------------------------------------------------------------------------------------
+        # Timer Attributes
+        self.timer_dict = {"action": Timer(), "card": Timer(), "cinematic": Timer(), "transition": Timer()}
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+        # ------------------------------------------------------------------------------------------------------------------
+        # Boss Attributes Initialization
         self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
         self.boss = DChan(self.boss_data)
         self.boss.load_boss_info()
-        self.hp_player = self.config.player_hp
-        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.boss.metadata = self.boss_data
+        # ------------------------------------------------------------------------------------------------------------------
+        # Player Attributes Initialization
+        self.hp_player = self.config.player_hp
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.player.image_list = self.config.image_list
+        self.player.columns = self.boss_data["columns"]
+        self.energy = self.boss_data["energy"]
+        self.card_complete = [0]
+        self.pairs = None
+        # ------------------------------------------------------------------------------------------------------------------
+        # Game Attributes Initialization
+        self.fade_in = True
+        for timer in self.timer_dict:
+            self.timer_dict[timer].stopwatch()
+
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
@@ -77,8 +102,25 @@ class BossDevilChan(Level):
         center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click, dt):
+        mouse_pos = (0, 0)
         if self.card_canvas_y != self.height:
-            self.card_canvas.fill((0, 255, 255))
+            self.card_canvas.fill(white)
+            if self.energy and not self.game_transition_in and not self.game_transition_out:
+                if not self.pairs:
+                    self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+                self.card_complete = self.player.complete()
+                if self.card_complete[0] == 2:
+                    if not self.timer_dict["action"].activate_timer:
+                        self.timer_dict["action"].time_start()
+                    if self.timer_dict["action"].seconds > 0.25:
+                        self.damage += self.card_complete[2] * 10
+                        self.energy -= self.card_complete[1]
+                        self.player.reset()
+                        self.timer_dict["action"].time_reset()
+                if click:
+                    mouse_pos = tuple(pg.mouse.get_pos())
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.timer_dict["action"].seconds > 500)
+            self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
         if not self.card_game:
@@ -103,26 +145,31 @@ class BossDevilChan(Level):
             # Put textbox code in here
 
     def cinematic_render(self):
-        s = self.cinematic_timer.seconds
+        s = self.timer_dict["cinematic"].seconds
         # E.G. [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
         if s < 1.5:
             self.typewriter.queue_text(self.boss.opening_phrases[0][0])
         elif s >= 1.5:
             self.typewriter.render(self.text_canvas, self.boss.opening_phrases[0][1], self.config.f_boss_text, white, 100, 600, self.boss.opening_phrases[0][2], 0)
             print('working')
-        print(self.cinematic_timer.seconds, self.typewriter.queue, self.typewriter.seconds)
+        print(self.timer_dict["cinematic"].seconds, self.typewriter.queue, self.typewriter.seconds)
         return True
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
         self.reload()
-        self.cinematic_timer.time_start()
+        self.timer_dict["cinematic"].time_start()
         self.typewriter.time_start()
         # ----------------------------------------------------------------------------------------------------------
         # Custom Events
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
         # ----------------------------------------------------------------------------------------------------------
+        # Initial parameters
+        acted = True
+        completed = True
+        time_elapsed = Timer()
+        time_elapsed.time_start()
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -140,9 +187,10 @@ class BossDevilChan(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
                 if event.type == milliseconds:
-                    self.game_transition_time.stopwatch()
-                    self.cinematic_timer.stopwatch()
                     self.typewriter.stopwatch()
+                    for timer in self.timer_dict:
+                        self.timer_dict[timer].stopwatch()
+                    time_elapsed.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
                 self.transition_in("game", self.game_canvas, dt)
@@ -154,39 +202,61 @@ class BossDevilChan(Level):
             # ------------------------------------------------------------------------------------------------------------------
             # Game Handler
             self.game_handler()
-            if self.click:
-                self.hp_player -= random.randint(1, 12)
-                self.hp_boss -= random.randint(1, 12)
-                self.trigger_in()
-                self.trigger_out()
+            if self.click and self.hp_boss and self.hp_player:
+                if not self.card_game and completed and not self.timer_dict["transition"].seconds:
+                    self.trigger_in()
+                elif self.card_game and self.energy == 0 and not self.timer_dict["transition"].seconds:
+                    self.trigger_out()
+            # This is what I have on teh card game test file
             # ------------------------------------------------------------------------------------------------------------------
             # Card Game Display Driver
             # self.card_canvas_y has an offset of 1 in order to get it to work with the function used for the transition
             # Transition In
             if self.game_transition_in:
-                if not self.game_transition_time.activate_timer:
-                    self.game_transition_time.time_start()
+                if not self.timer_dict["transition"].activate_timer:
+                    self.timer_dict["transition"].time_start()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = move_pos(True, self.game_transition_time.seconds, self.height, 25)
+                    self.card_canvas_y = move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
                     self.game_transition_in = False
                     self.card_game = True
-                    self.game_transition_time.time_reset()
+                    self.timer_dict["transition"].time_reset()
             # ------------------------------------------------------------------------------------------------------------------
             # Transition Out
             if self.game_transition_out:
-                if not self.game_transition_time.activate_timer:
-                    self.game_transition_time.time_start()
+                if not self.timer_dict["transition"].activate_timer:
+                    self.timer_dict["transition"].time_start()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = move_pos(False, self.game_transition_time.seconds, self.height, 25)
+                    self.card_canvas_y = move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
-                    self.game_transition_time.time_reset()
+                    acted = False
+                    completed = False
+                    self.timer_dict["transition"].time_reset()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
+                if not self.timer_dict["action"].activate_timer and not completed:
+                    self.timer_dict["action"].time_start()
+                if self.timer_dict["action"].seconds > 1:
+                    self.boss.update(self.damage)
+                    self.hp_boss = self.boss.health
+                    self.energy = self.boss.energy
+                    self.damage = 0
+                if self.timer_dict["action"].seconds > 1.5 and not acted:
+                    self.boss.trigger_method()
+                    action = self.boss.act()
+                    if action[0] != "die":
+                        self.hp_player -= action[1][0] + 40
+                    else:
+                        pass
+                    self.hp_boss = self.boss.health
+                    acted = True
+                elif self.timer_dict["action"].seconds > 2:
+                    self.timer_dict["action"].time_reset()
+                    completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(dt)  # Draw Boss' Image (See Method Above)
                 # Textbox
@@ -200,9 +270,14 @@ class BossDevilChan(Level):
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            self.run_card_game(self.click, dt)
+            if self.hp_player <= 0:
+                return 13
+            elif self.hp_boss <= 0:
+                return 14
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.hp_boss and self.hp_player:
+                self.run_card_game(self.click, dt)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens(self.card_canvas, 0, self.card_canvas_y)
             self.clock.tick(self.FPS)
             pg.display.update()
-            # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)
