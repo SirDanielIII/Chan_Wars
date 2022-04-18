@@ -116,6 +116,14 @@ class Options(Level):
             on_rect = pg.Rect(self.rect_dict[button].x + 5, self.rect_dict[button].y + 5, self.rect_dict[button].width - 10, self.rect_dict[button].height - 10)
             pg.draw.rect(self.game_canvas, red, on_rect)
 
+    def remove_mutually_exclusive(self):
+        fps_options = []
+        for index, button in enumerate(self.on_buttons):
+            if "FPS" in button[:3]:
+                fps_options.append((button, index))
+        if len(fps_options) > 1:
+            self.on_buttons.pop(fps_options[0][1])
+
     def run(self):
         clicked_rect = None
         while True:
@@ -157,11 +165,12 @@ class Options(Level):
             if self.click:
                 self.collision(mx, my)
             self.draw_inner_rect()
+            self.remove_mutually_exclusive()
+            print(self.on_buttons)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
             pg.display.update()
-            print(mx, my)
 
             # # ------------------------------------------------------------------------------------------------------------------
             # # Game Settings - Rectangles
