@@ -25,7 +25,7 @@ class Options(Level):
         self.button_size = 50
         self.title_offset = 100
         self.text_offset = 5
-        self.on_buttons = []
+        self.on_buttons = ["FPS_30"]
         self.mutually_exclusives = {"FPS": []}
         self.rect_dict = {"fullscreen": pg.Rect(self.align_01_x, self.align_01_y, self.button_size, self.button_size),
                           "FPS_30": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size),
@@ -40,7 +40,7 @@ class Options(Level):
                           "null15": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 8, self.button_size, self.button_size),
                           "null16": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 10, self.button_size, self.button_size),
                           "null21": pg.Rect(self.align_03_x, self.align_03_y, self.button_size, self.button_size),
-                          "null22": pg.Rect(self.align_03_x, self.align_03_y + self.button_size * 2, self.button_size, self.button_size)}
+                          "null22": pg.Rect(self.align_03_x, self.align_03_y + self.button_size * 4, self.button_size, self.button_size)}
 
     def draw_settings(self):
         video_header = self.config.f_options_title.render("Video", True, cw_yellow)
@@ -63,7 +63,7 @@ class Options(Level):
         # Music Settings Text Blitting
         draw_text_left("Music", cw_yellow, self.config.f_options_title, self.text_canvas, self.align_03_x, self.align_03_y - self.title_offset)
         draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.text_offset)
-        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.button_size * 2 + self.text_offset)
+        draw_text_left("[Placeholder]", cw_yellow, self.config.f_options_sub, self.text_canvas, self.align_03_x + self.button_size * 2, self.align_03_y + self.button_size * 4 + self.text_offset)
         # Button drawing
         for button in self.rect_dict:
             pg.draw.rect(self.game_canvas, light_grey, self.rect_dict[button])
@@ -105,12 +105,36 @@ class Options(Level):
         # fps_t5 = f_setting.render("165 FPS", True, white)
         # options_menu.blit(fps_t5, (200, 700))
 
+    def change_options(self, button, option_action):
+        match button, option_action:
+            case "FPS_30", "Start":
+                self.FPS = 30
+            case "FPS_60", "Start":
+                self.FPS = 60
+            case "FPS_75", "Start":
+                self.FPS = 75
+            case "FPS_165", "Start":
+                self.FPS = 165
+            case "fullscreen", "Start":
+                self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
+            case "fullscreen", "Stop":
+                self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
+            case "show_fps", "Start":
+                pass
+            case "show_fps", "Stop":
+                pass
+
     def collision(self, mx, my):
+        option_action = None
         for button in self.rect_dict:
             if button in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
                 self.on_buttons.remove(button)
+                option_action = "Stop"
             elif button not in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
                 self.on_buttons.append(button)
+                option_action = "Start"
+            self.change_options(button, option_action)
+
 
     def draw_inner_rect(self):
         for button in self.on_buttons:
@@ -119,11 +143,12 @@ class Options(Level):
 
     def remove_mutually_exclusive(self):
         for option in self.mutually_exclusives:
-            for index, button in enumerate(self.on_buttons):
-                if option in button[:len(option)] and (button, index) not in self.mutually_exclusives[option]:
-                    self.mutually_exclusives[option].append((button, index))
+            for button in self.on_buttons:
+                if option in button[:len(option)] and button not in self.mutually_exclusives[option]:
+                    self.mutually_exclusives[option].append(button)
+            print(self.mutually_exclusives, self.on_buttons)
             if len(self.mutually_exclusives[option]) > 1:
-                self.on_buttons.pop(self.mutually_exclusives[option].pop(0)[1])
+                self.on_buttons.remove(self.mutually_exclusives[option].pop(0))
 
     def run(self):
         clicked_rect = None
