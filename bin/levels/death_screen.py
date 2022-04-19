@@ -27,6 +27,7 @@ class Death(Level):
         self.background = self.config.end_screens[winning_state]
 
     def run(self):
+        self.alpha_game = 255
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
         while True:
