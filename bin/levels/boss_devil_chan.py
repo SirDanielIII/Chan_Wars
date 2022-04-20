@@ -20,7 +20,8 @@ import bin.classes.config_manager as load
 class BossDevilChan(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
+        self.back_button = ButtonTriangle(self.game_canvas, cw_blue)
+        self.go = False
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
         self.card_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
@@ -48,10 +49,18 @@ class BossDevilChan(Level):
         self.hp_boss = None
         self.hp_bar_boss = None
         # ------------------------------------------------------------------------------------------------------------------
-        # Cinematic Attributes
+        # Text Bar Attributes
+        self.text_transition_in = False
+        self.text_transition_out = False
+        self.typewriter_l1 = Typewriter()
+        self.typewriter_l2 = Typewriter()
+        self.finished = False
+        self.update = True
+        self.message = 0
+        self.align_x = 130
+        self.align_y1 = 670
+        self.align_y2 = 730
         self.cinematic = True
-        self.cinematic_line = 0
-        self.typewriter = Typewriter()
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "cinematic": Timer(), "transition": Timer(), "death": Timer()}
@@ -80,20 +89,19 @@ class BossDevilChan(Level):
         for timer in self.timer_dict:
             self.timer_dict[timer].time_reset()
 
-
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
         # Player Text & Health Bar
-        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                        self.hp_bar_player.x, self.hp_bar_player.y - self.hp_bar_player.h * 3)
-        draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x,
+        draw_text_left("You", white, self.config.f_hp_bar_name, self.game_canvas, self.hp_bar_player.x,
                        self.hp_bar_player.y + self.hp_bar_player.h + 5)
         self.hp_bar_player.render(self.hp_player, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
@@ -119,7 +127,8 @@ class BossDevilChan(Level):
                         self.timer_dict["action"].time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.timer_dict["action"].seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0,
+                                   self.energy and not self.timer_dict["action"].seconds > 500)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
@@ -135,31 +144,84 @@ class BossDevilChan(Level):
     def textbox(self):
         pass
 
-    def game_handler(self):
+    def game_handler(self, dt):
         if self.cinematic:
-            print('working')
-            if not self.cinematic_render():
-                self.cinematic = False
+            self.cinematic_render(dt)
         else:
             pass
             # Put textbox code in here
 
-    def cinematic_render(self):
-        s = self.timer_dict["cinematic"].seconds
-        # E.G. [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
-        if s < 1.5:
-            self.typewriter.queue_text(self.boss.opening_phrases[0][0])
-        elif s >= 1.5:
-            self.typewriter.render(self.text_canvas, self.boss.opening_phrases[0][1], self.config.f_boss_text, white, 100, 600, self.boss.opening_phrases[0][2], 0)
-            print('working')
-        print(self.timer_dict["cinematic"].seconds, self.typewriter.queue, self.typewriter.seconds)
-        return True
+    def cinematic_render(self, dt):
+        # ----------------------------------------------------------------------------------------------------------
+        # Initialize Values
+        seconds = self.timer_dict["cinematic"].seconds
+        if seconds > 1.5:
+            clear = self.boss.opening_phrases[self.message]["clear"]
+            # ----------------------------------------------------------------------------------------------------------
+            if self.update:  # Update these values once per message change
+                self.update = False
+                self.fade_in_text = self.boss.opening_phrases[self.message]["fade_in"]
+                self.fade_out_text = self.boss.opening_phrases[self.message]["fade_out"]
+            # ----------------------------------------------------------------------------------------------------------
+            # Textbox Fade In
+            if self.fade_in_text and not self.finished:
+                if self.fade_screen_in("text", self.text_canvas, self.transition_speed, dt):
+                    self.fade_in_text = False
+            # ----------------------------------------------------------------------------------------------------------
+            # E.G. self.boss.opening_phrases -> [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
+            # Draw Text
+            if not self.fade_in_text:
+                match self.boss.opening_phrases[self.message]["line"]:
+                    case 1:
+                        self.typewriter_l1.queue_text(self.boss.opening_phrases[self.message]["text"])  # Method has logic inside it to only update once in a loop
+                        self.finished = self.typewriter_l1.render(self.text_canvas,
+                                                                  self.boss.opening_phrases[self.message]["delay"],
+                                                                  self.config.f_boss_text, white, self.align_x, self.align_y1,
+                                                                  self.boss.opening_phrases[self.message]["shake"],
+                                                                  self.boss.opening_phrases[self.message]["pause"], 0)
+                    case 2:
+                        self.typewriter_l2.queue_text(self.boss.opening_phrases[self.message]["text"])  # Method has logic inside it to only update once in a loop
+                        # Render first line
+                        self.typewriter_l1.render(self.text_canvas,
+                                                  self.boss.opening_phrases[self.message - 1]["delay"],
+                                                  self.config.f_boss_text, white, self.align_x, self.align_y1,
+                                                  self.boss.opening_phrases[self.message - 1]["shake"],
+                                                  self.boss.opening_phrases[self.message - 1]["pause"], 0)
+                        # # Render second line
+                        self.finished = self.typewriter_l2.render(self.text_canvas,
+                                                                  self.boss.opening_phrases[self.message]["delay"],
+                                                                  self.config.f_boss_text, white, self.align_x, self.align_y2,
+                                                                  self.boss.opening_phrases[self.message]["shake"],
+                                                                  self.boss.opening_phrases[self.message]["pause"], 0)
+            # ----------------------------------------------------------------------------------------------------------
+            if self.finished:  # This occurs after the typewriter has finished blitting and completed its pause
+                if self.fade_out_text:  # Fades out textbox if required
+                    if self.fade_screen_out("text", self.text_canvas, self.transition_speed, dt):
+                        if clear:  # Clears textboxes if true & after the textbox finishes fading out
+                            self.typewriter_l1.clear()
+                            self.typewriter_l2.clear()
+                        if self.message < len(self.boss.opening_phrases) - 1:  # Transition to next message
+                            self.next_msg()
+                else:
+                    if clear:  # Clears textboxes if true (even if fade out isn't true) - Instant clear
+                        self.typewriter_l1.clear()
+                        self.typewriter_l2.clear()
+                    if self.message < len(self.boss.opening_phrases) - 1:  # Transition to next message
+                        self.next_msg()
+
+    def next_msg(self):
+        self.message += 1
+        self.update = True
+        self.finished = False
+        self.typewriter_l1.unlock()
+        self.typewriter_l2.unlock()
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
         self.reload()
         self.timer_dict["cinematic"].time_start()
-        self.typewriter.time_start()
+        self.typewriter_l1.time_start()
+        self.typewriter_l2.time_start()
         # ----------------------------------------------------------------------------------------------------------
         # Custom Events
         milliseconds = pg.USEREVENT
@@ -176,6 +238,7 @@ class BossDevilChan(Level):
             dt *= 60  # Delta time - 60fps physics
             self.last_time = time.time()
             self.click = False
+            self.go = False
             mx, my = pg.mouse.get_pos()  # Get mouse position
             # ----------------------------------------------------------------------------------------------------------
             for event in pg.event.get():
@@ -187,7 +250,8 @@ class BossDevilChan(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
                 if event.type == milliseconds:
-                    self.typewriter.stopwatch()
+                    self.typewriter_l1.stopwatch()
+                    self.typewriter_l2.stopwatch()
                     for timer in self.timer_dict:
                         self.timer_dict[timer].stopwatch()
                     time_elapsed.stopwatch()
@@ -201,8 +265,7 @@ class BossDevilChan(Level):
             self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             # Game Handler
-            self.game_handler()
-            if self.click and self.hp_boss and self.hp_player:
+            if self.go or self.click and self.hp_boss and self.hp_player:
                 if not self.card_game and completed and not self.timer_dict["transition"].seconds:
                     self.trigger_in()
                 elif self.card_game and self.energy == 0 and not self.timer_dict["transition"].seconds:
@@ -257,8 +320,9 @@ class BossDevilChan(Level):
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(dt)  # Draw Boss' Image (See Method Above)
                 # Textbox
-                pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
-                draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
+                pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
+                draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
+                self.game_handler(dt)
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
