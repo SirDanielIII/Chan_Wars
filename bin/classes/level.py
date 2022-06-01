@@ -7,6 +7,8 @@ from bin.colours import *
 class Level(ABC):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__()
+        # ------------------------------------------------------------------------------------------------------------------
+        # Event Handler Attributes
         self.width = width
         self.height = height
         self.surface = surface
@@ -16,17 +18,22 @@ class Level(ABC):
         self.last_time = last_time
         self.config = config
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
-        self.alpha_game = 0
-        self.alpha_text = 0
-        self.fade_in = True
-        self.fade_out = False
-        self.fade_in_text = False
-        self.fade_out_text = False
+        # ------------------------------------------------------------------------------------------------------------------
+        # Level Switching
+        self.alpha_game = 0  # Game Canvas Opacity
+        self.alpha_text = 0  # Text Canvas Opacity
+        self.fade_in = True  # Game Canvas Fade In
+        self.fade_out = False  # Game Canvas Fade Out
+        self.fade_in_text = False  # Text Canvas Fade In
+        self.fade_out_text = False  # Text Canvas Fade In
         self.transition_speed = 10  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
-        self.next_level = None
-        self.click = False
-        self.screen_offset = [0, 0]
-        self.freeze = True
+        self.next_level = None  # Point to next game level (E.G. Main Menu, choose bosses, etc)
+        self.click = False  # Mouse Click
+        self.screen_offset = [0, 0]  # For screen shake
+        self.freeze = True  # Stop logic processing of main game during transitions & off screen
+        # ------------------------------------------------------------------------------------------------------------------
+        # Event Handler
+        self.event = None
 
     # ------------------------------------------------------------------------------------------------------------------
     def restore(self):
@@ -157,7 +164,8 @@ class Level(ABC):
             pg.draw.rect(screen, clr_highlight, bar_highlight)
         bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
         pg.draw.rect(screen, clr_main, bar_main)
-        draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
+        draw_rect_outline(screen, clr_stroke,
+                          pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -169,9 +177,11 @@ class Level(ABC):
         if highlight:
             bar_highlight = pg.Rect(rectangle[0], rectangle[1], rectangle[2] * (last_current / max_current), rectangle[3])
             pg.draw.rect(screen, clr_highlight, bar_highlight)
-        new_w = rectangle[2] * (current / max_current)  # The width of the bar is tied to the percentage loss of the current value compared to the max value
+        new_w = rectangle[2] * (
+                current / max_current)  # The width of the bar is tied to the percentage loss of the current value compared to the max value
         pg.draw.rect(screen, clr_main, pg.Rect(rectangle[0], rectangle[1], new_w, rectangle[3]))
-        draw_rect_outline(screen, clr_stroke, pg.Rect(rectangle[0] - stroke_size, rectangle[1] - stroke_size, rectangle[2] + stroke_size * 2, rectangle[3] + stroke_size * 2))
+        draw_rect_outline(screen, clr_stroke, pg.Rect(rectangle[0] - stroke_size, rectangle[1] - stroke_size, rectangle[2] + stroke_size * 2,
+                                                      rectangle[3] + stroke_size * 2))
 
     # @staticmethod
     # def draw_bar_right(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):

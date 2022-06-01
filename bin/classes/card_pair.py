@@ -16,7 +16,7 @@ def move_pos(in_out, elapsed_time, y, speed):
     return pos
 
 
-class CardPair():
+class CardPair(object):
     def __init__(self, image, pos, size, m, columns, o_set):
         self.size = size
         self.position1 = [o_set[0] - columns + (size[0] + m[0]) * pos[0][0],
