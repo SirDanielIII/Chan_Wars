@@ -17,9 +17,11 @@ class Level(ABC):
         self.config = config
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         self.alpha_game = 0
-        self.alpha_text = 255
+        self.alpha_text = 0
         self.fade_in = True
         self.fade_out = False
+        self.fade_in_text = False
+        self.fade_out_text = False
         self.transition_speed = 10  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
         self.next_level = None
         self.click = False
