@@ -26,7 +26,7 @@ class BossMrPhone(Level):
         self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False  # Use this to stop the game\
-        self.energy = 4
+        self.energy = None
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
@@ -56,7 +56,7 @@ class BossMrPhone(Level):
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
-        self.player.columns = 5
+        self.player.columns = 7
         self.boss_data = self.config.get_config()["bosses"]["MrPhone"]
         self.mr_phone_boss.metadata = self.boss_data
         self.hp_player = self.config.player_hp
