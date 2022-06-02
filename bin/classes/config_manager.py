@@ -32,7 +32,6 @@ class Config(object):
         # ----------------------------------------------------------------------------------------------------------------------------
         self.card_size = (120, 180)
         # Settings
-        self.player_hp = None
         self.enable_music = None
         self.enable_sfx = None
         self.music_vol = None
@@ -76,7 +75,6 @@ class Config(object):
                 self.default = None
         with open(os.getcwd() + "/config.yml", "r") as f:
             self.data = yaml.safe_load(f)
-            self.player_hp = self.data["player"]["hp"]
             self.enable_music = self.data["settings"]["audio"]["enable_music"]
             self.enable_sfx = self.data["settings"]["audio"]["enable_sfx"]
             self.music_vol = self.data["settings"]["audio"]["music_vol"]

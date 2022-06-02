@@ -49,11 +49,11 @@ class DevilChan(Boss):
         self.opening_phrases = None
 
     def load_boss_info(self):
-        self.health = self.metadata["hp"]
-        self.energy = self.metadata["energy"]
-        self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["attack"]
-        self.opening_phrases = self.metadata["phrases"]["opening"]
+        self.health = self.metadata["boss"]["hp"]
+        self.energy = self.metadata["player"]["energy"]
+        self.basic_power = self.metadata["boss"]["basic"][1]
+        self.attack_phrases = self.metadata["boss"]["phrases"]["attack"]
+        self.opening_phrases = self.metadata["boss"]["phrases"]["opening"]
 
     def update(self, damage, turn_counter=0):
         self.health -= damage
@@ -101,21 +101,21 @@ class MsG(Boss):
         self.siberia = False
 
     def load_boss_info(self):
-        self.health = self.metadata["hp"]
-        self.energy = self.metadata["energy"]
-        self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["attack"]
+        self.health = self.metadata["boss"]["hp"]
+        self.energy = self.metadata["player"]["energy"]
+        self.basic_power = self.metadata["boss"]["basic"][1]
+        self.attack_phrases = self.metadata["boss"]["phrases"]["attack"]
 
     def update(self, damage, turn_counter=0):
         self.health -= damage
         if self.siberia:
-            self.energy = self.metadata["energy"] - 1
+            self.energy = self.metadata["player"]["energy"] - 1
         else:
-            self.energy = self.metadata["energy"]
+            self.energy = self.metadata["player"]["energy"]
 
     def trigger_method(self):
         self.trigger = "attack"
-        if (self.health == self.metadata["hp"] and not self.special) or (self.health <= self.metadata["hp"] // 2 and self.siberia):
+        if (self.health == self.metadata["boss"]["hp"] and not self.special) or (self.health <= self.metadata["boss"]["hp"] // 2 and self.siberia):
             self.trigger = "special"
         if self.health <= 0:
             self.trigger = "die"
@@ -130,7 +130,7 @@ class MsG(Boss):
                 return self.trigger, self.special_action()
 
     def death(self):
-        return self.metadata["phrases"]["death"], "death"
+        return self.metadata["boss"]["phrases"]["death"], "death"
 
     def basic_action(self):
         return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "normal"
@@ -139,11 +139,11 @@ class MsG(Boss):
         if not self.siberia:
             self.special = 1
             self.siberia = True
-            return self.siberia, self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)], "siberia-01"
+            return self.siberia, self.metadata["boss"]["phrases"]["special"][random.randint(0, len(self.metadata["boss"]["phrases"]["special"]) - 1)], "siberia-01"
         else:
             self.special = 1
             self.siberia = False
-            return self.siberia, self.metadata["phrases"]["special"], "siberia-02"
+            return self.siberia, self.metadata["boss"]["phrases"]["special"], "siberia-02"
             # ["out"]
 
 
@@ -162,10 +162,10 @@ class MrPhone(Boss):
         self.turn_count = 0
 
     def load_boss_info(self):
-        self.health = self.metadata["hp"]
-        self.energy = self.metadata["energy"]
-        self.basic_power = self.metadata["basic"][1]
-        self.attack_phrases = self.metadata["phrases"]["attack"]
+        self.health = self.metadata["boss"]["hp"]
+        self.energy = self.metadata["player"]["energy"]
+        self.basic_power = self.metadata["boss"]["basic"][1]
+        self.attack_phrases = self.metadata["boss"]["phrases"]["attack"]
 
     def update(self, damage, turn_counter=0):
         self.health -= damage
@@ -173,7 +173,7 @@ class MrPhone(Boss):
         if damage:
             self.damaged = True
         self.turn_count = turn_counter
-        self.energy = self.metadata["energy"]
+        self.energy = self.metadata["player"]["energy"]
         return self.health, self.energy
 
     def trigger_method(self):
@@ -197,13 +197,13 @@ class MrPhone(Boss):
                 return self.trigger, self.kill()
 
     def kill(self):
-        return self.metadata["kill"][1], self.metadata["phrases"]["kill"][random.randint(0, len(self.metadata["phrases"]["kill"]) - 1)], "good_game"
+        return self.metadata["boss"]["kill"][1], self.metadata["boss"]["phrases"]["kill"][random.randint(0, len(self.metadata["boss"]["phrases"]["kill"]) - 1)], "good_game"
 
     def death(self):
-        return self.metadata["phrases"]["death"], "death"
+        return self.metadata["boss"]["phrases"]["death"], "death"
 
     def basic_action(self):
         return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "thinking_question"
 
     def special_action(self):
-        return self.metadata["special"][1], self.metadata["phrases"]["special"][random.randint(0, len(self.metadata["phrases"]["special"]) - 1)], "disappointment"
+        return self.metadata["boss"]["special"][1], self.metadata["boss"]["phrases"]["special"][random.randint(0, len(self.metadata["boss"]["phrases"]["special"]) - 1)], "disappointment"

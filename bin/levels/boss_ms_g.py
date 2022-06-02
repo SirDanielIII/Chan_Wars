@@ -36,8 +36,8 @@ class BossMsG(Level):
         self.hp_bar_boss = None
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config()["bosses"]["MsG"]
-        self.hp_player = self.config.player_hp
+        self.boss_data = self.config.get_config()["level_2"]
+        self.hp_player = self.boss_data["player"]["hp"]
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)

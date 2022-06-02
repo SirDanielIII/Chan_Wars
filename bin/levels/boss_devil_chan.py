@@ -69,19 +69,19 @@ class BossDevilChan(Level):
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes Initialization
-        self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
+        self.boss_data = self.config.get_config()["level_1"]
         self.boss = DChan(self.boss_data)
         self.boss.load_boss_info()
-        self.hp_boss = self.boss_data["hp"]
+        self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.boss.metadata = self.boss_data
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
-        self.hp_player = self.config.player_hp
+        self.hp_player = self.boss_data["player"]["hp"]
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.player.image_list = self.config.image_list
-        self.player.columns = self.boss_data["columns"]
-        self.energy = self.boss_data["energy"]
+        self.player.columns = self.boss_data["player"]["columns"]
+        self.energy = self.boss_data["player"]["energy"]
         self.card_complete = [0]
         self.pairs = None
         # ------------------------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ class BossDevilChan(Level):
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.game_canvas,
+        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 

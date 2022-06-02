@@ -57,9 +57,9 @@ class Test(Level):
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
         self.player.columns = 3
-        self.boss_data = self.config.get_config()["bosses"]["DevilChan"]
+        self.boss_data = self.config.get_config()["level_1"]
         self.devil_chan_boss.metadata = self.boss_data
-        self.hp_player = self.config.player_hp
+        self.hp_player = self.boss_data["player"]["hp"]
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
