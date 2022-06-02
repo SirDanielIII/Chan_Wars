@@ -61,11 +61,13 @@ class BossDevilChan(Level):
         self.typ_box_align_y2 = 730
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "cinematic"
+        self.event = "intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
                            "update_delay": Timer()}
+
+        self.ran = 0
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         # ------------------------------------------------------------------------------------------------------------------
@@ -159,31 +161,33 @@ class BossDevilChan(Level):
 
     def event_handler(self, dt):
         match self.event:
-            case "cinematic":
+            case "intro":
                 self.intro(dt)
-            case "attack":
-                self.attack()
+            # case "attack":
+            #     self.attack()
             case "special":
                 self.special()
             case "dialogue":
                 self.dialogue(dt, self.boss.phrases["dialogue"])
             case "death":
                 self.game_over(dt)
+        # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
     def intro(self, dt):
         seconds = self.timer_dict["dialogue"].seconds
         clear = self.boss.phrases["intro"][self.typ_msg]["clear"]
         wait = self.boss.phrases["intro"][self.typ_msg]["wait"]
-        if seconds > 0.5:
-            if self.typ_update:  # This updates only once per message change BUG BUG BUG IT GOES TO 1 AND NOT 0 AT FIRSTs
+        if seconds > 1.0:
+            if self.typ_update:
                 self.typ_msg += 1
             self.textbox_logic(self.boss.phrases["intro"], dt, clear, wait, self.boss.phrases["intro"][self.typ_msg]["fade_in"],
                                self.boss.phrases["intro"][self.typ_msg]["fade_out"])
-            # End cinematic event & reset message value once all lines have finished rendering
+            # End event & reset message value once all lines have finished rendering
             if self.typ_msg == len(self.boss.phrases["intro"]):
                 self.event = "attack"
                 self.typ_msg = 0
                 self.timer_dict["dialogue"].time_reset()
+        print(self.event)
 
     def attack(self):
         # ------------------------------------------------------------------------------------------------------------------
@@ -229,8 +233,6 @@ class BossDevilChan(Level):
         clear = dialogue_dict[self.typ_msg]["clear"]
         wait = dialogue_dict[self.typ_msg]["wait"]
         if seconds > 1.5:
-            if self.typ_update:  # This updates only once per message change
-                self.typ_msg += 1
             self.textbox_logic(dialogue_dict, dt, clear, wait, dialogue_dict[self.typ_msg]["fade_in"],
                                dialogue_dict[self.typ_msg]["fade_out"])
             # End cinematic event & reset message value once all lines have finished rendering
@@ -301,6 +303,7 @@ class BossDevilChan(Level):
         return False
 
     def next_msg(self, wait):
+        # print(self.timer_dict["update_delay"].seconds, wait)
         if self.timer_dict["update_delay"].seconds < wait:
             self.timer_dict["update_delay"].time_start()
         else:  # Reset values
