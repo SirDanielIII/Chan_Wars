@@ -43,26 +43,30 @@ level_1:
         block: 0
         status: None
         heal: 20
+      death:
+        phrases:
+          - NOOOOOOO!!!
+          - THIS IS BLASPHEMYYYYYY!!! *dies*
+        damage: 0
+        block: 0
+        status: None
+        heal: 0
     hp: 60
     name: Devil Chan
-    phrases:
-      death:
-        - NOOOOOOO!!!
-        - THIS IS BLASPHEMYYYYYY!!! *dies*
-      opening:
-        - - Angel Chan...
-          - 0.1
-          - - 0
-            - 0
-          - 1.0
-        - - I loved you!
-          - 0.3
-          - - 5
-            - 0
-        - - How could you do this!?
-          - 0.2
-          - - 20
-            - 20
+    opening:
+      - - Angel Chan...
+        - 0.1
+        - - 0
+          - 0
+        - 1.0
+      - - I loved you!
+        - 0.3
+        - - 5
+          - 0
+      - - How could you do this!?
+        - 0.2
+        - - 20
+          - 20
   enemies:
     flying:
       health: 50
@@ -107,7 +111,7 @@ level_1:
           block: 0
           status: None
           damage: 25
-          heal: 0
+          heal: -30
     big:
       health: 75
       name: Big Chan
@@ -219,15 +223,26 @@ level_2:
         block: 0
         status: Siberia, 999
         heal: 0
+      death:
+        phrases:
+          - why must you use... list comphrehension... *dies*
+        damage: 0
+        block: 0
+        status: None
+        heal: 0
+      siberia:
+        phrases:
+          - You!!! How did you escape Siberia!?
+        damage: 0
+        block: 0
+        status: Left Siberia, 999
+        heal: 0
     hp: 100
     name: Ms. G
-    phrases:
-      death:
-        - why must you use... list comphrehension... *dies*
-      opening:
-        - Hello Sean!
-        - How are you doing?
-        - Wait, you're not Sean!
+    opening:
+      - Hello Sean!
+      - How are you doing?
+      - Wait, you're not Sean!
   enemies:
     flying:
       health: 75
@@ -270,7 +285,7 @@ level_2:
         corpse_explosion:
           phrase: Corpse Explosion
           block: 0
-          heal: 0
+          heal: -40
           status: None
           damage: 35
     big:
@@ -383,16 +398,20 @@ level_3:
         block: 0
         status: None
         heal: 0
+      death:
+        phrases:
+          - Huh.
+          - Looks like you did practice perfectly.
+          - Welp, I'll be on my way then.
+          - '*leaves*'
+        damage: 0
+        block: 0
+        status: None
+        heal: 0
     hp: 200
     name: Mr. Phone
-    phrases:
-      death:
-        - Huh.
-        - Looks like you did practice perfectly.
-        - Welp, I'll be on my way then.
-        - '*leaves*'
-      opening:
-        - Did you write your TQP?
+    opening:
+      - Did you write your TQP?
   enemies:
     flying:
       health: 100
@@ -436,7 +455,7 @@ level_3:
           phrase: Corpse Explosion
           block: 0
           status: None
-          heal: 0
+          heal: -50
           damage: 50
     big:
       health: 150
