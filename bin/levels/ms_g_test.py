@@ -57,11 +57,12 @@ class BossMsG(Level):
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.player.image_list = self.config.image_list
         self.player.columns = 5
-        self.boss_data = self.config.get_config()["bosses"]["MsG"]
+        self.boss_data = self.config.get_config()["level_2"]
         self.ms_g_boss.metadata = self.boss_data
-        self.hp_player = self.config.player_hp
+        self.hp_player = self.boss_data["player"]["hp"]
+        print(self.hp_player)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_boss = self.boss_data["hp"]
+        self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.MS_G_faces["normal"]
 
@@ -74,7 +75,7 @@ class BossMsG(Level):
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
@@ -251,7 +252,7 @@ class BossMsG(Level):
             if self.hp_player <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.config.end_screens[0].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.lose_screen, (0, 0))
             elif self.hp_boss <= 0:
                 self.death_stopwatch.time_start()
