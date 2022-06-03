@@ -24,7 +24,15 @@ level_1:
         block: 0
         status: Weakness, 1
         heal: 0
-
+      basic_3:
+        phrases:
+          - Face my wrath!
+          - Prepare yourself for the ultimate doom!
+          - You are not prepared!
+        damage: 0
+        block: 15
+        status: Vulnerable, 1
+        heal: 0
       special:
         phrases:
           - That's a neat little hack that I found!
@@ -178,31 +186,48 @@ level_2:
     energy: 4
     rows: 4
   boss:
-    basic:
-      - roast
-      - 15
+    attacks:
+      basic_1:
+        phrases:
+          - For Sean!
+          - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
+        damage: 15
+        block: 0
+        status: Vulnerable, 1
+        heal: 0
+      basic_2:
+        phrases:
+          - Don't ask me, use your brain.
+          - I have WELHpon *pulls out a meter stick*
+        damage: 15
+        block: 0
+        status: Weakness, 2
+        heal: 0
+      basic_3:
+        phrases:
+          - Do it on repl.it!!!
+          - One of them is a woman, the other has an Indian accent if you're into it.
+        damage: 0
+        block: 20
+        status: None
+        heal: 0
+      special:
+        phrases:
+          - You! Go to Siberia!
+          - You deserve to go to Siberia!
+        damage: 0
+        block: 0
+        status: Siberia, 999
+        heal: 0
     hp: 100
     name: Ms. G
     phrases:
-      attack:
-        - For Sean!
-        - One of them is a woman, the other has an Indian accent if you're into it.
-        - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
-        - Do it on repl.it!!!
-        - Don't ask me, use your brain.
-        - I have WELHpon *pulls out a meter stick*
       death:
         - why must you use... list comphrehension... *dies*
       opening:
         - Hello Sean!
         - How are you doing?
         - Wait, you're not Sean!
-      special:
-        - You! Go to Siberia!
-        - You deserve to go to Siberia!
-    special:
-      - siberia
-      - siberia
   enemies:
     flying:
       health: 75
@@ -318,6 +343,7 @@ level_2:
           block: 0
           heal: 0
           status: Weakness, 2
+
 level_3:
   player:
     hp: 100
@@ -325,41 +351,48 @@ level_3:
     energy: 5
     rows: 4
   boss:
-    basic:
-      phrases:
-        - You need to touch grass.
-        - My son could beat you at this game.
-        - Easy choices hard life, hard choices easy life.
-        - It's only awkward if you make it awkward.
-        - You have to build capacity.
-        - You chose that? Come on, that's crazy talk!!!
-        - Can't you be doing more?
-      damage: 0
+    attacks:
+      basic_1:
+        phrases:
+          - You need to touch grass.
+          - My son could beat you at this game.
+          - Easy choices hard life, hard choices easy life.
+          - It's only awkward if you make it awkward.
+          - You have to build capacity.
+          - You chose that? Come on, that's crazy talk!!!
+          - Can't you be doing more?
+        damage: 0
+        block: 0
+        status: disappointment, 1
+        heal: 0
+      basic_2:
+        phrases:
+          - Almost everything is a choice... including breathing!
+          - Reflect, reflect, REFLECT HARDER!!!
+          - Face the monster... ME!
+          - Keep your head on a swivel!
+        damage: 5
+        block: 0
+        status: None
+        heal: 0
+      special:
+        phrases:
+          - Next time, just practice perfectly.
+          - My record just increased :p
+        damage: 999
+        block: 0
+        status: None
+        heal: 0
     hp: 200
-    kill:
-      - thinking_question
-      - 9999
     name: Mr. Phone
     phrases:
-      attack:
       death:
         - Huh.
         - Looks like you did practice perfectly.
         - Welp, I'll be on my way then.
         - '*leaves*'
-      kill:
-        - Next time, just practice perfectly.
-        - My record just increased :p
       opening:
         - Did you write your TQP?
-      special:
-        - Almost everything is a choice... including breathing!
-        - Reflect, reflect, REFLECT HARDER!!!
-        - Face the monster... ME!
-        - Keep your head on a swivel!
-    special:
-      - emotional_damage
-      - 0
   enemies:
     flying:
       health: 100
