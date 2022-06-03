@@ -45,8 +45,7 @@ class DevilChan(Boss):
         self.health = None
         self.energy = None
         self.basic_power = None
-        self.attack_phrases = None
-        self.opening_phrases = None
+        self.phrases = None
 
     def load_boss_info(self):
         self.health = self.metadata["boss"]["hp"]
@@ -79,7 +78,7 @@ class DevilChan(Boss):
         return self.metadata["phrases"]["death"]
 
     def basic_action(self):
-        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)]
+        return self.basic_power, self.phrases["attack"][random.randint(0, len(self.phrases["attack"]) - 1)]
 
     def special_action(self):
         self.health += self.metadata["special"][2]

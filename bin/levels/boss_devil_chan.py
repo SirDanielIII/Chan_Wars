@@ -45,26 +45,29 @@ class BossDevilChan(Level):
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
         self.hp_bar_boss = None
+        self.acted = True
+        self.completed = True
         # ------------------------------------------------------------------------------------------------------------------
         # Text Bar Attributes
-        self.text_transition_in = False
-        self.text_transition_out = False
-        self.typewriter_l1 = Typewriter()
-        self.typewriter_l2 = Typewriter()
-        self.finished = False
-        self.update = True
-        self.message = 0
-        self.align_x = 130
-        self.align_y1 = 670
-        self.align_y2 = 730
+        self.typ_transition_in = False
+        self.typ_transition_out = False
+        self.typ_l1 = Typewriter()
+        self.typ_l2 = Typewriter()
+        self.typ_finished = False
+        self.typ_update = True
+        self.typ_msg = 0
+        self.typ_box_align_x = 130
+        self.typ_box_align_y1 = 670
+        self.typ_box_align_y2 = 730
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "cinematic"
-        self.cinematic = True
+        self.event = "intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
-        self.timer_dict = {"action": Timer(), "card": Timer(), "cinematic": Timer(), "transition": Timer(), "death": Timer(),
+        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
                            "update_delay": Timer()}
+
+        self.ran = 0
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         # ------------------------------------------------------------------------------------------------------------------
@@ -75,6 +78,8 @@ class BossDevilChan(Level):
         self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.boss.metadata = self.boss_data
+        self.acted = True
+        self.completed = True
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
         self.hp_player = self.boss_data["player"]["hp"]
@@ -85,17 +90,17 @@ class BossDevilChan(Level):
         self.card_complete = [0]
         self.pairs = None
         # ------------------------------------------------------------------------------------------------------------------
-        # Text Bar Attributes
-        self.text_transition_in = False
-        self.text_transition_out = False
-        self.typewriter_l1 = Typewriter()
-        self.typewriter_l2 = Typewriter()
-        self.finished = False
-        self.update = True
-        self.message = 0
-        self.align_x = 130
-        self.align_y1 = 670
-        self.align_y2 = 730
+        # Text Box & Typewriter Attributes
+        self.typ_transition_in = False
+        self.typ_transition_in = False
+        self.typ_l1 = Typewriter()
+        self.typ_l2 = Typewriter()
+        self.typ_finished = False
+        self.typ_update = True
+        self.typ_msg = 0
+        self.typ_box_align_x = 130
+        self.typ_box_align_y1 = 670
+        self.typ_box_align_y2 = 730
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
@@ -156,113 +161,169 @@ class BossDevilChan(Level):
 
     def event_handler(self, dt):
         match self.event:
-            case "cinematic":
-                pass
+            case "intro":
+                self.intro(dt)
+            # case "attack":
+            #     self.attack()
+            case "special":
+                self.special()
             case "dialogue":
-                pass
-            case "attack":
-                pass
+                self.dialogue(dt, self.boss.phrases["dialogue"])
             case "death":
-                pass
-            case "card game":
-                pass
+                self.game_over(dt)
+        # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
-        if self.cinematic:
-            seconds = self.timer_dict["cinematic"].seconds
-            clear = self.boss.opening_phrases[self.message]["clear"]
-            wait = self.boss.opening_phrases[self.message]["wait"]
-            if seconds > 1.5:
-                self.textbox_logic(self.boss.opening_phrases, dt, clear, wait, self.boss.opening_phrases[self.message]["fade_in"],
-                                   self.boss.opening_phrases[self.message]["fade_out"])
-                if self.message == len(self.boss.opening_phrases):
-                    self.cinematic = False
-                    self.message = 0
-        else:
-            pass
+    def intro(self, dt):
+        seconds = self.timer_dict["dialogue"].seconds
+        clear = self.boss.phrases["intro"][self.typ_msg]["clear"]
+        wait = self.boss.phrases["intro"][self.typ_msg]["wait"]
+        if seconds > 1.0:
+            if self.typ_update:
+                self.typ_msg += 1
+            self.textbox_logic(self.boss.phrases["intro"], dt, clear, wait, self.boss.phrases["intro"][self.typ_msg]["fade_in"],
+                               self.boss.phrases["intro"][self.typ_msg]["fade_out"])
+            # End event & reset message value once all lines have finished rendering
+            if self.typ_msg == len(self.boss.phrases["intro"]):
+                self.event = "attack"
+                self.typ_msg = 0
+                self.timer_dict["dialogue"].time_reset()
+        print(self.event)
+
+    def attack(self):
+        # ------------------------------------------------------------------------------------------------------------------
+        # Matching Game Triggers
+        if self.hp_boss and self.hp_player:
+            if not self.card_game and self.completed and not self.timer_dict["transition"].seconds:
+                self.trigger_in()
+            elif self.card_game and self.energy == 0 and not self.timer_dict["transition"].seconds:
+                self.trigger_out()
+        # ------------------------------------------------------------------------------------------------------------------
+        if self.game_transition_in:
+            if not self.timer_dict["transition"].activate_timer:
+                self.timer_dict["transition"].time_start()
+            if self.card_canvas_y > 1:
+                self.card_canvas_y = move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
+            elif self.card_canvas_y <= 1:
+                self.card_canvas_y = 0
+                self.game_transition_in = False
+                self.card_game = True
+                self.timer_dict["transition"].time_reset()
+        # ------------------------------------------------------------------------------------------------------------------
+        # Transition Out
+        if self.game_transition_out:
+            if not self.timer_dict["transition"].activate_timer:
+                self.timer_dict["transition"].time_start()
+            if self.card_canvas_y < self.height - 1:
+                self.card_canvas_y = move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
+                self.card_game = False
+            elif self.card_canvas_y >= self.height - 1:
+                self.card_canvas_y = self.height
+                self.game_transition_out = False
+                self.acted = False
+                self.completed = False
+                self.timer_dict["transition"].time_reset()
+
+    def special(self):
+        pass
+
+    def dialogue(self, dialogue_dict, dt):
+        if not self.timer_dict["dialogue"].activate_timer:
+            self.timer_dict["dialogue"].time_start()
+        seconds = self.timer_dict["dialogue"].seconds
+        clear = dialogue_dict[self.typ_msg]["clear"]
+        wait = dialogue_dict[self.typ_msg]["wait"]
+        if seconds > 1.5:
+            self.textbox_logic(dialogue_dict, dt, clear, wait, dialogue_dict[self.typ_msg]["fade_in"],
+                               dialogue_dict[self.typ_msg]["fade_out"])
+            # End cinematic event & reset message value once all lines have finished rendering
+            if self.typ_msg == len(self.boss.opening_phrases):
+                self.event = "attack"
+                self.typ_msg = 0
+
+    def game_over(self, dt):
+        pass
 
     def textbox_logic(self, messages, dt, clear, wait, fade_in, fade_out):
+        """"
+        E.G. self.boss.opening_phrases
+          -> [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
+        """
         # ----------------------------------------------------------------------------------------------------------
-        if self.update:  # Update these values once per message change
-            self.update = False
+        if self.typ_update:  # Update these values once per message change
+            self.typ_update = False
             self.fade_in_text = fade_in
             self.fade_out_text = fade_out
         # ----------------------------------------------------------------------------------------------------------
         # Textbox Fade In
-        if self.fade_in_text and not self.finished:
+        if self.fade_in_text and not self.typ_finished:
             if self.fade_screen_in("text", self.text_canvas, self.transition_speed, dt):
                 self.fade_in_text = False
         # ----------------------------------------------------------------------------------------------------------
-        # E.G. self.boss.opening_phrases -> [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
         # Draw Text
-        if not self.fade_in_text:
-            match messages[self.message]["line"]:
-                case 1:
-                    self.typewriter_l1.queue_text(
-                        messages[self.message]["text"])  # Method has logic inside it to only update once in a loop
-                    self.finished = self.typewriter_l1.render(self.text_canvas,
-                                                              messages[self.message]["delay"],
-                                                              self.config.f_boss_text, white, self.align_x, self.align_y1,
-                                                              messages[self.message]["shake"],
-                                                              messages[self.message]["pause"], 0)
-                case 2:  # Migrate the dictionary into a parameter
-                    self.typewriter_l2.queue_text(
-                        messages[self.message]["text"])  # Method has logic inside it to only update once in a loop
+        if not self.fade_in_text:  # Run when textbox is not fading in
+            match messages[self.typ_msg]["line"]:
+                case 1:  # Line 1
+                    self.typ_l1.queue_text(messages[self.typ_msg]["text"])  # Method has logic inside it to only update once in a loop
+                    self.typ_finished = self.typ_l1.render(self.text_canvas,
+                                                           messages[self.typ_msg]["delay"],
+                                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                                           messages[self.typ_msg]["shake"],
+                                                           messages[self.typ_msg]["pause"], 0)
+                case 2:  # Line 2
+                    self.typ_l2.queue_text(messages[self.typ_msg]["text"])  # Method has logic inside it to only update once in a loop
                     # Render first line
-                    self.typewriter_l1.render(self.text_canvas,
-                                              messages[self.message - 1]["delay"],
-                                              self.config.f_boss_text, white, self.align_x, self.align_y1,
-                                              messages[self.message - 1]["shake"],
-                                              messages[self.message - 1]["pause"], 0)
+                    self.typ_l1.render(self.text_canvas,
+                                       messages[self.typ_msg - 1]["delay"],
+                                       self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                       messages[self.typ_msg - 1]["shake"],
+                                       messages[self.typ_msg - 1]["pause"], 0)
                     # # Render second line
-                    self.finished = self.typewriter_l2.render(self.text_canvas,
-                                                              messages[self.message]["delay"],
-                                                              self.config.f_boss_text, white, self.align_x, self.align_y2,
-                                                              messages[self.message]["shake"],
-                                                              messages[self.message]["pause"], 0)
+                    self.typ_finished = self.typ_l2.render(self.text_canvas,
+                                                           messages[self.typ_msg]["delay"],
+                                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
+                                                           messages[self.typ_msg]["shake"],
+                                                           messages[self.typ_msg]["pause"], 0)
         # ----------------------------------------------------------------------------------------------------------
-        if self.finished:  # This occurs after the typewriter has finished blitting and completed its pause
+        if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
             if self.fade_out_text:  # Fades out textbox if required
                 if self.fade_screen_out("text", self.text_canvas, self.transition_speed, dt):
-                    if clear:  # Clears textboxes if true & after the textbox finishes fading out
-                        self.typewriter_l1.clear()
-                        self.typewriter_l2.clear()
-                    if self.message < len(messages) - 1:  # Transition to next message
+                    if clear:  # Clears textbox if true & after the textbox finishes fading out
+                        self.typ_l1.clear()
+                        self.typ_l2.clear()
+                    if self.typ_msg < len(messages) - 1:  # Transition to next message
                         self.next_msg(wait)
                         return True
             else:
-                if clear:  # Clears textboxes if true (even if fade out isn't true) - Instant clear
-                    self.typewriter_l1.clear()
-                    self.typewriter_l2.clear()
-                if self.message < len(messages) - 1:  # Transition to next message
+                if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
+                    self.typ_l1.clear()
+                    self.typ_l2.clear()
+                if self.typ_msg < len(messages) - 1:  # Transition to next message
                     self.next_msg(wait)
                     return True
         return False
 
     def next_msg(self, wait):
+        # print(self.timer_dict["update_delay"].seconds, wait)
         if self.timer_dict["update_delay"].seconds < wait:
             self.timer_dict["update_delay"].time_start()
-        else:
+        else:  # Reset values
             self.timer_dict["update_delay"].time_reset()
-            self.message += 1
-            self.update = True
-            self.finished = False
-            self.typewriter_l1.unlock()
-            self.typewriter_l2.unlock()
+            self.typ_update = True
+            self.typ_finished = False
+            self.typ_l1.unlock()
+            self.typ_l2.unlock()
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
         self.reload()
-        self.timer_dict["cinematic"].time_start()
-        self.typewriter_l1.time_start()
-        self.typewriter_l2.time_start()
+        self.timer_dict["dialogue"].time_start()
+        self.typ_l1.time_start()
+        self.typ_l2.time_start()
         # ----------------------------------------------------------------------------------------------------------
         # Custom Events
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
         # ----------------------------------------------------------------------------------------------------------
-        # Initial parameters
-        acted = True
-        completed = True
         time_elapsed = Timer()
         time_elapsed.time_start()
         while True:
@@ -281,11 +342,11 @@ class BossDevilChan(Level):
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
-                if event.type == milliseconds:
-                    self.typewriter_l1.stopwatch()
-                    self.typewriter_l2.stopwatch()
-                    for timer in self.timer_dict:
-                        self.timer_dict[timer].stopwatch()
+                if event.type == milliseconds:  # Timers
+                    self.typ_l1.stopwatch()
+                    self.typ_l2.stopwatch()
+                    for timer in self.timer_dict:  # Loop through timers and run them
+                        self.timer_dict[timer].stopwatch()  # If `self.activate_timer = False` then this won't update
                     time_elapsed.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
@@ -296,40 +357,8 @@ class BossDevilChan(Level):
             self.fill_screens()
             self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            # Matching Game Triggers
-            if self.hp_boss and self.hp_player:
-                if not self.card_game and completed and not self.timer_dict["transition"].seconds:
-                    self.trigger_in()
-                elif self.card_game and self.energy == 0 and not self.timer_dict["transition"].seconds:
-                    self.trigger_out()
-            # ------------------------------------------------------------------------------------------------------------------
-            if self.game_transition_in:
-                if not self.timer_dict["transition"].activate_timer:
-                    self.timer_dict["transition"].time_start()
-                if self.card_canvas_y > 1:
-                    self.card_canvas_y = move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
-                elif self.card_canvas_y <= 1:
-                    self.card_canvas_y = 0
-                    self.game_transition_in = False
-                    self.card_game = True
-                    self.timer_dict["transition"].time_reset()
-            # ------------------------------------------------------------------------------------------------------------------
-            # Transition Out
-            if self.game_transition_out:
-                if not self.timer_dict["transition"].activate_timer:
-                    self.timer_dict["transition"].time_start()
-                if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
-                    self.card_game = False
-                elif self.card_canvas_y >= self.height - 1:
-                    self.card_canvas_y = self.height
-                    self.game_transition_out = False
-                    acted = False
-                    completed = False
-                    self.timer_dict["transition"].time_reset()
-            # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
-                if not self.timer_dict["action"].activate_timer and not completed:
+                if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if not self.timer_dict["death"].activate_timer:
                     if self.timer_dict["action"].seconds > 1:
@@ -337,22 +366,24 @@ class BossDevilChan(Level):
                         self.hp_boss = self.boss.health
                         self.energy = self.boss.energy
                         self.damage = 0
-                    if self.timer_dict["action"].seconds > 1.5 and not acted:
+                    if self.timer_dict["action"].seconds > 1.5 and not self.acted:
                         self.boss.trigger_method()
                         action = self.boss.act()
                         if action[0] != "die":
                             self.hp_player -= action[1][0]
                         self.hp_boss = self.boss.health
-                        acted = True
+                        self.acted = True
                     elif self.timer_dict["action"].seconds > 2:
                         self.timer_dict["action"].time_reset()
-                        completed = True
+                        self.completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss()  # Draw Boss' Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
-                self.event_handler(dt)
+                # ------------------------------------------------------------------------------------------------------------------
+                if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
+                    self.event_handler(dt)
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
