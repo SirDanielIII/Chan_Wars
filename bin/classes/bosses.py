@@ -103,59 +103,37 @@ class MrPhone(Boss):
     def __init__(self, config):
         super().__init__()
         self.metadata = config
-        self.trigger = None
-        self.special = 0
         self.health = None
         self.energy = None
-        self.basic_power = None
-        self.attack_phrases = None
+        self.attacks = None
+        self.death = None
+        self.block = 0
         self.special = 0
         self.damaged = True
-        self.turn_count = 0
+        self.special_move = None
 
     def load_boss_info(self):
+        self.attacks = {b: self.metadata["boss"]["attacks"][a]
+                        for (a, b) in (self.metadata["boss"]["attacks"], range(len(self.metadata["boss"]["attacks"]))) if "special" not in a and "death" not in a}
+        self.special_move = self.metadata["boss"]["attacks"]["special"]
+        self.death = self.metadata["boss"]["attacks"]["death"]
         self.health = self.metadata["boss"]["hp"]
         self.energy = self.metadata["player"]["energy"]
-        self.basic_power = self.metadata["boss"]["basic"][1]
-        self.attack_phrases = self.metadata["boss"]["phrases"]["attack"]
 
-    def update(self, damage, turn_counter=0):
-        self.health -= damage
+    def act(self, turn_counter):
+        move = self.attacks[turn_counter % (len(self.attacks - 1))]
+        if not self.damaged:
+            move = self.special_move
+            self.special = True
+        if self.health <= 0:
+            move = self.death
+        self.health += move[1][3]
+        self.block += move[1][1]
+        return move["phrases"][random.randint(0, len(move["phrases"] - 1))], move[1][0], move[1][2]
+
+    def update(self, damage):
+        self.energy = self.metadata["player"]["energy"]
         self.damaged = False
         if damage:
             self.damaged = True
-        self.turn_count = turn_counter
-        self.energy = self.metadata["player"]["energy"]
-        return self.health, self.energy
-
-    def trigger_method(self):
-        self.trigger = "attack"
-        if not self.turn_count % 4:
-            self.trigger = "special"
-        if not self.damaged:
-            self.trigger = "kill"
-        if self.health <= 0:
-            self.trigger = "die"
-
-    def act(self):
-        match self.trigger:
-            case "attack":
-                return self.trigger, self.basic_action()
-            case "die":
-                return self.trigger, self.death()
-            case "special":
-                return self.trigger, self.special_action()
-            case "kill":
-                return self.trigger, self.kill()
-
-    def kill(self):
-        return self.metadata["boss"]["kill"][1], self.metadata["boss"]["phrases"]["kill"][random.randint(0, len(self.metadata["boss"]["phrases"]["kill"]) - 1)], "good_game"
-
-    def death(self):
-        return self.metadata["boss"]["phrases"]["death"], "death"
-
-    def basic_action(self):
-        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "thinking_question"
-
-    def special_action(self):
-        return self.metadata["boss"]["special"][1], self.metadata["boss"]["phrases"]["special"][random.randint(0, len(self.metadata["boss"]["phrases"]["special"]) - 1)], "disappointment"
+        self.health -= damage
