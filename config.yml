@@ -1,0 +1,509 @@
+level_1:
+  player:
+    hp: 50
+    columns: 3
+    energy: 3
+    rows: 4
+  boss:
+    attacks:
+      basic_1:
+        phrases:
+          - For My Lost Love!
+          - World Shaking Explosion Fist!
+          - North Star Spear!
+        damage: 10
+        block: 10
+        status: None
+        heal: 0
+      basic_2:
+        phrases:
+          - Million Soul Bomb!
+          - Burning Sun Beam!
+          - Point Two Electron Volts!
+        damage: 15
+        block: 0
+        status: Weakness, 1
+        heal: 0
+
+      special:
+        phrases:
+          - That's a neat little hack that I found!
+          - With this hack, I'll steal your health for myself.
+          - I hope you're prepared for this.
+          - You know, I'm something of a scientist myself.
+        damage: 10
+        block: 0
+        status: None
+        heal: 20
+    hp: 60
+    name: Devil Chan
+    phrases:
+      death:
+        - NOOOOOOO!!!
+        - THIS IS BLASPHEMYYYYYY!!! *dies*
+      opening:
+        - - Angel Chan...
+          - 0.1
+          - - 0
+            - 0
+          - 1.0
+        - - I loved you!
+          - 0.3
+          - - 5
+            - 0
+        - - How could you do this!?
+          - 0.2
+          - - 20
+            - 20
+  enemies:
+    flying:
+      health: 50
+      name: Flying Chan
+      attacks:
+        swoop_in:
+          phrase: Swoop In
+          damage: 0
+          block: 0
+          status: Fear, 1
+          heal: 0
+        claw_strike:
+          phrase: Claw Strike
+          block: 0
+          status: None
+          damage: 10
+          heal: 0
+        fly_up:
+          phrase: Fly Up
+          damage: 0
+          status: None
+          block: 10
+          heal: 0
+    drowned:
+      health: 30
+      name: Drowned Chan
+      attacks:
+        drowned_glare:
+          phrase: Drowned Glare
+          damage: 0
+          block: 0
+          status: Fear, 1
+          heal: 0
+        bloated_breath:
+          phrase: Bloated Breath
+          damage: 0
+          block: 0
+          status: Vulnerable, 1
+          heal: 0
+        corpse_explosion:
+          phrase: Corpse Explosion
+          block: 0
+          status: None
+          damage: 25
+          heal: 0
+    big:
+      health: 75
+      name: Big Chan
+      attacks:
+        big_smack:
+          phrase: Biggus Smackus
+          block: 0
+          status: None
+          heal: 0
+          damage: 15
+    dark:
+      health: 40
+      name: Dark Chan
+      attacks:
+        dark_orb:
+          phrase: Dark Orb
+          block: 0
+          heal: 0
+          status: None
+          damage: 10
+        darkness:
+          phrase: Darkness
+          damage: 0
+          block: 0
+          heal: 0
+          status: Blindness, 2
+        dark_curse:
+          phrase: Dark Curse
+          damage: 0
+          heal: 0
+          block: 0
+          status: Vulnerable, 1
+    goblin:
+      health: 30
+      name: Goblin Chan
+      attacks:
+        evasive_maneuvers:
+          phrase: Evasive Maneuvers
+          damage: 0
+          heal: 0
+          status: None
+          block: 10
+        tiny_stab:
+          phrase: Tiny Stab
+          block: 0
+          status: None
+          heal: 0
+          damage: 10
+        hamstring:
+          phrase: Hamstring
+          damage: 0
+          block: 0
+          heal: 0
+          status: Weakness, 2
+    bat:
+      health: 40
+      name: Bat Chan
+      attacks:
+        sonic_attack:
+          phrase: Sonic Attack
+          block: 0
+          heal: 0
+          status: None
+          damage: 10
+        resonate:
+          phrase: Resonate
+          damage: 0
+          block: 0
+          heal: 0
+          status: Weakness, 1
+
+level_2:
+  player:
+    hp: 75
+    columns: 5
+    energy: 4
+    rows: 4
+  boss:
+    basic:
+      - roast
+      - 15
+    hp: 100
+    name: Ms. G
+    phrases:
+      attack:
+        - For Sean!
+        - One of them is a woman, the other has an Indian accent if you're into it.
+        - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
+        - Do it on repl.it!!!
+        - Don't ask me, use your brain.
+        - I have WELHpon *pulls out a meter stick*
+      death:
+        - why must you use... list comphrehension... *dies*
+      opening:
+        - Hello Sean!
+        - How are you doing?
+        - Wait, you're not Sean!
+      special:
+        - You! Go to Siberia!
+        - You deserve to go to Siberia!
+    special:
+      - siberia
+      - siberia
+  enemies:
+    flying:
+      health: 75
+      name: Flying Chan
+      attacks:
+        swoop_in:
+          phrase: Swoop In
+          damage: 0
+          block: 0
+          heal: 0
+          status: Fear, 2
+        claw_strike:
+          phrase: Claw Strike
+          block: 0
+          status: None
+          heal: 0
+          damage: 15
+        fly_Up:
+          phrase: Fly Up
+          damage: 0
+          status: None
+          heal: 0
+          block: 20
+    drowned:
+      health: 40
+      name: Drowned Chan
+      attacks:
+        drowned_glare:
+          phrase: Drowned Glare
+          damage: 0
+          block: 0
+          heal: 0
+          status: Fear, 2
+        bloated_breath:
+          phrase: Bloated Breath
+          damage: 0
+          heal: 0
+          block: 0
+          status: Vulnerable, 1
+        corpse_explosion:
+          phrase: Corpse Explosion
+          block: 0
+          heal: 0
+          status: None
+          damage: 35
+    big:
+      health: 100
+      name: Big Chan
+      attacks:
+        big_smack:
+          phrase: Biggus Smackus
+          block: 0
+          status: None
+          heal: 0
+          damage: 15
+    dark:
+      health: 50
+      name: Dark Chan
+      attacks:
+        dark_orb:
+          phrase: Dark Orb
+          block: 0
+          heal: 0
+          status: None
+          damage: 20
+        darkness:
+          phrase: Darkness
+          damage: 0
+          heal: 0
+          block: 0
+          status: Blindness, 2
+        curse:
+          phrase: Dark Curse
+          damage: 0
+          heal: 0
+          block: 0
+          status: Vulnerable, 1
+    goblin:
+      health: 35
+      name: Goblin Chan
+      attacks:
+        evasive_maneuvers:
+          phrase: Evasive Maneuvers
+          damage: 0
+          status: None
+          heal: 0
+          block: 20
+        tiny_stab:
+          phrase: Tiny Stab
+          block: 0
+          status: None
+          heal: 0
+          damage: 10
+        hamstring:
+          phrase: Hamstring
+          damage: 0
+          block: 0
+          heal: 0
+          status: Weakness, 3
+    bat:
+      health: 40
+      name: Bat Chan
+      attacks:
+        sonic_attack:
+          phrase: Sonic Attack
+          block: 0
+          heal: 0
+          status: None
+          damage: 15
+        resonate:
+          phrase: Resonate
+          damage: 0
+          block: 0
+          heal: 0
+          status: Weakness, 2
+level_3:
+  player:
+    hp: 100
+    columns: 7
+    energy: 5
+    rows: 4
+  boss:
+    basic:
+      phrases:
+        - You need to touch grass.
+        - My son could beat you at this game.
+        - Easy choices hard life, hard choices easy life.
+        - It's only awkward if you make it awkward.
+        - You have to build capacity.
+        - You chose that? Come on, that's crazy talk!!!
+        - Can't you be doing more?
+      damage: 0
+    hp: 200
+    kill:
+      - thinking_question
+      - 9999
+    name: Mr. Phone
+    phrases:
+      attack:
+      death:
+        - Huh.
+        - Looks like you did practice perfectly.
+        - Welp, I'll be on my way then.
+        - '*leaves*'
+      kill:
+        - Next time, just practice perfectly.
+        - My record just increased :p
+      opening:
+        - Did you write your TQP?
+      special:
+        - Almost everything is a choice... including breathing!
+        - Reflect, reflect, REFLECT HARDER!!!
+        - Face the monster... ME!
+        - Keep your head on a swivel!
+    special:
+      - emotional_damage
+      - 0
+  enemies:
+    flying:
+      health: 100
+      name: Flying Chan
+      attacks:
+        swoop_in:
+          phrase: Swoop In
+          damage: 0
+          block: 0
+          heal: 0
+          status: Fear, 2
+        claw_strike:
+          phrase: Claw Strike
+          block: 0
+          heal: 0
+          status: None
+          damage: 20
+        fly_Up:
+          phrase: Fly Up
+          damage: 0
+          heal: 0
+          status: None
+          block: 25
+    drowned:
+      health: 50
+      name: Drowned Chan
+      attacks:
+        drowned_glare:
+          phrase: Drowned Glare
+          damage: 0
+          block: 0
+          heal: 0
+          status: Fear, 2
+        bloated_breath:
+          phrase: Bloated Breath
+          damage: 0
+          block: 0
+          heal: 0
+          status: Vulnerable, 1
+        corpse_explosion:
+          phrase: Corpse Explosion
+          block: 0
+          status: None
+          heal: 0
+          damage: 50
+    big:
+      health: 150
+      name: Big Chan
+      attacks:
+        big_smack:
+          phrase: Biggus Smackus
+          block: 0
+          heal: 0
+          status: None
+          damage: 20
+    dark:
+      health: 60
+      name: Dark Chan
+      attacks:
+        dark_orb:
+          phrase: Dark Orb
+          block: 0
+          status: None
+          heal: 0
+          damage: 20
+        darkness:
+          phrase: Darkness
+          damage: 0
+          block: 0
+          heal: 0
+          status: Blindness, 3
+        curse:
+          phrase: Dark Curse
+          damage: 0
+          block: 0
+          heal: 0
+          status: Vulnerable, 2
+        dark_claw:
+          phrase: Dark Claw
+          block: 0
+          status: None
+          heal: 0
+          damage: 10
+    goblin:
+      health: 50
+      name: Goblin Chan
+      attacks:
+        evasive_maneuvers:
+          phrase: Evasive Maneuvers
+          damage: 0
+          heal: 0
+          status: None
+          block: 25
+        tiny_stab:
+          phrase: Tiny Stab
+          block: 0
+          heal: 0
+          status: None
+          damage: 10
+        hamstring:
+          phrase: Hamstring
+          damage: 0
+          heal: 0
+          block: 0
+          status: Weakness, 3
+    bat:
+      health: 50
+      name: Bat Chan
+      attacks:
+        sonic_attack:
+          phrase: Sonic Attack
+          block: 0
+          status: None
+          damage: 20
+          heal: 0
+        resonate:
+          phrase: Resonate
+          damage: 0
+          block: 0
+          heal: 0
+          status: Weakness, 2
+        screech:
+          phrase: Screech
+          block: 0
+          heal: 0
+          status: None
+          damage: 15
+
+
+other:
+  boss_face_size:
+  - 500
+  - 500
+  highest_level_beat: 0
+settings:
+  audio:
+    enable_music: true
+    enable_sfx: true
+    music_vol: 1.0
+    sfx_vol: 1.0
+  fps:
+    show: false
+    30: false
+    60: false
+    75: false
+    165: true
+  fullscreen: false
