@@ -7,6 +7,7 @@ from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, c
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
+from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
 from bin.colours import *
@@ -55,10 +56,11 @@ class BossDevilChan(Level):
         self.typ_l2 = Typewriter()
         self.typ_finished = False
         self.typ_update = True
-        self.typ_msg = 0
         self.typ_box_align_x = 130
         self.typ_box_align_y1 = 670
         self.typ_box_align_y2 = 730
+        self.typ_queue = Queue()
+        self.typ_queue_update = True
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
         self.event = "intro"
@@ -97,10 +99,11 @@ class BossDevilChan(Level):
         self.typ_l2 = Typewriter()
         self.typ_finished = False
         self.typ_update = True
-        self.typ_msg = 0
         self.typ_box_align_x = 130
         self.typ_box_align_y1 = 670
         self.typ_box_align_y2 = 730
+        self.typ_queue = Queue()
+        self.typ_queue_update = True
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
@@ -162,32 +165,42 @@ class BossDevilChan(Level):
     def event_handler(self, dt):
         match self.event:
             case "intro":
-                self.intro(dt)
-            # case "attack":
-            #     self.attack()
+                self.typewriter_queue("intro")
+                self.intro(1.0, dt)
+            case "attack":
+                self.attack()
             case "special":
                 self.special()
             case "dialogue":
+                self.typewriter_queue("dialogue")
                 self.dialogue(dt, self.boss.phrases["dialogue"])
             case "death":
                 self.game_over(dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
-    def intro(self, dt):
+    def typewriter_queue(self, e):
+        if self.typ_queue_update:  # Only runs once
+            self.typ_queue_update = False
+            match e:
+                case "intro":
+                    for key in self.boss.phrases[e]:
+                        self.typ_queue.enqueue(self.boss.phrases[e][key])  # Queue all messages in order
+                case "dialogue":
+                    self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])  # Choose random message
+        print(self.typ_queue.items)
+
+    def intro(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
-        clear = self.boss.phrases["intro"][self.typ_msg]["clear"]
-        wait = self.boss.phrases["intro"][self.typ_msg]["wait"]
-        if seconds > 1.0:
-            if self.typ_update:
-                self.typ_msg += 1
-            self.textbox_logic(self.boss.phrases["intro"], dt, clear, wait, self.boss.phrases["intro"][self.typ_msg]["fade_in"],
-                               self.boss.phrases["intro"][self.typ_msg]["fade_out"])
-            # End event & reset message value once all lines have finished rendering
-            if self.typ_msg == len(self.boss.phrases["intro"]):
+        clear = self.typ_queue.peek()["clear"]
+        wait = self.typ_queue.peek()["wait"]
+
+        if seconds > delay:
+            if self.typ_queue.size() != 0:
+                self.typewriter_render(self.typ_queue, dt, clear, wait, self.typ_queue.peek()["fade_in"], self.typ_queue.peek()["fade_out"])
+            else:  # Reset settings when queue is empty
                 self.event = "attack"
-                self.typ_msg = 0
+                self.typ_queue_update = True
                 self.timer_dict["dialogue"].time_reset()
-        print(self.event)
 
     def attack(self):
         # ------------------------------------------------------------------------------------------------------------------
@@ -227,62 +240,49 @@ class BossDevilChan(Level):
         pass
 
     def dialogue(self, dialogue_dict, dt):
-        if not self.timer_dict["dialogue"].activate_timer:
-            self.timer_dict["dialogue"].time_start()
-        seconds = self.timer_dict["dialogue"].seconds
-        clear = dialogue_dict[self.typ_msg]["clear"]
-        wait = dialogue_dict[self.typ_msg]["wait"]
-        if seconds > 1.5:
-            self.textbox_logic(dialogue_dict, dt, clear, wait, dialogue_dict[self.typ_msg]["fade_in"],
-                               dialogue_dict[self.typ_msg]["fade_out"])
-            # End cinematic event & reset message value once all lines have finished rendering
-            if self.typ_msg == len(self.boss.opening_phrases):
-                self.event = "attack"
-                self.typ_msg = 0
+        pass
 
     def game_over(self, dt):
         pass
 
-    def textbox_logic(self, messages, dt, clear, wait, fade_in, fade_out):
-        """"
-        E.G. self.boss.opening_phrases
-          -> [['Angel Chan...', 0.02, [0, 0]], ['I loved you!', 0.03, [5, 0]], ['How could you do this!?', 0.02, [20, 20]]]
-        """
-        # ----------------------------------------------------------------------------------------------------------
-        if self.typ_update:  # Update these values once per message change
+    def typewriter_render(self, messages, dt, clear, wait, fade_in, fade_out):
+        if self.typ_update:  # Update these values once per message update
             self.typ_update = False
             self.fade_in_text = fade_in
             self.fade_out_text = fade_out
         # ----------------------------------------------------------------------------------------------------------
         # Textbox Fade In
-        if self.fade_in_text and not self.typ_finished:
+        if self.fade_in_text and not self.typ_finished:  # Fade in textbox if specified
             if self.fade_screen_in("text", self.text_canvas, self.transition_speed, dt):
                 self.fade_in_text = False
         # ----------------------------------------------------------------------------------------------------------
         # Draw Text
         if not self.fade_in_text:  # Run when textbox is not fading in
-            match messages[self.typ_msg]["line"]:
+            match messages.peek()["line"]:
                 case 1:  # Line 1
-                    self.typ_l1.queue_text(messages[self.typ_msg]["text"])  # Method has logic inside it to only update once in a loop
-                    self.typ_finished = self.typ_l1.render(self.text_canvas,
-                                                           messages[self.typ_msg]["delay"],
-                                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
-                                                           messages[self.typ_msg]["shake"],
-                                                           messages[self.typ_msg]["pause"], 0)
+                    self.typ_l1.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
+                    self.typ_finished = \
+                        self.typ_l1.render(self.text_canvas,
+                                           messages.peek()["delay"],
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                           messages.peek()["shake"],
+                                           messages.peek()["pause"], 0)
                 case 2:  # Line 2
-                    self.typ_l2.queue_text(messages[self.typ_msg]["text"])  # Method has logic inside it to only update once in a loop
+                    self.typ_l2.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
                     # Render first line
-                    self.typ_l1.render(self.text_canvas,
-                                       messages[self.typ_msg - 1]["delay"],
-                                       self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
-                                       messages[self.typ_msg - 1]["shake"],
-                                       messages[self.typ_msg - 1]["pause"], 0)
+                    if messages.size() > 1:  # Need to check this as messages gets popped when its finished blitting below
+                        self.typ_l1.render(self.text_canvas,
+                                           messages.peek(-1)["delay"],
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                           messages.peek(-1)["shake"],
+                                           messages.peek(-1)["pause"], 0)
                     # # Render second line
-                    self.typ_finished = self.typ_l2.render(self.text_canvas,
-                                                           messages[self.typ_msg]["delay"],
-                                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
-                                                           messages[self.typ_msg]["shake"],
-                                                           messages[self.typ_msg]["pause"], 0)
+                    self.typ_finished = \
+                        self.typ_l2.render(self.text_canvas,
+                                           messages.peek()["delay"],
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
+                                           messages.peek()["shake"],
+                                           messages.peek()["pause"], 0)
         # ----------------------------------------------------------------------------------------------------------
         if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
             if self.fade_out_text:  # Fades out textbox if required
@@ -290,28 +290,23 @@ class BossDevilChan(Level):
                     if clear:  # Clears textbox if true & after the textbox finishes fading out
                         self.typ_l1.clear()
                         self.typ_l2.clear()
-                    if self.typ_msg < len(messages) - 1:  # Transition to next message
                         self.next_msg(wait)
-                        return True
             else:
                 if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
                     self.typ_l1.clear()
                     self.typ_l2.clear()
-                if self.typ_msg < len(messages) - 1:  # Transition to next message
                     self.next_msg(wait)
-                    return True
-        return False
 
     def next_msg(self, wait):
-        # print(self.timer_dict["update_delay"].seconds, wait)
-        if self.timer_dict["update_delay"].seconds < wait:
-            self.timer_dict["update_delay"].time_start()
-        else:  # Reset values
-            self.timer_dict["update_delay"].time_reset()
-            self.typ_update = True
+        if self.timer_dict["update_delay"].seconds < wait:  # Seconds is initially at 0
+            self.timer_dict["update_delay"].time_start()  # Start counting seconds if smaller than wait
+        else:  # Reset values after delay
+            self.timer_dict["update_delay"].time_reset()  # Reset delay timer
+            self.typ_update = True  # Update message dictionary next loop
             self.typ_finished = False
             self.typ_l1.unlock()
             self.typ_l2.unlock()
+            self.typ_queue.dequeue()  # Pop last element (dictionary) in lst
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
