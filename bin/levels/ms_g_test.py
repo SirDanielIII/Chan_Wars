@@ -222,7 +222,7 @@ class BossMsG(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
-                    self.ms_g_boss.update(self.damage)
+                    self.ms_g_boss.update(self.damage, None)
                     self.hp_boss = self.ms_g_boss.health
                     self.energy = self.ms_g_boss.energy
                     if self.damage:
@@ -234,7 +234,7 @@ class BossMsG(Level):
                     action = self.ms_g_boss.act(self.turn_counter)
                     self.face = self.config.MS_G_faces["normal"]
                     if action[0] == "special":
-                        self.ms_g_boss.update(0)
+                        self.ms_g_boss.update(0, None)
                         self.energy = self.ms_g_boss.energy
                         if not self.turn_counter:
                             self.face = self.config.MS_G_faces["siberia-01"]
@@ -261,7 +261,7 @@ class BossMsG(Level):
             elif self.hp_boss <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.config.emd_screens[1].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.hp_boss and self.hp_player:

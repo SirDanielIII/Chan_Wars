@@ -9,6 +9,8 @@ class Enemy:
         self.energy = None
         self.attacks = None
         self.block = 0
+        self.status_bar = {}
+        self.buff_bar = {}
         self.name = None
 
     def initialize_type(self, name):
@@ -22,5 +24,6 @@ class Enemy:
         attack = self.attacks[str(turn_counter % (len(self.attacks - 1)))]
         self.health += attack["heal"]
         self.block += attack["block"]
+        self.buff_bar[attack["buff"][0]] = attack["buff"][1]
         phrase = "{} used {}".format(self.metadata["enemies"][self.name]["name"], attack["phrase"])
         return phrase, attack["damage"], attack["status"]
