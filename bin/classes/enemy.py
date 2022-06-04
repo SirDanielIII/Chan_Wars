@@ -23,4 +23,4 @@ class Enemy:
         self.health += attack["heal"]
         self.block += attack["block"]
         phrase = "{} used {}".format(self.metadata["enemies"][self.name]["name"], attack["phrase"])
-        return phrase, attack[1][0], attack[1][2]
+        return phrase, attack["damage"], attack["status"]

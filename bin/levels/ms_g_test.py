@@ -47,6 +47,7 @@ class BossMsG(Level):
         self.action_stopwatch = Timer()
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
+        self.turn_counter = None
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
@@ -60,7 +61,7 @@ class BossMsG(Level):
         self.boss_data = self.config.get_config()["level_2"]
         self.ms_g_boss.metadata = self.boss_data
         self.hp_player = self.boss_data["player"]["hp"]
-        print(self.hp_player)
+        self.turn_counter = 0
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
@@ -230,17 +231,20 @@ class BossMsG(Level):
                     updated = True
                     self.update_stopwatch.time_reset()
                 if self.action_stopwatch.seconds > 2.5 and not acted:
-                    self.ms_g_boss.trigger_method()
-                    action = self.ms_g_boss.act()
-                    if action[0] != "die" and action[0] != "special":
-                        self.hp_player -= action[1][0]
-                    elif action[0] == "special":
+                    action = self.ms_g_boss.act(self.turn_counter)
+                    self.face = self.config.MS_G_faces["normal"]
+                    if action[0] == "special":
                         self.ms_g_boss.update(0)
                         self.energy = self.ms_g_boss.energy
-                    self.face = self.config.MS_G_faces[action[1][-1]]
+                        if not self.turn_counter:
+                            self.face = self.config.MS_G_faces["siberia-01"]
+                        else:
+                            self.face = self.config.MS_G_faces["siberia-02"]
+                    self.hp_player -= action[2]
                     self.hp_boss = self.ms_g_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 5:
+                elif self.action_stopwatch.seconds > 4:
+                    self.turn_counter += 1
                     self.action_stopwatch.time_reset()
                     completed = True
                     self.face = self.config.MS_G_faces["normal"]

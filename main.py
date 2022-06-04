@@ -30,7 +30,7 @@ class Main(object):
     def __init__(self):
         self.width = 1600
         self.height = 900
-        self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.RESIZABLE)
+        self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
         self.game_canvas = pg.Surface((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
         self.clock = pg.time.Clock()
         self.FPS = 165

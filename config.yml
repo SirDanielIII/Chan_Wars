@@ -1,3 +1,27 @@
+"
+Stacks are reduced at the end of the turn
+
+Status Effects:
+Weakness: Deals 25% less damage. Falls by one stack every turn.
+Blindness: The first pair of cards flipped become invisible. Player specific. Falls by one stack every turn.
+Vulnerable: Takes 25% more damage. Falls by one stack every turn.
+Disappointment: Emotional damage. Falls by one stack every turn.
+Marked: Takes one extra damage per stack after being attacked. Player specific. Stacks do not disappear.`
+Burning: Takes one damage at the end of the turn per stack. Damage taken increases by 10%. Falls by one stack every turn.
+Poison: Takes one damage at the end of the turn per stack. Damage dealt falls by 10%. Falls by one stack every turn.
+
+Buffs:
+Power: Deals 25% more damage. Falls by one stack every turn.
+Thorns: Deals damage equal to number of stacks when taking damage. Stacks do not disappear.
+Lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
+Regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
+Artifact: Negates a debuff per stack. Stacks do not disappear.
+Dodge: Negate damage once for every stack. Player specific. Stacks disappear at the start of the player's turn.
+Energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
+Armor: Gain 1 block per stack. Falls by one stack every turn.
+Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
+"
+
 level_1:
   player:
     hp: 50
@@ -5,24 +29,26 @@ level_1:
     energy: 3
     rows: 4
   boss:
-    attacks:
+    moves:
       basic_1:
         phrases:
           - For My Lost Love!
           - World Shaking Explosion Fist!
           - North Star Spear!
-        damage: 10
-        block: 10
+        damage: 15
+        block: 0
         status: None
+        buff: None
         heal: 0
       basic_2:
         phrases:
           - Million Soul Bomb!
           - Burning Sun Beam!
           - Point Two Electron Volts!
-        damage: 15
+        damage: 10
         block: 0
-        status: Weakness, 1
+        status: Weakness, 2
+        buff: Armor, 10
         heal: 0
       basic_3:
         phrases:
@@ -31,6 +57,7 @@ level_1:
           - You are not prepared!
         damage: 0
         block: 15
+        buff: Power, 1
         status: Vulnerable, 1
         heal: 0
       special:
@@ -42,6 +69,7 @@ level_1:
         damage: 10
         block: 0
         status: None
+        buff: Lifesteal, 2
         heal: 20
       death:
         phrases:
@@ -50,23 +78,25 @@ level_1:
         damage: 0
         block: 0
         status: None
+        buff: None
         heal: 0
     hp: 60
     name: Devil Chan
-    opening:
-      - - Angel Chan...
-        - 0.1
-        - - 0
-          - 0
-        - 1.0
-      - - I loved you!
-        - 0.3
-        - - 5
-          - 0
-      - - How could you do this!?
-        - 0.2
-        - - 20
-          - 20
+    phrases:
+      intro:
+        - - Angel Chan...
+          - 0.1
+          - - 0
+            - 0
+          - 1.0
+        - - I loved you!
+          - 0.3
+          - - 5
+            - 0
+        - - How could you do this!?
+          - 0.2
+          - - 20
+            - 20
   enemies:
     flying:
       health: 50
@@ -77,18 +107,21 @@ level_1:
           damage: 0
           block: 0
           status: Fear, 1
+          buff: None
           heal: 0
         claw_strike:
           phrase: Claw Strike
           block: 0
           status: None
           damage: 10
+          buff: None
           heal: 0
         fly_up:
           phrase: Fly Up
           damage: 0
           status: None
           block: 10
+          buff: None
           heal: 0
     drowned:
       health: 30
@@ -99,18 +132,21 @@ level_1:
           damage: 0
           block: 0
           status: Fear, 1
+          buff: None
           heal: 0
         bloated_breath:
           phrase: Bloated Breath
           damage: 0
           block: 0
           status: Vulnerable, 1
+          buff: None
           heal: 0
         corpse_explosion:
           phrase: Corpse Explosion
           block: 0
           status: None
           damage: 25
+          buff: None
           heal: -30
     big:
       health: 75
@@ -120,6 +156,7 @@ level_1:
           phrase: Biggus Smackus
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 15
     dark:
@@ -129,6 +166,7 @@ level_1:
         dark_orb:
           phrase: Dark Orb
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 10
@@ -136,11 +174,13 @@ level_1:
           phrase: Darkness
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Blindness, 2
         dark_curse:
           phrase: Dark Curse
           damage: 0
+          buff: None
           heal: 0
           block: 0
           status: Vulnerable, 1
@@ -151,6 +191,7 @@ level_1:
         evasive_maneuvers:
           phrase: Evasive Maneuvers
           damage: 0
+          buff: None
           heal: 0
           status: None
           block: 10
@@ -158,12 +199,14 @@ level_1:
           phrase: Tiny Stab
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 10
         hamstring:
           phrase: Hamstring
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Weakness, 2
     bat:
@@ -173,6 +216,7 @@ level_1:
         sonic_attack:
           phrase: Sonic Attack
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 10
@@ -180,6 +224,7 @@ level_1:
           phrase: Resonate
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Weakness, 1
 
@@ -190,7 +235,7 @@ level_2:
     energy: 4
     rows: 4
   boss:
-    attacks:
+    moves:
       basic_1:
         phrases:
           - For Sean!
@@ -198,7 +243,8 @@ level_2:
         damage: 15
         block: 0
         status: Vulnerable, 1
-        heal: 0
+        buff: None
+          heal: 0
       basic_2:
         phrases:
           - Don't ask me, use your brain.
@@ -206,7 +252,8 @@ level_2:
         damage: 15
         block: 0
         status: Weakness, 2
-        heal: 0
+        buff: None
+          heal: 0
       basic_3:
         phrases:
           - Do it on repl.it!!!
@@ -214,7 +261,8 @@ level_2:
         damage: 0
         block: 20
         status: None
-        heal: 0
+        buff: None
+          heal: 0
       special:
         phrases:
           - You! Go to Siberia!
@@ -222,27 +270,31 @@ level_2:
         damage: 0
         block: 0
         status: None
-        heal: 0
+        buff: None
+          heal: 0
       death:
         phrases:
           - why must you use... list comphrehension... *dies*
         damage: 0
         block: 0
         status: None
-        heal: 0
+        buff: None
+          heal: 0
       siberia:
         phrases:
           - You!!! How did you escape Siberia!?
         damage: 0
         block: 0
         status: None
-        heal: 0
+        buff: None
+          heal: 0
     hp: 100
     name: Ms. G
-    opening:
-      - Hello Sean!
-      - How are you doing?
-      - Wait, you're not Sean!
+    phrases:
+      intro:
+        - Hello Sean!
+        - How are you doing?
+        - Wait, you're not Sean!
   enemies:
     flying:
       health: 75
@@ -252,18 +304,21 @@ level_2:
           phrase: Swoop In
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Fear, 2
         claw_strike:
           phrase: Claw Strike
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 15
         fly_Up:
           phrase: Fly Up
           damage: 0
           status: None
+          buff: None
           heal: 0
           block: 20
     drowned:
@@ -274,17 +329,20 @@ level_2:
           phrase: Drowned Glare
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Fear, 2
         bloated_breath:
           phrase: Bloated Breath
           damage: 0
+          buff: None
           heal: 0
           block: 0
           status: Vulnerable, 1
         corpse_explosion:
           phrase: Corpse Explosion
           block: 0
+          buff: None
           heal: -40
           status: None
           damage: 35
@@ -296,6 +354,7 @@ level_2:
           phrase: Biggus Smackus
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 15
     dark:
@@ -305,18 +364,21 @@ level_2:
         dark_orb:
           phrase: Dark Orb
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 20
         darkness:
           phrase: Darkness
           damage: 0
+          buff: None
           heal: 0
           block: 0
           status: Blindness, 2
         curse:
           phrase: Dark Curse
           damage: 0
+          buff: None
           heal: 0
           block: 0
           status: Vulnerable, 1
@@ -328,18 +390,21 @@ level_2:
           phrase: Evasive Maneuvers
           damage: 0
           status: None
+          buff: None
           heal: 0
           block: 20
         tiny_stab:
           phrase: Tiny Stab
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 10
         hamstring:
           phrase: Hamstring
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Weakness, 3
     bat:
@@ -349,6 +414,7 @@ level_2:
         sonic_attack:
           phrase: Sonic Attack
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 15
@@ -356,6 +422,7 @@ level_2:
           phrase: Resonate
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Weakness, 2
 
@@ -366,7 +433,7 @@ level_3:
     energy: 5
     rows: 4
   boss:
-    attacks:
+    moves:
       basic_1:
         phrases:
           - You need to touch grass.
@@ -379,7 +446,8 @@ level_3:
         damage: 0
         block: 0
         status: disappointment, 1
-        heal: 0
+        buff: None
+          heal: 0
       basic_2:
         phrases:
           - Almost everything is a choice... including breathing!
@@ -389,7 +457,8 @@ level_3:
         damage: 0
         block: 0
         status: Fear, 2
-        heal: 0
+        buff: None
+          heal: 0
       special:
         phrases:
           - Next time, just practice perfectly.
@@ -397,7 +466,8 @@ level_3:
         damage: 999
         block: 0
         status: None
-        heal: 0
+        buff: None
+          heal: 0
       death:
         phrases:
           - Huh.
@@ -407,11 +477,13 @@ level_3:
         damage: 0
         block: 0
         status: None
-        heal: 0
+        buff: None
+          heal: 0
     hp: 200
     name: Mr. Phone
-    opening:
-      - Did you write your TQP?
+    phrases:
+      intro:
+        - Did you write your TQP?
   enemies:
     flying:
       health: 100
@@ -421,17 +493,20 @@ level_3:
           phrase: Swoop In
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Fear, 2
         claw_strike:
           phrase: Claw Strike
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 20
         fly_Up:
           phrase: Fly Up
           damage: 0
+          buff: None
           heal: 0
           status: None
           block: 25
@@ -443,18 +518,21 @@ level_3:
           phrase: Drowned Glare
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Fear, 2
         bloated_breath:
           phrase: Bloated Breath
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Vulnerable, 1
         corpse_explosion:
           phrase: Corpse Explosion
           block: 0
           status: None
+          buff: None
           heal: -50
           damage: 50
     big:
@@ -464,6 +542,7 @@ level_3:
         big_smack:
           phrase: Biggus Smackus
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 20
@@ -475,24 +554,28 @@ level_3:
           phrase: Dark Orb
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 20
         darkness:
           phrase: Darkness
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Blindness, 3
         curse:
           phrase: Dark Curse
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Vulnerable, 2
         dark_claw:
           phrase: Dark Claw
           block: 0
           status: None
+          buff: None
           heal: 0
           damage: 10
     goblin:
@@ -502,18 +585,21 @@ level_3:
         evasive_maneuvers:
           phrase: Evasive Maneuvers
           damage: 0
+          buff: None
           heal: 0
           status: None
           block: 25
         tiny_stab:
           phrase: Tiny Stab
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 10
         hamstring:
           phrase: Hamstring
           damage: 0
+          buff: None
           heal: 0
           block: 0
           status: Weakness, 3
@@ -526,16 +612,19 @@ level_3:
           block: 0
           status: None
           damage: 20
+          buff: None
           heal: 0
         resonate:
           phrase: Resonate
           damage: 0
           block: 0
+          buff: None
           heal: 0
           status: Weakness, 2
         screech:
           phrase: Screech
           block: 0
+          buff: None
           heal: 0
           status: None
           damage: 15
