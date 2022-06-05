@@ -11,11 +11,11 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.bosses import MsG
+from bin.classes.enemy import Enemy
 import bin.classes.card_pair as card_pair
 
 
-class BossMsG(Level):
+class EnemyTest1(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
@@ -34,7 +34,7 @@ class BossMsG(Level):
         self.hp_bar_player = None
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
-        self.boss_data = None
+        self.enemy_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
         self.hp_bar_boss = None
@@ -51,21 +51,23 @@ class BossMsG(Level):
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
-        self.ms_g_boss = MsG(self.boss_data)
+        self.enemy = Enemy(self.enemy_data)
+        self.name = None
         self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+        self.name = "flying"
         self.player.image_list = self.config.image_list
         self.player.columns = 5
-        self.boss_data = self.config.get_config()["level_2"]
-        self.ms_g_boss.metadata = self.boss_data
-        self.hp_player = self.boss_data["player"]["hp"]
+        self.enemy_data = self.config.get_config()["level_2"]
+        self.enemy.metadata = self.enemy_data
+        self.hp_player = self.enemy_data["player"]["hp"]
         self.turn_counter = 0
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_boss = self.boss_data["boss"]["hp"]
+        self.hp_boss = self.enemy_data["enemies"][self.name]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.face = self.config.MS_G_faces["normal"]
+        self.face = self.config.enemies_images[self.name]
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -76,7 +78,7 @@ class BossMsG(Level):
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+        draw_text_right(self.enemy_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
@@ -120,15 +122,14 @@ class BossMsG(Level):
 
     def run(self):
         self.reload()
-        self.ms_g_boss.load_boss_info()
-        acted = False
-        completed = False
-        updated = False
+        self.enemy.initialize_type(self.name)
+        acted = True
+        completed = True
+        updated = True
         milliseconds = pg.USEREVENT
         time_elapsed = Timer()
         time_elapsed.time_start()
         pg.time.set_timer(milliseconds, 10)
-        self.ms_g_boss.siberia = False
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -159,10 +160,7 @@ class BossMsG(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            if self.ms_g_boss.siberia:
-                background = self.config.MS_G_backgrounds[1]
-            else:
-                background = self.config.MS_G_backgrounds[0]
+            background = self.config.MS_G_backgrounds[0]
             self.game_canvas.blit(background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
@@ -222,32 +220,21 @@ class BossMsG(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
-                    self.ms_g_boss.update(self.damage, None)
-                    self.hp_boss = self.ms_g_boss.health
-                    self.energy = self.ms_g_boss.energy
-                    if self.damage:
-                        self.face = self.config.MS_G_faces["hit"]
+                    self.enemy.update(self.damage, None)
+                    self.hp_boss = self.enemy.health
+                    self.energy = self.enemy.energy
                     self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
                 if self.action_stopwatch.seconds > 2.5 and not acted:
-                    action = self.ms_g_boss.act(self.turn_counter)
-                    self.face = self.config.MS_G_faces["normal"]
-                    if action[0] == "special":
-                        self.ms_g_boss.update(0, None)
-                        self.energy = self.ms_g_boss.energy
-                        if not self.turn_counter:
-                            self.face = self.config.MS_G_faces["siberia-01"]
-                        else:
-                            self.face = self.config.MS_G_faces["siberia-02"]
+                    action = self.enemy.act(self.turn_counter)
                     self.hp_player -= action[2]
-                    self.hp_boss = self.ms_g_boss.health
+                    self.hp_boss = self.enemy.health
                     acted = True
                 elif self.action_stopwatch.seconds > 4:
                     self.turn_counter += 1
                     self.action_stopwatch.time_reset()
                     completed = True
-                    self.face = self.config.MS_G_faces["normal"]
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
                 # Textbox

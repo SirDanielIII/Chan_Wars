@@ -15,6 +15,7 @@ class Config(object):
         self.background = None
         self.DEVIL_CHAN_face = None
         self.DEVIL_CHAN_background = None
+        self.enemies_images = None
         self.MS_G_faces = None
         self.MS_G_backgrounds = None
         self.MR_PHONE_faces = None
@@ -97,6 +98,7 @@ class Config(object):
         self.DEVIL_CHAN_background = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(), (1600, 900))
         self.end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
                             pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
+        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\" + name + ".jpg").convert(), (100, 100)) for name in ["flying", "drowned"]} # self.data["level_1"]["enemies"]
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 80)

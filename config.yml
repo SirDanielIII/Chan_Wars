@@ -85,7 +85,7 @@ level_1:
             - 20
   enemies:
     flying:
-      health: 50
+      hp: 50
       name: Flying Chan
       attacks:
         swoop_in:
@@ -112,7 +112,7 @@ level_1:
           buff: None
           heal: 0
     drowned:
-      health: 30
+      hp: 30
       name: Drowned Chan
       attacks:
         drowned_glare:
@@ -141,7 +141,7 @@ level_1:
           buff: None
           heal: -30
     big:
-      health: 75
+      hp: 75
       name: Big Chan
       attacks:
         big_smack:
@@ -152,7 +152,7 @@ level_1:
           heal: 0
           damage: 15
     dark:
-      health: 40
+      hp: 40
       name: Dark Chan
       attacks:
         dark_orb:
@@ -181,7 +181,7 @@ level_1:
             - Vulnerable
             - 1
     goblin:
-      health: 30
+      hp: 30
       name: Goblin Chan
       attacks:
         evasive_maneuvers:
@@ -208,7 +208,7 @@ level_1:
             - Weakness
             - 2
     bat:
-      health: 40
+      hp: 40
       name: Bat Chan
       attacks:
         sonic_attack:
@@ -301,7 +301,7 @@ level_2:
         - Wait, you're not Sean!
   enemies:
     flying:
-      health: 75
+      hp: 75
       name: Flying Chan
       attacks:
         swoop_in:
@@ -328,7 +328,7 @@ level_2:
           heal: 0
           block: 20
     drowned:
-      health: 40
+      hp: 40
       name: Drowned Chan
       attacks:
         drowned_glare:
@@ -357,7 +357,7 @@ level_2:
           status: None
           damage: 35
     big:
-      health: 100
+      hp: 100
       name: Big Chan
       attacks:
         big_smack:
@@ -368,7 +368,7 @@ level_2:
           heal: 0
           damage: 15
     dark:
-      health: 50
+      hp: 50
       name: Dark Chan
       attacks:
         dark_orb:
@@ -397,7 +397,7 @@ level_2:
             - Vulnerable
             - 1
     goblin:
-      health: 35
+      hp: 35
       name: Goblin Chan
       attacks:
         evasive_maneuvers:
@@ -424,7 +424,7 @@ level_2:
             - Weakness
             - 3
     bat:
-      health: 40
+      hp: 40
       name: Bat Chan
       attacks:
         sonic_attack:
@@ -508,7 +508,7 @@ level_3:
         - Did you write your TQP?
   enemies:
     flying:
-      health: 100
+      hp: 100
       name: Flying Chan
       attacks:
         swoop_in:
@@ -535,7 +535,7 @@ level_3:
           status: None
           block: 25
     drowned:
-      health: 50
+      hp: 50
       name: Drowned Chan
       attacks:
         drowned_glare:
@@ -564,7 +564,7 @@ level_3:
           heal: -50
           damage: 50
     big:
-      health: 150
+      hp: 150
       name: Big Chan
       attacks:
         big_smack:
@@ -575,7 +575,7 @@ level_3:
           status: None
           damage: 20
     dark:
-      health: 60
+      hp: 60
       name: Dark Chan
       attacks:
         dark_orb:
@@ -611,7 +611,7 @@ level_3:
           heal: 0
           damage: 10
     goblin:
-      health: 50
+      hp: 50
       name: Goblin Chan
       attacks:
         evasive_maneuvers:
@@ -638,7 +638,7 @@ level_3:
             - Weakness
             - 3
     bat:
-      health: 50
+      hp: 50
       name: Bat Chan
       attacks:
         sonic_attack:
@@ -694,7 +694,7 @@ settings:
 # Blindness: The first pair of cards flipped become invisible. Player specific. Falls by one stack every turn.
 # Vulnerable: Takes 25% more damage. Falls by one stack every turn.
 # Disappointment: Emotional damage. Falls by one stack every turn.
-# Marked: Takes one extra damage per stack after being attacked. Player specific. Stacks do not disappear.`
+# Marked: Takes one extra damage per stack after being attacked. Player specific. Stacks do not disappear.
 # Burning: Takes one damage at the end of the turn per stack. Damage taken increases by 10%. Falls by one stack every turn.
 # Poison: Takes one damage at the end of the turn per stack. Damage dealt falls by 10%. Falls by one stack every turn.
 #
@@ -704,7 +704,7 @@ settings:
 # Lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
 # Regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
 # Artifact: Negates a debuff per stack. Stacks do not disappear.
-# Dodge: Negate damage once for every stack. Player specific. Stacks disappear at the start of the player's turn.
+# Dodge: Negate damage once for every stack. Player specific. Falls by one stack every turn.
 # Energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
 # Armor: Gain 1 block per stack. Falls by one stack every turn.
 # Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
