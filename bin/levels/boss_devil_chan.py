@@ -38,7 +38,7 @@ class BossDevilChan(Level):
         self.hp_bar_player = None
         self.card_complete = [0]
         self.pairs = None
-        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
+        self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
         self.boss = None
@@ -76,7 +76,7 @@ class BossDevilChan(Level):
         # Boss Attributes Initialization
         self.boss_data = self.config.get_config()["level_1"]
         self.boss = DChan(self.boss_data)
-        self.boss.load_boss_info()
+        self.boss.initialize()
         self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.boss.metadata = self.boss_data
@@ -128,7 +128,7 @@ class BossDevilChan(Level):
 
     def draw_boss(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
-        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.config.face_images[1], self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -350,7 +350,7 @@ class BossDevilChan(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
+            self.game_canvas.blit(self.config.backgrounds[1], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.timer_dict["action"].activate_timer and not self.completed:

@@ -1,4 +1,3 @@
-import random
 import sys
 import time
 import os
@@ -12,11 +11,11 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.bosses import DevilChan as DChan
+from bin.classes.enemy import Enemy
 import bin.classes.card_pair as card_pair
 
 
-class Test(Level):
+class EnemyTest1(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
@@ -27,7 +26,7 @@ class Test(Level):
         self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False  # Use this to stop the game\
-        self.energy = 3
+        self.energy = 4
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
@@ -35,7 +34,7 @@ class Test(Level):
         self.hp_bar_player = None
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
-        self.boss_data = None
+        self.enemy_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_boss = None
         self.hp_bar_boss = None
@@ -48,22 +47,28 @@ class Test(Level):
         self.action_stopwatch = Timer()
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
+        self.turn_counter = None
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
-        self.devil_chan_boss = DChan(self.boss_data)
+        self.enemy = Enemy(self.enemy_data)
+        self.name = None
+        self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+        self.name = "flying"
         self.player.image_list = self.config.image_list
-        self.player.columns = 3
-        self.boss_data = self.config.get_config()["level_1"]
-        self.devil_chan_boss.metadata = self.boss_data
-        self.hp_player = self.boss_data["player"]["hp"]
+        self.player.columns = 5
+        self.enemy_data = self.config.get_config()["level_2"]
+        self.enemy.metadata = self.enemy_data
+        self.hp_player = self.enemy_data["player"]["hp"]
+        self.turn_counter = 0
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_boss = self.boss_data["hp"]
+        self.hp_boss = self.enemy_data["enemies"][self.name]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.devil_chan_boss.initialize()
+        self.face = self.config.enemies_images[self.name]
+        self.enemy.initialize_type(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -74,13 +79,13 @@ class Test(Level):
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+        draw_text_right(self.enemy_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
         self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
 
     def draw_boss(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
-        center_blit_image(self.game_canvas, self.config.DEVIL_CHAN_face, self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -102,11 +107,19 @@ class Test(Level):
                         self.card_stopwatch.time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
+            '''
+            RUN THE CARD GAME CODE HERE
+            WHEN YOU RUN OUT OF ENERGY, SET GAME_TRANSITION_OUT = TRUE (and get rid of the click stuff below)
+            Essentially the card game is always blitting on top of game canvas. 
+            Due to the nature of blit_screens(), game canvas is always being blit, which impacts performance.
+            However, if we use the self.card_game boolean to stop the drawing of various UI elements in game canvas when it's true,
+            that should increase the fps by a bit. Blitting transparent filled surfaces don't impact the FPS that much anyways (did test it).
+            '''
 
     def run(self):
         self.reload()
@@ -147,7 +160,8 @@ class Test(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.backgrounds["level_1"], (0, 0))
+            background = self.config.backgrounds[2][0]
+            self.game_canvas.blit(background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -174,7 +188,7 @@ class Test(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_screen(True, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(True, self.transition_stopwatch.seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
@@ -186,7 +200,8 @@ class Test(Level):
                 if not self.transition_stopwatch.activate_timer:
                     self.transition_stopwatch.time_start()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_screen(False, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(False, self.transition_stopwatch.seconds, self.height, 25)
+                    # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
@@ -204,24 +219,20 @@ class Test(Level):
                     self.update_stopwatch.time_start()
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
-                if self.update_stopwatch.seconds > 1:
-                    self.devil_chan_boss.update(self.damage + 20)
-                    self.hp_boss = self.devil_chan_boss.health
-                    self.energy = self.devil_chan_boss.energy
+                if self.update_stopwatch.seconds > 1.5:
+                    self.enemy.update(self.damage, "None")
+                    self.hp_boss = self.enemy.health
+                    self.energy = self.enemy.energy
                     self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
-                if self.action_stopwatch.seconds > 1.5 and not acted:
-                    self.devil_chan_boss.trigger_method()
-                    action = self.devil_chan_boss.act()
-                    if action[0] != "die":
-                        print(action[1][0])
-                        self.hp_player -= action[1][0]
-                    else:
-                        pass
-                    self.hp_boss = self.devil_chan_boss.health
+                if self.action_stopwatch.seconds > 2.5 and not acted:
+                    action = self.enemy.act(self.turn_counter)
+                    self.hp_player -= action[2]
+                    self.hp_boss = self.enemy.health
                     acted = True
-                elif self.action_stopwatch.seconds > 2:
+                elif self.action_stopwatch.seconds > 4:
+                    self.turn_counter += 1
                     self.action_stopwatch.time_reset()
                     completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
@@ -232,12 +243,12 @@ class Test(Level):
             if self.hp_player <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.config.end_screens[0].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.lose_screen, (0, 0))
             elif self.hp_boss <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.config.end_screens[1].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.hp_boss and self.hp_player:

@@ -8,7 +8,7 @@ class Boss(ABC):
         pass
 
     @abstractmethod
-    def load_boss_info(self):
+    def initialize(self):
         pass
 
     @abstractmethod
@@ -16,7 +16,7 @@ class Boss(ABC):
         pass
 
     @abstractmethod
-    def update(self, damage):
+    def update(self, damage, status_effects):
         pass
 
 
@@ -26,34 +26,44 @@ class DevilChan(Boss):
         self.metadata = config
         self.special = 0
         self.health = None
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.energy = None
-        self.attacks = None
-        self.death = None
+        self.moves = None
+        self.images = {"background": None, "face": None}
         self.block = 0
-        self.special_move = None
+        self.phrases = None
 
-    def load_boss_info(self):
-        self.attacks = {b: self.metadata["boss"]["attacks"][a]
-                        for (a, b) in (self.metadata["boss"]["attacks"], range(len(self.metadata["boss"]["attacks"]))) if "special" not in a and "death" not in a}
-        self.special_move = self.metadata["boss"]["attacks"]["special"]
-        self.death = self.metadata["boss"]["attacks"]["death"]
+    def initialize(self):
+        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
+        self.phrases = self.metadata["boss"]["phrases"]
+        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
+        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
         self.health = self.metadata["boss"]["hp"]
         self.energy = self.metadata["player"]["energy"]
 
     def act(self, turn_counter):
-        move = self.attacks[turn_counter % (len(self.attacks - 1))]
+        move_type = "basic"
+        move = self.moves[turn_counter % (len(self.moves) - 2)]
         if self.health < self.metadata["hp"] // 2 and not self.special:
-            move = self.special_move
+            move_type = "special"
+            move = self.moves["special"]
             self.special = 1
         if self.health <= 0:
-            move = self.death
-        self.health += move[1][3]
-        self.block += move[1][1]
-        return move["phrases"][random.randint(0, len(move["phrases"] - 1))], move[1][0], move[1][2]
+            move_type = "death"
+            move = self.moves["death"]
+        self.health += move["heal"]
+        self.block += move["block"]
+        if move["buff"] != "None":
+            self.buff_bar[move["buff"][0]] = move["buff"][1]
+        return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
-    def update(self, damage):
+    def update(self, damage, status_effects):
         self.energy = self.metadata["player"]["energy"]
-        self.health -= damage
+        self.health -= damage - self.block
+        self.block = 0 if self.block < damage else self.block - damage
+        if status_effects != "None":
+            self.status_bar[status_effects[0]] += status_effects[1]
 
 
 class MsG(Boss):
@@ -62,100 +72,97 @@ class MsG(Boss):
         self.metadata = config
         self.health = None
         self.energy = None
-        self.attacks = None
-        self.death = None
-        self.siberia_move = None
+        self.moves = None
         self.block = 0
         self.siberia = False
-        self.special_move = None
+        self.phrases = None
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
 
-    def load_boss_info(self):
-        self.attacks = {b: self.metadata["boss"]["attacks"][a]
-                        for (a, b) in (self.metadata["boss"]["attacks"], range(len(self.metadata["boss"]["attacks"]))) if "special" not in a and "death" not in a}
-        self.special_move = self.metadata["boss"]["attacks"]["special"]
-        self.death = self.metadata["boss"]["attacks"]["death"]
-        self.siberia_move = self.metadata["boss"]["attacks"]["siberia"]
+    def initialize(self):
+        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
+        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
+        self.moves["siberia"] = self.metadata["boss"]["moves"]["siberia"]
+        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
+        self.phrases = self.metadata["boss"]["phrases"]
         self.health = self.metadata["boss"]["hp"]
         self.energy = self.metadata["player"]["energy"]
 
     def act(self, turn_counter):
-        move = self.attacks[turn_counter % (len(self.attacks - 1))]
-        if self.health == self.metadata["boss"]["hp"] and not self.siberia:
-            move = self.special_move
+        move_type = "basic"
+        move = self.moves[turn_counter % (len(self.moves) - 3)]
+        print(turn_counter, move, self.moves, len(self.moves))
+        if turn_counter == 0:
+            move_type = "special"
+            move = self.moves["special"]
             self.siberia = True
         elif self.health <= self.metadata["boss"]["hp"] // 2 and self.siberia:
-            move = self.siberia_move
+            move_type = "special"
+            move = self.moves["siberia"]
             self.siberia = False
         if self.health <= 0:
-            move = self.death
-        self.health += move[1][3]
-        self.block += move[1][1]
-        return move["phrases"][random.randint(0, len(move["phrases"] - 1))], move[1][0], move[1][2]
+            move_type = "death"
+            move = self.moves["death"]
+        self.health += move["heal"]
+        self.block += move["block"]
+        if move["buff"] != "None":
+            self.buff_bar[move["buff"][0]] = move["buff"][1]
+        return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
-    def update(self, damage):
+    def update(self, damage, status_effects):
         self.energy = self.metadata["player"]["energy"]
         if self.siberia:
             self.energy -= 1
-        self.health -= damage
+        self.health -= damage - self.block
+        self.block = 0 if self.block < damage else self.block - damage
+        if status_effects != "None":
+            self.status_bar[status_effects[0]] += status_effects[1]
 
 
 class MrPhone(Boss):
     def __init__(self, config):
         super().__init__()
         self.metadata = config
-        self.trigger = None
-        self.special = 0
         self.health = None
         self.energy = None
-        self.basic_power = None
-        self.attack_phrases = None
+        self.moves = None
+        self.block = 0
         self.special = 0
         self.damaged = True
-        self.turn_count = 0
+        self.phrases = None
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
 
-    def load_boss_info(self):
+    def initialize(self):
+        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
+        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
+        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
+        self.phrases = self.metadata["boss"]["phrases"]
         self.health = self.metadata["boss"]["hp"]
         self.energy = self.metadata["player"]["energy"]
-        self.basic_power = self.metadata["boss"]["basic"][1]
-        self.attack_phrases = self.metadata["boss"]["phrases"]["attack"]
 
-    def update(self, damage, turn_counter=0):
-        self.health -= damage
+    def act(self, turn_counter):
+        move_type = "basic"
+        move = self.moves[turn_counter % (len(self.moves) - 2)]
+        if not self.damaged:
+            move_type = "special"
+            move = self.moves["special"]
+            self.special = True
+        if self.health <= 0:
+            move_type = "death"
+            move = self.moves["death"]
+        self.health += move["heal"]
+        if move["buff"] != "None":
+            self.buff_bar[move["buff"][0]] = move["buff"][1]
+        self.block += move["block"]
+        return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
+
+    def update(self, damage, status_effects):
+        self.energy = self.metadata["player"]["energy"]
         self.damaged = False
         if damage:
             self.damaged = True
-        self.turn_count = turn_counter
-        self.energy = self.metadata["player"]["energy"]
-        return self.health, self.energy
-
-    def trigger_method(self):
-        self.trigger = "attack"
-        if not self.turn_count % 4:
-            self.trigger = "special"
-        if not self.damaged:
-            self.trigger = "kill"
-        if self.health <= 0:
-            self.trigger = "die"
-
-    def act(self):
-        match self.trigger:
-            case "attack":
-                return self.trigger, self.basic_action()
-            case "die":
-                return self.trigger, self.death()
-            case "special":
-                return self.trigger, self.special_action()
-            case "kill":
-                return self.trigger, self.kill()
-
-    def kill(self):
-        return self.metadata["boss"]["kill"][1], self.metadata["boss"]["phrases"]["kill"][random.randint(0, len(self.metadata["boss"]["phrases"]["kill"]) - 1)], "good_game"
-
-    def death(self):
-        return self.metadata["boss"]["phrases"]["death"], "death"
-
-    def basic_action(self):
-        return self.basic_power, self.attack_phrases[random.randint(0, len(self.attack_phrases) - 1)], "thinking_question"
-
-    def special_action(self):
-        return self.metadata["boss"]["special"][1], self.metadata["boss"]["phrases"]["special"][random.randint(0, len(self.metadata["boss"]["phrases"]["special"]) - 1)], "disappointment"
+        self.health -= damage - self.block
+        self.block = 0 if self.block < damage else self.block - damage
+        if status_effects != "None":
+            self.status_bar[status_effects[0]] += status_effects[1]
