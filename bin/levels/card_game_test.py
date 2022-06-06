@@ -147,7 +147,7 @@ class Test(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
+            self.game_canvas.blit(self.config.backgrounds["level_1"], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True

@@ -104,7 +104,7 @@ class BossMsG(Level):
                         self.card_stopwatch.time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0, self.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
@@ -160,9 +160,9 @@ class BossMsG(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
             if self.ms_g_boss.siberia:
-                background = self.config.MS_G_backgrounds[1]
+                background = self.config.backgrounds[2][1]
             else:
-                background = self.config.MS_G_backgrounds[0]
+                background = self.config.backgrounds[2][0]
             self.game_canvas.blit(background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
@@ -222,7 +222,7 @@ class BossMsG(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
-                    self.ms_g_boss.update(self.damage, None)
+                    self.ms_g_boss.update(self.damage, "None")
                     self.hp_boss = self.ms_g_boss.health
                     self.energy = self.ms_g_boss.energy
                     if self.damage:
@@ -234,7 +234,7 @@ class BossMsG(Level):
                     action = self.ms_g_boss.act(self.turn_counter)
                     self.face = self.config.MS_G_faces["normal"]
                     if action[0] == "special":
-                        self.ms_g_boss.update(0, None)
+                        self.ms_g_boss.update(0, "None")
                         self.energy = self.ms_g_boss.energy
                         if not self.turn_counter:
                             self.face = self.config.MS_G_faces["siberia-01"]

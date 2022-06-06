@@ -54,9 +54,9 @@ level_1:
         block: 0
         status: None
         buff:
-          - Lifesteal
-          - 2
-        heal: 20
+          - Regeneration
+          - 10
+        heal: 10
       death:
         phrases:
           - NOOOOOOO!!!
@@ -694,18 +694,12 @@ settings:
 # Blindness: The first pair of cards flipped become invisible. Player specific. Falls by one stack every turn.
 # Vulnerable: Takes 25% more damage. Falls by one stack every turn.
 # Disappointment: Emotional damage. Falls by one stack every turn.
-# Marked: Takes one extra damage per stack after being attacked. Player specific. Stacks do not disappear.
-# Burning: Takes one damage at the end of the turn per stack. Damage taken increases by 10%. Falls by one stack every turn.
-# Poison: Takes one damage at the end of the turn per stack. Damage dealt falls by 10%. Falls by one stack every turn.
+# Poison: Takes one damage at the end of the turn per stack. Falls by one stack every turn.
 #
 # Buffs:
 # Power: Deals 25% more damage. Falls by one stack every turn.
-# Thorns: Deals damage equal to number of stacks when taking damage. Stacks do not disappear.
-# Lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
 # Regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
-# Artifact: Negates a debuff per stack. Stacks do not disappear.
 # Dodge: Negate damage once for every stack. Player specific. Falls by one stack every turn.
-# Energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
 # Armor: Gain 1 block per stack. Falls by one stack every turn.
 # Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
 ########################################################################################################################

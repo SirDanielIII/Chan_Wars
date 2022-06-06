@@ -26,10 +26,11 @@ class DevilChan(Boss):
         self.metadata = config
         self.special = 0
         self.health = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Marked": 0, "Burning": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Artifact": 0, "Dodge": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
+        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
         self.energy = None
         self.moves = None
+        self.images = {"background": None, "face": None}
         self.block = 0
         self.phrases = None
 
@@ -43,7 +44,7 @@ class DevilChan(Boss):
 
     def act(self, turn_counter):
         move_type = "basic"
-        move = self.moves[(turn_counter - 1) % (len(self.moves) - 2)]
+        move = self.moves[turn_counter % (len(self.moves) - 2)]
         if self.health < self.metadata["hp"] // 2 and not self.special:
             move_type = "special"
             move = self.moves["special"]
@@ -53,7 +54,7 @@ class DevilChan(Boss):
             move = self.moves["death"]
         self.health += move["heal"]
         self.block += move["block"]
-        if move["buff"]:
+        if move["buff"] != "None":
             self.buff_bar[move["buff"][0]] = move["buff"][1]
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
@@ -61,7 +62,7 @@ class DevilChan(Boss):
         self.energy = self.metadata["player"]["energy"]
         self.health -= damage - self.block
         self.block = 0 if self.block < damage else self.block - damage
-        if status_effects:
+        if status_effects != "None":
             self.status_bar[status_effects[0]] += status_effects[1]
 
 
@@ -75,8 +76,8 @@ class MsG(Boss):
         self.block = 0
         self.siberia = False
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Marked": 0, "Burning": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Artifact": 0, "Dodge": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
+        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
 
     def load_boss_info(self):
         self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
@@ -89,7 +90,7 @@ class MsG(Boss):
 
     def act(self, turn_counter):
         move_type = "basic"
-        move = self.moves[(turn_counter - 1) % (len(self.moves) - 3)]
+        move = self.moves[turn_counter % (len(self.moves) - 3)]
         print(turn_counter, move, self.moves, len(self.moves))
         if turn_counter == 0:
             move_type = "special"
@@ -104,7 +105,7 @@ class MsG(Boss):
             move = self.moves["death"]
         self.health += move["heal"]
         self.block += move["block"]
-        if move["buff"]:
+        if move["buff"] != "None":
             self.buff_bar[move["buff"][0]] = move["buff"][1]
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
@@ -114,7 +115,7 @@ class MsG(Boss):
             self.energy -= 1
         self.health -= damage - self.block
         self.block = 0 if self.block < damage else self.block - damage
-        if status_effects:
+        if status_effects != "None":
             self.status_bar[status_effects[0]] += status_effects[1]
 
 
@@ -129,8 +130,8 @@ class MrPhone(Boss):
         self.special = 0
         self.damaged = True
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Marked": 0, "Burning": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Artifact": 0, "Dodge": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
+        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
 
     def load_boss_info(self):
         self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
@@ -142,7 +143,7 @@ class MrPhone(Boss):
 
     def act(self, turn_counter):
         move_type = "basic"
-        move = self.moves[(turn_counter - 1) % (len(self.moves) - 2)]
+        move = self.moves[turn_counter % (len(self.moves) - 2)]
         if not self.damaged:
             move_type = "special"
             move = self.moves["special"]
@@ -151,7 +152,7 @@ class MrPhone(Boss):
             move_type = "death"
             move = self.moves["death"]
         self.health += move["heal"]
-        if move["buff"]:
+        if move["buff"] != "None":
             self.buff_bar[move["buff"][0]] = move["buff"][1]
         self.block += move["block"]
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
@@ -163,5 +164,5 @@ class MrPhone(Boss):
             self.damaged = True
         self.health -= damage - self.block
         self.block = 0 if self.block < damage else self.block - damage
-        if status_effects:
+        if status_effects != "None":
             self.status_bar[status_effects[0]] += status_effects[1]

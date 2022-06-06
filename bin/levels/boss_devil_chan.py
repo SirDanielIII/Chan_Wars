@@ -350,7 +350,7 @@ class BossDevilChan(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.DEVIL_CHAN_background, (0, 0))
+            self.game_canvas.blit(self.config.backgrounds[1], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.timer_dict["action"].activate_timer and not self.completed:
