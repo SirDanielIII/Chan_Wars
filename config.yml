@@ -665,6 +665,35 @@ level_3:
           status: None
           damage: 15
 
+cards:
+  air_chan:
+    damage: 10
+  angel_chan:
+    damage: 10
+  avatar_chan:
+    damage: 10
+  earth_chan:
+    damage: 10
+  farquaad_chan:
+    damage: 10
+  fire_chan:
+    damage: 10
+  jackie_chan:
+    damage: 10
+  jesus_chan:
+    damage: 10
+  oni_chan:
+    damage: 10
+  shrek_chan:
+    damage: 10
+  square_chan:
+    damage: 10
+  un-chany_chan:
+    damage: 10
+  upsidedown_chan:
+    damage: 10
+  water_chan:
+    damage: 10
 
 other:
   boss_face_size:
