@@ -15,7 +15,7 @@ from bin.classes.enemy import Enemy
 import bin.classes.card_pair as card_pair
 
 
-class EnemyTest1(Level):
+class EnemyLevel(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
@@ -33,15 +33,15 @@ class EnemyTest1(Level):
         self.hp_player = None
         self.hp_bar_player = None
         # ------------------------------------------------------------------------------------------------------------------
-        # Boss Attributes
+        # Enemy Attributes
         self.enemy_data = None
-        self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
-        self.hp_boss = None
-        self.hp_bar_boss = None
+        self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
+        self.hp_enemy = None
+        self.hp_bar_enemy = None
         # ------------------------------------------------------------------------------------------------------------------
         self.size = self.config.card_size
         self.margins = (20, 30)
-        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
+        self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
         self.pairs = None
         self.damage = 0
         self.action_stopwatch = Timer()
@@ -59,15 +59,17 @@ class EnemyTest1(Level):
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.name = "flying"
         self.player.image_list = self.config.image_list
-        self.player.columns = 5
         self.enemy_data = self.config.get_config()["level_2"]
+        self.player.columns = self.enemy_data["player"]["columns"]
+        self.player.rows = self.enemy_data["player"]["rows"]
         self.enemy.metadata = self.enemy_data
         self.hp_player = self.enemy_data["player"]["hp"]
         self.turn_counter = 0
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_boss = self.enemy_data["enemies"][self.name]["hp"]
-        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_enemy = self.enemy_data["enemies"][self.name]["hp"]
+        self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.hp_enemy, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.enemies_images[self.name]
+        self.enemy.initialize(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -75,14 +77,14 @@ class EnemyTest1(Level):
         draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
         self.hp_bar_player.render(self.hp_player, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
-        # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.enemy_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
-        self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
+        # Enemy Text & Health Bar
+        draw_text_right(str(math.ceil(self.hp_enemy)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+                        self.hp_bar_enemy.x + self.hp_bar_enemy.w + 10, self.hp_bar_enemy.y)
+        draw_text_right(self.enemy_data["enemies"][self.name]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+                        self.hp_bar_enemy.x + self.hp_bar_enemy.w + 5, self.hp_bar_enemy.y + self.hp_bar_enemy.h * 2 + 5)
+        self.hp_bar_enemy.render(self.hp_enemy, 0.3, dt, True)
 
-    def draw_boss(self, time_elapsed):
+    def draw_enemy(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
         center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
@@ -122,7 +124,6 @@ class EnemyTest1(Level):
 
     def run(self):
         self.reload()
-        self.enemy.initialize_type(self.name)
         acted = True
         completed = True
         updated = True
@@ -171,7 +172,7 @@ class EnemyTest1(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click and self.hp_boss and self.hp_player:
+            if self.click and self.hp_enemy and self.hp_player:
                 if not self.card_game and completed and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
@@ -221,7 +222,7 @@ class EnemyTest1(Level):
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
                     self.enemy.update(self.damage, "None")
-                    self.hp_boss = self.enemy.health
+                    self.hp_enemy = self.enemy.health
                     self.energy = self.enemy.energy
                     self.damage = 0
                     updated = True
@@ -229,14 +230,14 @@ class EnemyTest1(Level):
                 if self.action_stopwatch.seconds > 2.5 and not acted:
                     action = self.enemy.act(self.turn_counter)
                     self.hp_player -= action[2]
-                    self.hp_boss = self.enemy.health
+                    self.hp_enemy = self.enemy.health
                     acted = True
                 elif self.action_stopwatch.seconds > 4:
                     self.turn_counter += 1
                     self.action_stopwatch.time_reset()
                     completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
-                self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
+                self.draw_enemy(time_elapsed)  # Draw Enemy' Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
@@ -245,13 +246,13 @@ class EnemyTest1(Level):
                 if self.death_stopwatch.seconds > 1:
                     self.config.end_screens[0].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.lose_screen, (0, 0))
-            elif self.hp_boss <= 0:
+            elif self.hp_enemy <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
                     self.config.end_screens[1].set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.hp_boss and self.hp_player:
+            if self.hp_enemy and self.hp_player:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

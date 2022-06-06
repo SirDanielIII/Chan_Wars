@@ -66,6 +66,7 @@ class BossMsG(Level):
         self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.MS_G_faces["normal"]
+        self.ms_g_boss.load_boss_info()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -120,7 +121,6 @@ class BossMsG(Level):
 
     def run(self):
         self.reload()
-        self.ms_g_boss.load_boss_info()
         acted = False
         completed = False
         updated = False

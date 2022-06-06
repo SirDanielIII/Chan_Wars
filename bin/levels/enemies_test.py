@@ -68,6 +68,7 @@ class EnemyTest1(Level):
         self.hp_boss = self.enemy_data["enemies"][self.name]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.enemies_images[self.name]
+        self.enemy.initialize_type(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -122,7 +123,6 @@ class EnemyTest1(Level):
 
     def run(self):
         self.reload()
-        self.enemy.initialize_type(self.name)
         acted = True
         completed = True
         updated = True

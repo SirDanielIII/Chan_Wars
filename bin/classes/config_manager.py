@@ -12,11 +12,9 @@ class Config(object):
         self.boss_card = None
         self.end_screens = None
         self.image_list = None
-        self.DEVIL_CHAN_face = None
+        self.face_images = None
         self.backgrounds = None
         self.enemies_images = None
-        self.MS_G_faces = None
-        self.MR_PHONE_faces = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
         self.f_hp_bar_hp = None
@@ -104,11 +102,11 @@ class Config(object):
         self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 80)
         self.f_options_title = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 75)
         self.f_options_sub = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 40)
-        self.DEVIL_CHAN_face = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size)
-        self.MS_G_faces = {filename[5:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/" + filename), self.boss_face_size).convert_alpha()
-                           for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")}
-        self.MR_PHONE_faces = {filename[6:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/" + filename), self.boss_face_size).convert_alpha()
-                               for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}
+        self.face_images = {1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(), self.boss_face_size),
+                            2: {filename[5:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/" + filename), self.boss_face_size).convert_alpha()
+                                for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")},
+                            3: {filename[6:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/" + filename), self.boss_face_size).convert_alpha()
+                                for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}}
 
     def get_config(self):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,

@@ -41,7 +41,7 @@ class BossMrPhone(Level):
         # ------------------------------------------------------------------------------------------------------------------
         self.size = self.config.card_size
         self.margins = (20, 30)
-        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
+        self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
         self.pairs = None
         self.damage = 0
         self.action_stopwatch = Timer()
@@ -63,8 +63,8 @@ class BossMrPhone(Level):
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["boss"]["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        print(self.config.MR_PHONE_faces)
-        self.face = self.config.MR_PHONE_faces["normal"]
+        self.face = self.config.face_images[3]["normal"]
+        self.mr_phone_boss.initialize()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -119,7 +119,6 @@ class BossMrPhone(Level):
 
     def run(self):
         self.reload()
-        self.mr_phone_boss.load_boss_info()
         acted = True
         completed = False
         updated = True
@@ -221,7 +220,7 @@ class BossMrPhone(Level):
                     self.hp_boss = self.mr_phone_boss.health
                     self.energy = self.mr_phone_boss.energy
                     if self.damage:
-                        self.face = self.config.MR_PHONE_faces["hit"]
+                        self.face = self.config.face_images[3]["hit"]
                     self.damage = 0
                     updated = True
                     self.update_stopwatch.time_reset()
@@ -230,13 +229,13 @@ class BossMrPhone(Level):
                     action = self.mr_phone_boss.act()
                     if action[0] != "die":
                         self.hp_player -= action[1][0]
-                    self.face = self.config.MR_PHONE_faces[action[1][-1]]
+                    self.face = self.config.face_images[3][action[1][-1]]
                     self.hp_boss = self.mr_phone_boss.health
                     acted = True
                 elif self.action_stopwatch.seconds > 5 or (not counter and self.action_stopwatch.seconds > 2):
                     self.action_stopwatch.time_reset()
                     completed = True
-                    self.face = self.config.MR_PHONE_faces["normal"]
+                    self.face = self.config.face_images[3]["normal"]
                     counter += 1
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)

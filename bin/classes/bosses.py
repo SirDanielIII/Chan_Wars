@@ -8,7 +8,7 @@ class Boss(ABC):
         pass
 
     @abstractmethod
-    def load_boss_info(self):
+    def initialize(self):
         pass
 
     @abstractmethod
@@ -26,15 +26,15 @@ class DevilChan(Boss):
         self.metadata = config
         self.special = 0
         self.health = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.energy = None
         self.moves = None
         self.images = {"background": None, "face": None}
         self.block = 0
         self.phrases = None
 
-    def load_boss_info(self):
+    def initialize(self):
         self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
         self.phrases = self.metadata["boss"]["phrases"]
         self.moves["special"] = self.metadata["boss"]["moves"]["special"]
@@ -76,10 +76,10 @@ class MsG(Boss):
         self.block = 0
         self.siberia = False
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
 
-    def load_boss_info(self):
+    def initialize(self):
         self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
         self.moves["special"] = self.metadata["boss"]["moves"]["special"]
         self.moves["siberia"] = self.metadata["boss"]["moves"]["siberia"]
@@ -130,10 +130,10 @@ class MrPhone(Boss):
         self.special = 0
         self.damaged = True
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
 
-    def load_boss_info(self):
+    def initialize(self):
         self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
         self.moves["special"] = self.metadata["boss"]["moves"]["special"]
         self.moves["death"] = self.metadata["boss"]["moves"]["death"]

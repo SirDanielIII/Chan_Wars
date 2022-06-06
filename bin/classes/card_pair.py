@@ -46,9 +46,9 @@ class CardPair(object):
 
 
 class MatchingScreen:
-    def __init__(self, columns, images, screen):
+    def __init__(self, columns, rows, images, screen):
         self.screen = screen
-        self.rows = 4
+        self.rows = rows
         self.columns = columns
         self.image_list = images
         self.set = []

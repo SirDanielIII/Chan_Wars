@@ -12,7 +12,7 @@ from bin.classes.config_manager import Config
 
 from bin.levels.boot import Boot
 from bin.levels.boss_devil_chan import BossDevilChan
-from bin.levels.ms_g_test import BossMsG
+from bin.levels.enemy_level import EnemyLevel as BossMsG
 from bin.levels.credits import Credits
 from bin.levels.game_menu import GameMenu
 from bin.levels.how_to_play import HowToPlay

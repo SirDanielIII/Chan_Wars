@@ -6,12 +6,12 @@ class Enemy:
         self.energy = None
         self.attacks = None
         self.block = 0
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0}
-        self.buff_bar = {"Power": 0, "Regeneration": 0, "Dodge": 0, "Armor": 0, "Clairvoyant": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.name = None
         self.image = None
 
-    def initialize_type(self, name):
+    def initialize(self, name):
         self.name = name
         self.attacks = {a: self.metadata["enemies"][self.name]["attacks"][b] for a, b in enumerate(self.metadata["enemies"][self.name]["attacks"])}
         self.energy = self.metadata["player"]["energy"]

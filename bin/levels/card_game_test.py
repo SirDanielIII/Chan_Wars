@@ -63,6 +63,7 @@ class Test(Level):
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_boss = self.boss_data["hp"]
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.devil_chan_boss.initialize()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -109,7 +110,6 @@ class Test(Level):
 
     def run(self):
         self.reload()
-        self.devil_chan_boss.load_boss_info()
         acted = True
         completed = True
         updated = True
