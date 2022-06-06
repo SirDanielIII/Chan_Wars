@@ -11,7 +11,7 @@ class Config(object):
         self.menu_img = None
         self.boss_card = None
         self.end_screens = None
-        self.image_list = None
+        self.image_dict = None
         self.face_images = None
         self.backgrounds = None
         self.enemies_images = None
@@ -87,16 +87,17 @@ class Config(object):
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
-        self.image_list = self.load_images_resize(os.getcwd() + "/resources/chans", self.card_size) + \
-                          [pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)]
+        self.image_dict = {a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.card_size).convert(), chan)
+                           for a, chan in enumerate(self.data["cards"])}
+        self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)
         self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
                             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(), (1600, 900)),
-                            2: [pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert(), (1600, 900)),
-                                        pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert(), (1600, 900))],
+                            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert(), (1600, 900)),
+                            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert(), (1600, 900)),
                             3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert(), (1600, 900))}
         self.end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
                             pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
-        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\" + name + ".jpg").convert(), (100, 100)) for name in ["flying", "drowned"]} # self.data["level_1"]["enemies"]
+        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\" + name + ".png").convert(), (100, 100)) for name in self.data["level_1"]["enemies"]}
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 80)

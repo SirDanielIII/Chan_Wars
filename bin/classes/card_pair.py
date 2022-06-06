@@ -17,7 +17,7 @@ def move_pos(in_out, elapsed_time, y, speed):
 
 
 class CardPair(object):
-    def __init__(self, image, pos, size, m, columns, o_set):
+    def __init__(self, image, pos, size, m, columns, o_set, card_type):
         self.size = size
         self.position1 = [o_set[0] - columns + (size[0] + m[0]) * pos[0][0],
                           o_set[1] + (size[1] + m[1]) * pos[0][1]]
@@ -26,6 +26,7 @@ class CardPair(object):
         self.image = image
         self.chosen1 = 0
         self.chosen2 = 0
+        self.card_type = card_type
 
     def choose(self, m_pos, choose_boolean, rect_pair):
         if choose_boolean:
@@ -50,17 +51,16 @@ class MatchingScreen:
         self.screen = screen
         self.rows = rows
         self.columns = columns
-        self.image_list = images
+        self.image_dict = images
         self.set = []
 
     def generate_pairs(self, size, margins, X, Y):
         # ------------------------------------------------------------------------------------------------------------------
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
-        print(o_set)
         # Daniel made it so that the offset was calculated in the method and not in the parameters
         image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
         pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
-        card_set = [CardPair(self.image_list[card1[2] // 2], ((card1[:2]), (card2[:2])), size, margins, self.columns, o_set)
+        card_set = [CardPair(self.image_dict[card1[2] // 2][0], ((card1[:2]), (card2[:2])), size, margins, self.columns, o_set, self.image_dict[card1[2] // 2][1])
                     for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
         rect_set = [(pg.Rect(card_pair.position1[0], card_pair.position1[1], card_pair.size[0], card_pair.size[1]),
                      pg.Rect(card_pair.position2[0], card_pair.position2[1], card_pair.size[0], card_pair.size[1])) for card_pair in card_set]
@@ -74,7 +74,7 @@ class MatchingScreen:
             for pair in self.set:
                 pair[0].choose(m_pos, choose_boolean, pair[1])
         for pair in [cards[0] for cards in self.set]:
-            pair.draw_matching(self.image_list[-1], self.screen, pos_mod)
+            pair.draw_matching(self.image_dict["card_back"], self.screen, pos_mod)
 
     def complete(self):
         count = 0

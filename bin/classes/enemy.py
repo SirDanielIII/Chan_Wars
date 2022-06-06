@@ -7,7 +7,7 @@ class Enemy:
         self.attacks = None
         self.block = 0
         self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.name = None
         self.image = None
 
@@ -19,20 +19,34 @@ class Enemy:
 
     def act(self, turn_counter):
         attack = self.attacks[turn_counter % len(self.attacks)]
+        if self.buff_bar["lifesteal"]:
+            attack["heal"] += attack["damage"]
         self.health += attack["heal"]
+        if self.buff_bar["Armor"]:
+            attack["block"] += self.buff_bar["Armor"]
         self.block = attack["block"]
         if attack["buff"] != "None":
             self.buff_bar[attack["buff"][0]] += attack["buff"][1]
         phrase = "{} used {}".format(self.metadata["enemies"][self.name]["name"], attack["phrase"])
+        if self.status_bar["Weakness"]:
+            attack["damage"] *= 0.75
+        if self.buff_bar["Power"]:
+            attack["damage"] *= 1.25
         return "basic", phrase, attack["damage"], attack["status"]
 
     def update(self, damage, status_effects):
         self.energy = self.metadata["player"]["energy"]
+        if self.status_bar["Vulnerable"]:
+            damage *= 1.25
+        if self.status_bar["Marked"] and damage:
+            damage += self.status_bar["Marked"]
         if self.block >= damage:
             damage = 0
         else:
             damage -= self.block
         self.block = 0
+        damage += self.status_bar["Poison"]
+        self.health += self.status_bar["Regeneration"]
         self.health -= damage
         if status_effects != "None":
             self.status_bar[status_effects[0]] += status_effects[1]

@@ -1,6 +1,7 @@
 import sys
 import time
 import os
+import random
 import math
 
 import bin.classes.config_manager as load
@@ -26,7 +27,7 @@ class EnemyLevel(Level):
         self.card_game = False
         self.game_transition_in = False
         self.game_transition_out = False  # Use this to stop the game\
-        self.energy = 4
+        self.energy = None
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
@@ -44,6 +45,8 @@ class EnemyLevel(Level):
         self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
         self.pairs = None
         self.damage = 0
+        self.background = None
+        self.level = None
         self.action_stopwatch = Timer()
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
@@ -57,11 +60,13 @@ class EnemyLevel(Level):
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.name = "flying"
-        self.player.image_list = self.config.image_list
-        self.enemy_data = self.config.get_config()["level_2"]
+        self.level = 1
+        self.player.image_dict = self.config.image_dict
+        self.enemy_data = self.config.get_config()["level_" + str(self.level)]
         self.player.columns = self.enemy_data["player"]["columns"]
+        self.name = random.choice(list(self.enemy_data["enemies"].keys()))
         self.player.rows = self.enemy_data["player"]["rows"]
+        self.energy = self.enemy_data["player"]["energy"]
         self.enemy.metadata = self.enemy_data
         self.hp_player = self.enemy_data["player"]["hp"]
         self.turn_counter = 0
@@ -161,8 +166,8 @@ class EnemyLevel(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            background = self.config.backgrounds[2][0]
-            self.game_canvas.blit(background, (0, 0))
+            self.background = self.config.backgrounds[self.level]
+            self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -245,12 +250,12 @@ class EnemyLevel(Level):
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
                     self.config.end_screens[0].set_alpha((self.death_stopwatch.seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.lose_screen, (0, 0))
+                    self.game_canvas.blit(self.config.end_screens[0], (0, 0))
             elif self.hp_enemy <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
                     self.config.end_screens[1].set_alpha((self.death_stopwatch.seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.win_screen, (0, 0))
+                    self.game_canvas.blit(self.config.end_screens[1], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.hp_enemy and self.hp_player:
                 self.run_card_game(self.click)
