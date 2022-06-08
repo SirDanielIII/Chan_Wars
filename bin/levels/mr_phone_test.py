@@ -30,54 +30,60 @@ class BossMrPhone(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
-        self.hp_player = None
+        self.player_data = None
         self.hp_bar_player = None
+        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player_attack = 0
+        self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
         self.boss_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
-        self.hp_boss = None
         self.hp_bar_boss = None
+        self.boss_attack = 0
+        self.boss_statuses = []
+        self.acted = True
+        self.completed = True
+        self.boss = None
         # ------------------------------------------------------------------------------------------------------------------
         self.size = self.config.card_size
         self.margins = (20, 30)
-        self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
+        self.level = 3
         self.pairs = None
-        self.damage = 0
         self.action_stopwatch = Timer()
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
+        self.turn_counter = 0
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
-        self.mr_phone_boss = MrPhone(self.boss_data)
         self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+        self.boss_data = self.config.get_config()["level_" + str(self.level)]["boss"]
+        self.player_data = self.config.get_config()["level_" + str(self.level)]["player"]
+        self.player.metadata = self.player_data
+        self.boss.metadata = self.boss_data
+        self.boss.initialize()
+        self.player.initialize(self.config.image_dict)
         self.player.image_list = self.config.image_list
-        self.player.columns = 7
-        self.boss_data = self.config.get_config()["level_3"]
-        self.mr_phone_boss.metadata = self.boss_data
-        self.hp_player = self.boss_data["player"]["hp"]
-        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_boss = self.boss_data["boss"]["hp"]
-        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.face_images[3]["normal"]
-        self.mr_phone_boss.initialize()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
-        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y)
+        draw_text_left(str(math.ceil(self.player.health)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y)
         draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
-        self.hp_bar_player.render(self.hp_player, 0.3, dt)
+        self.hp_bar_player.render(self.player.health, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+        draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
         draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
-        self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
+        self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
 
     def draw_boss(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
@@ -97,7 +103,7 @@ class BossMrPhone(Level):
                     if not self.card_stopwatch.activate_timer:
                         self.card_stopwatch.time_start()
                     if self.card_stopwatch.seconds > 0.25:
-                        self.damage += self.card_complete[2] * 10
+                        self.player_attack += self.card_complete[2] * 10
                         self.energy -= self.card_complete[1]
                         self.player.reset()
                         self.card_stopwatch.time_reset()
@@ -167,7 +173,7 @@ class BossMrPhone(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click and self.hp_boss and self.hp_player:
+            if self.click and self.boss.health and self.player.health:
                 if not self.card_game and completed and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
@@ -216,23 +222,21 @@ class BossMrPhone(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
-                    self.mr_phone_boss.update(self.damage, counter)
-                    self.hp_boss = self.mr_phone_boss.health
-                    self.energy = self.mr_phone_boss.energy
-                    if self.damage:
+                    self.boss.update(self.player_attack, counter)
+                    if self.player_attack:
                         self.face = self.config.face_images[3]["hit"]
-                    self.damage = 0
+                    self.player_attack = 0
                     updated = True
                     self.update_stopwatch.time_reset()
                 if self.action_stopwatch.seconds > 2.5 and not acted:
-                    self.mr_phone_boss.trigger_method()
-                    action = self.mr_phone_boss.act()
+                    self.boss.trigger_method()
+                    action = self.boss.act()
                     if action[0] != "die":
-                        self.hp_player -= action[1][0]
+                        self.boss_attack += action[1][0]
                     self.face = self.config.face_images[3][action[1][-1]]
-                    self.hp_boss = self.mr_phone_boss.health
                     acted = True
-                elif self.action_stopwatch.seconds > 5 or (not counter and self.action_stopwatch.seconds > 2):
+                    self.player.update(self.boss_attack, None)
+                elif self.action_stopwatch.seconds > 4 or (not counter and self.action_stopwatch.seconds > 2):
                     self.action_stopwatch.time_reset()
                     completed = True
                     self.face = self.config.face_images[3]["normal"]
@@ -242,18 +246,18 @@ class BossMrPhone(Level):
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
-            if self.hp_player <= 0:
+            if self.player.health <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
                     self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.lose_screen, (0, 0))
-            elif self.hp_boss <= 0:
+            elif self.boss.health <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
                     self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
                     self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.hp_boss and self.hp_player:
+            if self.boss.health and self.player.health:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

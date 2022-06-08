@@ -26,28 +26,26 @@ class BossDevilChan(Level):
         self.card_canvas_y = self.height
         self.card_game = False
         self.game_transition_in = False
-        self.game_transition_out = False
-        self.energy = None
-        self.size = self.config.card_size
-        self.margins = (20, 30)
+        self.game_transition_out = False  # Use this to stop the game
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
-        self.hp_player = None
-        self.damage = 0
+        self.player_data = None
         self.hp_bar_player = None
-        self.card_complete = [0]
-        self.pairs = None
-        self.player = card_pair.MatchingScreen(0, 0, None, self.card_canvas)
+        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player_attack = 0
+        self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
-        self.boss = None
         self.boss_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
-        self.hp_boss = None
         self.hp_bar_boss = None
+        self.boss_attack = 0
+        self.boss_statuses = []
         self.acted = True
         self.completed = True
+        self.boss = None
+        self.face = None
         # ------------------------------------------------------------------------------------------------------------------
         # Text Bar Attributes
         self.typ_transition_in = False
@@ -72,25 +70,16 @@ class BossDevilChan(Level):
         self.ran = 0
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        # ------------------------------------------------------------------------------------------------------------------
-        # Boss Attributes Initialization
-        self.boss_data = self.config.get_config()["level_1"]
-        self.boss = DChan(self.boss_data)
-        self.boss.initialize()
-        self.hp_boss = self.boss_data["boss"]["hp"]
-        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.hp_boss, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.boss_data = self.config.get_config()["level_" + str(self.level)]["boss"]
+        self.player_data = self.config.get_config()["level_" + str(self.level)]["player"]
+        self.player.metadata = self.player_data
         self.boss.metadata = self.boss_data
-        self.acted = True
-        self.completed = True
-        # ------------------------------------------------------------------------------------------------------------------
-        # Player Attributes Initialization
-        self.hp_player = self.boss_data["player"]["hp"]
-        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.hp_player, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.boss.initialize()
+        self.player.initialize(self.config.image_dict)
         self.player.image_list = self.config.image_list
-        self.player.columns = self.boss_data["player"]["columns"]
-        self.energy = self.boss_data["player"]["energy"]
-        self.card_complete = [0]
-        self.pairs = None
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.face = self.config.face_images[3]["normal"]
         # ------------------------------------------------------------------------------------------------------------------
         # Text Box & Typewriter Attributes
         self.typ_transition_in = False
@@ -120,11 +109,11 @@ class BossDevilChan(Level):
         self.hp_bar_player.render(self.hp_player, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.hp_boss)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
+        draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
         draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
-        self.hp_bar_boss.render(self.hp_boss, 0.3, dt, True)
+        self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
 
     def draw_boss(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
@@ -136,20 +125,20 @@ class BossDevilChan(Level):
             self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
         if self.card_canvas_y != self.height:
             self.card_canvas.fill(white)
-            if self.energy and not self.game_transition_in and not self.game_transition_out:
+            if self.player.health and not self.game_transition_in and not self.game_transition_out:
                 self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
                     if not self.timer_dict["action"].activate_timer:
                         self.timer_dict["action"].time_start()
                     if self.timer_dict["action"].seconds > 0.25:
                         self.damage += self.card_complete[2] * 10
-                        self.energy -= self.card_complete[1]
+                        self.player.health -= self.card_complete[1]
                         self.player.reset()
                         self.timer_dict["action"].time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0,
-                                   self.energy and not self.timer_dict["action"].seconds > 500)
+                                   self.player.health and not self.timer_dict["action"].seconds > 500)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
@@ -205,10 +194,10 @@ class BossDevilChan(Level):
     def attack(self):
         # ------------------------------------------------------------------------------------------------------------------
         # Matching Game Triggers
-        if self.hp_boss and self.hp_player:
+        if self.boss.health and self.hp_player:
             if not self.card_game and self.completed and not self.timer_dict["transition"].seconds:
                 self.trigger_in()
-            elif self.card_game and self.energy == 0 and not self.timer_dict["transition"].seconds:
+            elif self.card_game and self.player.health == 0 and not self.timer_dict["transition"].seconds:
                 self.trigger_out()
         # ------------------------------------------------------------------------------------------------------------------
         if self.game_transition_in:
@@ -357,16 +346,13 @@ class BossDevilChan(Level):
                     self.timer_dict["action"].time_start()
                 if not self.timer_dict["death"].activate_timer:
                     if self.timer_dict["action"].seconds > 1:
-                        self.boss.update(self.damage)
-                        self.hp_boss = self.boss.health
-                        self.energy = self.boss.energy
-                        self.damage = 0
+                        self.boss.update(self.player_attack)
+                        self.player_attack = 0
                     if self.timer_dict["action"].seconds > 1.5 and not self.acted:
                         self.boss.trigger_method()
                         action = self.boss.act()
                         if action[0] != "die":
                             self.hp_player -= action[1][0]
-                        self.hp_boss = self.boss.health
                         self.acted = True
                     elif self.timer_dict["action"].seconds > 2:
                         self.timer_dict["action"].time_reset()
@@ -392,13 +378,13 @@ class BossDevilChan(Level):
                     self.timer_dict["death"].time_start()
                 if self.timer_dict["death"].seconds > 1.5:
                     return 13
-            elif self.hp_boss <= 0:
+            elif self.boss.health <= 0:
                 if not self.timer_dict["death"].activate_timer:
                     self.timer_dict["death"].time_start()
                 if self.timer_dict["death"].seconds > 1.5:
                     return 14
             # ------------------------------------------------------------------------------------------------------------------
-            if self.hp_boss and self.hp_player:
+            if self.boss.health and self.hp_player:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens(self.card_canvas, 0, self.card_canvas_y)
