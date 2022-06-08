@@ -88,7 +88,7 @@ class Config(object):
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_dict = {a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.card_size).convert(), chan)
-                           for a, chan in enumerate(self.data["cards"])}
+                           for a, chan in enumerate(self.data["level_1"]["player"]["cards"])}
         self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)
         self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
                             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(), (1600, 900)),

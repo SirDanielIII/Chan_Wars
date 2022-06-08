@@ -13,13 +13,12 @@ class Enemy:
 
     def initialize(self, name):
         self.name = name
-        self.attacks = {a: self.metadata["enemies"][self.name]["attacks"][b] for a, b in enumerate(self.metadata["enemies"][self.name]["attacks"])}
-        self.energy = self.metadata["player"]["energy"]
-        self.health = self.metadata["enemies"][self.name]["hp"]
+        self.attacks = {a: self.metadata["attacks"][b] for a, b in enumerate(self.metadata["attacks"])}
+        self.health = self.metadata["hp"]
 
     def act(self, turn_counter):
         attack = self.attacks[turn_counter % len(self.attacks)]
-        if self.buff_bar["lifesteal"]:
+        if self.buff_bar["Lifesteal"]:
             attack["heal"] += attack["damage"]
         self.health += attack["heal"]
         if self.buff_bar["Armor"]:
@@ -27,7 +26,7 @@ class Enemy:
         self.block = attack["block"]
         if attack["buff"] != "None":
             self.buff_bar[attack["buff"][0]] += attack["buff"][1]
-        phrase = "{} used {}".format(self.metadata["enemies"][self.name]["name"], attack["phrase"])
+        phrase = "{} used {}".format(self.metadata["name"], attack["phrase"])
         if self.status_bar["Weakness"]:
             attack["damage"] *= 0.75
         if self.buff_bar["Power"]:
@@ -35,7 +34,6 @@ class Enemy:
         return "basic", phrase, attack["damage"], attack["status"]
 
     def update(self, damage, status_effects):
-        self.energy = self.metadata["player"]["energy"]
         if self.status_bar["Vulnerable"]:
             damage *= 1.25
         if self.status_bar["Marked"] and damage:
@@ -46,7 +44,9 @@ class Enemy:
             damage -= self.block
         self.block = 0
         damage += self.status_bar["Poison"]
-        self.health += self.status_bar["Regeneration"]
+        self.health += self.buff_bar["Regeneration"]
         self.health -= damage
-        if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+        print(status_effects)
+        for effect in status_effects:
+            if effect != "None":
+                self.status_bar[effect[0]] += effect[1]

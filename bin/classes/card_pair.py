@@ -47,12 +47,31 @@ class CardPair(object):
 
 
 class MatchingScreen:
-    def __init__(self, columns, rows, images, screen):
+    def __init__(self, screen, config):
         self.screen = screen
-        self.rows = rows
-        self.columns = columns
-        self.image_dict = images
+        self.metadata = config
+        self.rows = 0
+        self.cards = None
+        self.columns = 0
+        self.image_dict = None
+        self.damage = 0
+        self.block = 0
+        self.health = 0
+        self.energy = 0
+        self.attack = []
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.set = []
+        self.acted = False
+
+    def initialize(self, image_dict):
+        self.rows = self.metadata["rows"]
+        self.cards = self.metadata["cards"]
+        self.columns = self.metadata["columns"]
+        self.image_dict = image_dict
+        self.health = self.metadata["hp"]
+        self.energy = self.metadata["energy"]
+
 
     def generate_pairs(self, size, margins, X, Y):
         # ------------------------------------------------------------------------------------------------------------------
@@ -79,11 +98,30 @@ class MatchingScreen:
     def complete(self):
         count = 0
         for a in self.set:
-            if a[0].chosen1 + a[0].chosen2 == 2:
-                return 2, 1, 1
+            if a[0].chosen1 + a[0].chosen2 == 2 and not self.acted:
+                attack = self.cards[a[0].card_type]
+                if attack["buff"] != "None":
+                    self.buff_bar[attack["buff"][0]] += attack["buff"][1]
+                if self.buff_bar["Lifesteal"]:
+                    attack["heal"] += attack["damage"]
+                if self.buff_bar["Armor"]:
+                    attack["block"] += self.buff_bar["Armor"]
+                if self.status_bar["Weakness"]:
+                    attack["damage"] *= 0.75
+                if self.buff_bar["Power"]:
+                    attack["damage"] *= 1.25
+                self.health += attack["heal"]
+                if self.health > self.metadata["hp"]:
+                    self.health = self.metadata["hp"]
+                self.block = attack["block"]
+                self.acted = True
+                print(self.status_bar, self.buff_bar, attack)
+                return 2, attack["damage"], attack["status"]
             else:
                 count += a[0].chosen1 + a[0].chosen2
-        return count, 1, 0
+        if count == 2:
+            self.acted = True
+        return count, 0, "None"
 
     def reset(self):
         for m, a in enumerate(self.set):
@@ -91,5 +129,31 @@ class MatchingScreen:
                 self.set.pop(m)
             a[0].chosen1 = 0
             a[0].chosen2 = 0
+        self.acted = False
 
-# Here, Daniel fixed a bug in which the order of rectangles would get messed up by changing the two sets into one ordered set.
+    def update(self, damage, status_effects):
+        print(self.status_bar, self.buff_bar)
+        self.energy = self.metadata["energy"]
+        self.energy += self.buff_bar["Energized"]
+        if self.status_bar["Vulnerable"]:
+            damage *= 1.25
+        if self.status_bar["Marked"] and damage:
+            damage += self.status_bar["Marked"]
+        if self.block >= damage:
+            damage = 0
+        else:
+            damage -= self.block
+        self.block = 0
+        damage += self.status_bar["Poison"]
+        self.health += self.buff_bar["Regeneration"]
+        if self.health > self.metadata["hp"]:
+            self.health = self.metadata["hp"]
+        self.health -= damage
+        for a in self.status_bar:
+            if self.status_bar[a]:
+                self.status_bar[a] -= 1
+        for b in self.buff_bar:
+            if self.buff_bar[b]:
+                self.buff_bar[b] -= 1
+        if status_effects != "None":
+            self.status_bar[status_effects[0]] += status_effects[1]

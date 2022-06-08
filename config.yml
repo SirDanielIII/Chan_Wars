@@ -4,6 +4,121 @@ level_1:
     columns: 3
     energy: 3
     rows: 4
+    cards:
+      air_chan:
+        block: 5
+        buff: None
+        heal: 5
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      angel_chan:
+        block: 0
+        buff: None
+        heal: 10
+        status: None
+        damage: 5
+      avatar_chan:
+        block: 5
+        buff:
+          - Power
+          - 1
+        heal: 5
+        status:
+          - Weakness
+          - 1
+        damage: 5
+      earth_chan:
+        block: 10
+        buff:
+          - Armor
+          - 3
+        heal: 0
+        status: None
+        damage: 0
+      farquaad_chan:
+        block: 0
+        buff: None
+        heal: 0
+        status: None
+          - Marked
+          - 3
+        damage: 10
+      fire_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status: None
+        damage: 10
+      jackie_chan:
+        block: 10
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      jesus_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 15
+        status: None
+        damage: 0
+      oni_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status:
+        damage: 10
+      shrek_chan:
+        block: 10
+        buff: None
+        heal: 0
+        status: None
+        damage: 10
+      square_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 0
+        status:
+          - Marked
+          - 3
+        damage: 0
+      un-chany_chan:
+        block: 0
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status: None
+        damage: 15
+      upsidedown_chan:
+        block: 10
+        buff:
+          - Lifesteal
+          - 2
+        heal: 0
+        status: None
+        damage: 5
+      water_chan:
+        block: 0
+        buff:
+          - Regeneration
+          - 5
+        heal: 10
+        status: None
+        damage: 0
   boss:
     moves:
       basic_1:
@@ -234,6 +349,121 @@ level_2:
     columns: 5
     energy: 4
     rows: 4
+    cards:
+      air_chan:
+        block: 5
+        buff: None
+        heal: 5
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      angel_chan:
+        block: 0
+        buff: None
+        heal: 10
+        status: None
+        damage: 5
+      avatar_chan:
+        block: 5
+        buff:
+          - Power
+          - 1
+        heal: 5
+        status:
+          - Weakness
+          - 1
+        damage: 5
+      earth_chan:
+        block: 10
+        buff:
+          - Armor
+          - 3
+        heal: 0
+        status: None
+        damage: 0
+      farquaad_chan:
+        block: 0
+        buff: None
+        heal: 0
+        status: None
+          - Marked
+          - 3
+        damage: 10
+      fire_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status: None
+        damage: 10
+      jackie_chan:
+        block: 10
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      jesus_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 15
+        status: None
+        damage: 0
+      oni_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status:
+        damage: 10
+      shrek_chan:
+        block: 10
+        buff: None
+        heal: 0
+        status: None
+        damage: 10
+      square_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 0
+        status:
+          - Marked
+          - 3
+        damage: 0
+      un-chany_chan:
+        block: 0
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status: None
+        damage: 15
+      upsidedown_chan:
+        block: 10
+        buff:
+          - Lifesteal
+          - 2
+        heal: 0
+        status: None
+        damage: 5
+      water_chan:
+        block: 0
+        buff:
+          - Regeneration
+          - 5
+        heal: 10
+        status: None
+        damage: 0
   boss:
     moves:
       basic_1:
@@ -450,6 +680,121 @@ level_3:
     columns: 7
     energy: 5
     rows: 4
+    cards:
+      air_chan:
+        block: 5
+        buff: None
+        heal: 5
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      angel_chan:
+        block: 0
+        buff: None
+        heal: 10
+        status: None
+        damage: 5
+      avatar_chan:
+        block: 5
+        buff:
+          - Power
+          - 1
+        heal: 5
+        status:
+          - Weakness
+          - 1
+        damage: 5
+      earth_chan:
+        block: 10
+        buff:
+          - Armor
+          - 3
+        heal: 0
+        status: None
+        damage: 0
+      farquaad_chan:
+        block: 0
+        buff: None
+        heal: 0
+        status:
+          - Marked
+          - 3
+        damage: 10
+      fire_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status: None
+        damage: 10
+      jackie_chan:
+        block: 10
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status:
+          - Weakness
+          - 2
+        damage: 0
+      jesus_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 15
+        status: None
+        damage: 0
+      oni_chan:
+        block: 0
+        buff:
+          - Power
+          - 2
+        heal: 0
+        status:
+        damage: 10
+      shrek_chan:
+        block: 10
+        buff: None
+        heal: 0
+        status: None
+        damage: 10
+      square_chan:
+        block: 0
+        buff:
+          - Clairvoyant
+          - 2
+        heal: 0
+        status:
+          - Marked
+          - 3
+        damage: 0
+      un-chany_chan:
+        block: 0
+        buff:
+          - Energized
+          - 1
+        heal: 0
+        status: None
+        damage: 15
+      upsidedown_chan:
+        block: 10
+        buff:
+          - Lifesteal
+          - 2
+        heal: 0
+        status: None
+        damage: 5
+      water_chan:
+        block: 0
+        buff:
+          - Regeneration
+          - 5
+        heal: 10
+        status: None
+        damage: 0
   boss:
     moves:
       basic_1:
@@ -664,122 +1009,6 @@ level_3:
           heal: 0
           status: None
           damage: 15
-
-cards:
-  air_chan:
-    block: 5
-    buff: None
-    heal: 5
-    status:
-      - Weakness
-      - 2
-    damage: 0
-  angel_chan:
-    block: 0
-    buff: None
-    heal: 10
-    status: None
-    damage: 5
-  avatar_chan:
-    block: 5
-    buff:
-      - Power
-      - 1
-    heal: 5
-    status:
-      - Weakness
-      - 1
-    damage: 5
-  earth_chan:
-    block: 10
-    buff:
-      - Armor
-      - 3
-    heal: 0
-    status: None
-    damage: 0
-  farquaad_chan:
-    block: 0
-    buff: None
-    heal: 0
-    status: None
-      - Marked
-      - 3
-    damage: 10
-  fire_chan:
-    block: 0
-    buff:
-      - Power
-      - 2
-    heal: 0
-    status: None
-    damage: 10
-  jackie_chan:
-    block: 10
-    buff:
-      - Energized
-      - 1
-    heal: 0
-    status:
-      - Weakness
-      - 2
-    damage: 0
-  jesus_chan:
-    block: 0
-    buff:
-      - Clairvoyant
-      - 2
-    heal: 15
-    status: None
-    damage: 0
-  oni_chan:
-    block: 0
-    buff:
-      - Power
-      - 2
-    heal: 0
-    status:
-    damage: 10
-  shrek_chan:
-    block: 10
-    buff: None
-    heal: 0
-    status: None
-    damage: 10
-  square_chan:
-    block: 0
-    buff:
-      - Clairvoyant
-      - 2
-    heal: 0
-    status:
-      - Marked
-      - 3
-    damage: 0
-  un-chany_chan:
-    block: 0
-    buff:
-      - Energized
-      - 1
-    heal: 0
-    status: None
-    damage: 15
-  upsidedown_chan:
-    block: 10
-    buff:
-      - Lifesteal
-      - 2
-    heal: 0
-    status: None
-    damage: 5
-  water_chan:
-    block: 0
-    buff:
-      - Regeneration
-      - 5
-    heal: 10
-    status: None
-    damage: 0
 
 other:
   boss_face_size:
