@@ -26,6 +26,7 @@ class CardPair(object):
         self.image = image
         self.chosen1 = 0
         self.chosen2 = 0
+        self.clairvoyant = False
         self.card_type = card_type
 
     def choose(self, m_pos, choose_boolean, rect_pair):
