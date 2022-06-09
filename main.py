@@ -10,16 +10,16 @@ import os
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 
-from bin.levels.boot import Boot
-from bin.levels.boss_devil_chan import BossDevilChan
+from bin.menus.boot import Boot
+from bin.levels.level_1.boss_devil_chan import BossDevilChan
 from bin.levels.enemy_level import EnemyLevel as BossMsG
-from bin.levels.credits import Credits
-from bin.levels.game_menu import GameMenu
-from bin.levels.how_to_play import HowToPlay
-from bin.levels.main_menu import MainMenu
+from bin.menus.credits import Credits
+from bin.menus.game_menu import GameMenu
+from bin.menus.how_to_play import HowToPlay
+from bin.menus.main_menu import MainMenu
 from bin.levels.mr_phone_test import BossMrPhone
-from bin.levels.options import Options
-from bin.levels.death_screen import Death
+from bin.menus.options import Options
+from bin.menus.death_screen import Death
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)

@@ -1,7 +1,7 @@
 import os
 
 import pygame as pg
-from .config_manager import Config as c
+from bin.classes.config_manager import Config as c
 
 # Initialize pg.mixer.init() first
 # Then pg.mixer.pre_init(48000, -16, 2, 256)
