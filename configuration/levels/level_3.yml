@@ -119,62 +119,6 @@ level_3:
         heal: 10
         status: None
         damage: 0
-  boss:
-    moves:
-      basic_1:
-        phrases:
-          - You need to touch grass.
-          - My son could beat you at this game.
-          - Easy choices hard life, hard choices easy life.
-          - It's only awkward if you make it awkward.
-          - You have to build capacity.
-          - You chose that? Come on, that's crazy talk!!!
-          - Can't you be doing more?
-        damage: 0
-        block: 0
-        status:
-          - disappointment
-          - 1
-        buff: None
-        heal: 0
-      basic_2:
-        phrases:
-          - Almost everything is a choice... including breathing!
-          - Reflect, reflect, REFLECT HARDER!!!
-          - Face the monster... ME!
-          - Keep your head on a swivel!
-        damage: 0
-        block: 0
-        status:
-          - Fear
-          - 2
-        buff: None
-        heal: 0
-      special:
-        phrases:
-          - Next time, just practice perfectly.
-          - My record just increased :p
-        damage: 999
-        block: 0
-        status: None
-        buff: None
-        heal: 0
-      death:
-        phrases:
-          - Huh.
-          - Looks like you did practice perfectly.
-          - Welp, I'll be on my way then.
-          - '*leaves*'
-        damage: 0
-        block: 0
-        status: None
-        buff: None
-        heal: 0
-    hp: 200
-    name: Mr. Phone
-    phrases:
-      intro:
-        - Did you write your TQP?
   enemies:
     flying:
       hp: 100

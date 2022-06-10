@@ -54,7 +54,7 @@ class Config(object):
                     , f)  # Create config file with default values if it doesn't exist
 
         with open(os.getcwd() + "/configuration/config.yml", "r") as f:
-            self.global_conf = yaml.safe_load(f)  # Save .yml file into variable
+            self.global_conf = yaml.safe_load(f)  # Save .yml file data into variable
             self.enable_music = self.global_conf["settings"]["audio"]["enable_music"]
             self.enable_sfx = self.global_conf["settings"]["audio"]["enable_sfx"]
             self.music_vol = self.global_conf["settings"]["audio"]["music_vol"]
@@ -66,14 +66,14 @@ class Config(object):
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
             self.boss_face_size = self.global_conf["other"]["boss_face_size"]
 
-    def load_level_confs(self):  # Run this after load_global_config()
+    def load_level_confs(self):  # Run this after load_global_config() - Create files if they don't exist, and read from them
         for i in range(self.levels):
             filename = "level_" + str(i)
             if not os.path.exists(os.getcwd() + "/configuration/levels/" + filename + ".yml"):
-                with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "w") as f:
+                with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "r+") as f:
                     match i:
                         case 1:
-                            self.level_confs[i] = {'level_1': {'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
+                            yaml.dump({'level_1': {'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -191,9 +191,10 @@ class Config(object):
                                                                                                                      'phrase': 'Resonate',
                                                                                                                      'damage': 0, 'block': 0,
                                                                                                                      'buff': 'None', 'heal': 0,
-                                                                                                                     'status': ['Weakness', 1]}}}}}}
+                                                                                                                     'status': ['Weakness', 1]}}}}}},
+                                      f)
                         case 2:
-                            self.level_confs[i] = {'level_2': {'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
+                            yaml.dump({'level_2': {'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -246,9 +247,9 @@ class Config(object):
                                                   'status': ['Weakness', 3]}}}, 'bat': {'hp': 40, 'name': 'Bat Chan', 'attacks': {
                                     'sonic_attack': {'phrase': 'Sonic Attack', 'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 15},
                                     'resonate': {'phrase': 'Resonate', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0,
-                                                 'status': ['Weakness', 2]}}}}}}
+                                                 'status': ['Weakness', 2]}}}}}}, f)
                         case 2:
-                            self.level_confs[i] = {'level_3': {'player': {'hp': 100, 'columns': 7, 'energy': 5, 'rows': 4, 'cards': {
+                            yaml.dump({'level_3': {'player': {'hp': 100, 'columns': 7, 'energy': 5, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -358,22 +359,86 @@ class Config(object):
                                                                                                                  'status': ['Weakness', 2]},
                                                                                                     'screech': {'phrase': 'Screech', 'block': 0,
                                                                                                                 'buff': 'None', 'heal': 0,
-                                                                                                                'status': 'None', 'damage': 15}}}}}}
+                                                                                                                'status': 'None', 'damage': 15}}}}}},
+                                      f)
+
+            self.level_confs[i] = yaml.safe_load(f)  # Save .yml file data into variable
 
     def load_boss_confs(self):  # Run this after load_global_config()
         for i in self.bosses:
-            filename = "level_" + str(i)
-            if not os.path.exists(os.getcwd() + "/configuration/levels/" + filename + ".yml"):
-                with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "w") as f:
+            if not os.path.exists(os.getcwd() + "/configuration/bosses/" + i + ".yml"):
+                with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "w") as f:
+                    match i:
+                        case "devil_chan":
+                            yaml.dump({'name': 'Devil Chan', 'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 60, 'phrases': {
+                                'dialogue': {
+                                    0: {'line': 1, 'text': 'FOR MY LOST LOVE!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
+                                        'fade_out': True, 'clear': True, 'wait': 1.0},
+                                    1: {'line': 1, 'text': 'WORLD SHAKING EXPLOSION FIST!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4,
+                                        'fade_in': True, 'fade_out': True, 'clear': True, 'wait': 1.0},
+                                    2: {'line': 1, 'text': 'NORTH STAR SPEAR!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
+                                        'fade_out': True, 'clear': True, 'wait': 1.0},
+                                    3: {'line': 1, 'text': 'MILLION SOUL BOMB!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
+                                        'fade_out': True, 'clear': True, 'wait': 1.0},
+                                    4: {'line': 1, 'text': 'BURNING SUN BEAM!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
+                                        'fade_out': True, 'clear': True, 'wait': 1.0},
+                                    5: {'line': 1, 'text': '.2 ELECTRON VOLTS!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
+                                        'fade_out': True, 'clear': True, 'wait': 1.0}}, 'death': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'],
+                                'intro': {0: {'line': 1, 'text': 'Angel Chan...', 'delay': 0.1, 'shake': [0, 0], 'pause': 1.0, 'fade_in': True,
+                                              'fade_out': False, 'clear': False, 'wait': 0},
+                                          1: {'line': 2, 'text': 'I loved you!', 'delay': 0.2, 'shake': [5, 0], 'pause': 1.3, 'fade_in': False,
+                                              'fade_out': True, 'clear': True, 'wait': 0.5},
+                                          2: {'line': 1, 'text': 'How could you do this to me!?', 'delay': 0.1, 'shake': [20, 20], 'pause': 1.4,
+                                              'fade_in': True, 'fade_out': True, 'clear': True, 'wait': 1.0}},
+                                'special': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.",
+                                            "I hope you're prepared for this.", "You know, I'm something of a scientist myself."]}, 'rows': 4,
+                                       'special': ['neat_hack', 10, 10],
+                                       'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 4, 'hp': 200,
+                                                   'kill': ['thinking_question', 9999], 'name': 'Mr. Phone', 'phrases': {
+                                               'attack': ['You need to touch grass.', 'My son could beat you at this game.',
+                                                          'Easy choices hard life, hard choices easy life.',
+                                                          "It's only awkward if you make it awkward.", 'You have to build capacity.',
+                                                          "You chose that? Come on, that's crazy talk!!!", "Can't you be doing more?"],
+                                               'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.",
+                                                         '*leaves*'], 'kill': ['Next time, just practice perfectly.', 'My record just increased :p'],
+                                               'opening': ['Did you write your TQP?'],
+                                               'special': ['Almost everything is a choice... including breathing!',
+                                                           'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!',
+                                                           'Keep your head on a swivel!']}, 'rows': 4, 'special': ['emotional_damage', 0]}}
+                                      , f)
+                        case "ms_g":
+                            yaml.dump({'name': 'Ms. G', 'basic': ['roast', 15], 'columns': 4, 'energy': 4, 'hp': 100, 'phrases': {
+                                'attack': ['For Sean!', "One of them is a woman, the other has an Indian accent if you're into it.",
+                                           "I'll only give you 100% if youâ€™re one of my favourite students.", 'Do it on repl.it!!!',
+                                           "Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'],
+                                'death': ['why must you use... list comphrehension... *dies*'],
+                                'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"],
+                                'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5, 'special': ['siberia', 'siberia']}
+                                      , f)
+                        case "mr_phone":
+                            yaml.dump({'name': 'Mr. Phone', 'basic': ['disappointment', 0], 'columns': 7, 'energy': 4, 'hp': 200,
+                                       'kill': ['thinking_question', 9999], 'phrases': {
+                                    'attack': ['You need to touch grass.', 'My son could beat you at this game.',
+                                               'Easy choices hard life, hard choices easy life.', "It's only awkward if you make it awkward.",
+                                               'You have to build capacity.', "You chose that? Come on, that's crazy talk!!!",
+                                               "Can't you be doing more?"],
+                                    'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
+                                    'kill': ['Next time, just practice perfectly.', 'My record just increased :p'],
+                                    'opening': ['Did you write your TQP?'],
+                                    'special': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!',
+                                                'Face the monster... ME!', 'Keep your head on a swivel!']}, 'rows': 4,
+                                       'special': ['emotional_damage', 0]}
+                                      , f)
+            self.boss_confs[i] = yaml.safe_load(f)  # Save .yml file data into variable
 
-    def load_media(self):
+    def load_media(self):  # Fix the paths - will be broken after game restructure
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_dict = {
-            a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.card_size).convert(), chan)
+            a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.chan_card_size).convert(), chan)
             for a, chan in enumerate(self.global_conf["level_1"]["player"]["cards"])}
-        self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.card_size)
+        self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
         self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
                             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(),
                                                         (1600, 900)),

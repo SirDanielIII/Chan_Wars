@@ -1,0 +1,28 @@
+name: Ms. G
+basic:
+  - roast
+  - 15
+columns: 4
+energy: 4
+hp: 100
+phrases:
+  attack:
+    - For Sean!
+    - One of them is a woman, the other has an Indian accent if you're into it.
+    - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
+    - Do it on repl.it!!!
+    - Don't ask me, use your brain.
+    - I have WELHpon *pulls out a meter stick*
+  death:
+    - why must you use... list comphrehension... *dies*
+  opening:
+    - Hello Sean!
+    - How are you doing?
+    - Wait, you're not Sean!
+  special:
+    - You! Go to Siberia!
+    - You deserve to go to Siberia!
+rows: 5
+special:
+  - siberia
+  - siberia
