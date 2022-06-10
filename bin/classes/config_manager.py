@@ -74,7 +74,7 @@ class Config(object):
                 with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "w") as f:
                     match i:
                         case 0:
-                            yaml.dump({'level_1': {'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
+                            yaml.dump({'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -192,10 +192,10 @@ class Config(object):
                                                                                                                      'phrase': 'Resonate',
                                                                                                                      'damage': 0, 'block': 0,
                                                                                                                      'buff': 'None', 'heal': 0,
-                                                                                                                     'status': ['Weakness', 1]}}}}}},
+                                                                                                                     'status': ['Weakness', 1]}}}}},
                                       f)
                         case 1:
-                            yaml.dump({'level_2': {'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
+                            yaml.dump({'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -248,9 +248,9 @@ class Config(object):
                                                   'status': ['Weakness', 3]}}}, 'bat': {'hp': 40, 'name': 'Bat Chan', 'attacks': {
                                     'sonic_attack': {'phrase': 'Sonic Attack', 'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 15},
                                     'resonate': {'phrase': 'Resonate', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0,
-                                                 'status': ['Weakness', 2]}}}}}}, f)
+                                                 'status': ['Weakness', 2]}}}}}, f)
                         case 2:
-                            yaml.dump({'level_3': {'player': {'hp': 100, 'columns': 7, 'energy': 5, 'rows': 4, 'cards': {
+                            yaml.dump({'player': {'hp': 100, 'columns': 7, 'energy': 5, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
@@ -360,7 +360,7 @@ class Config(object):
                                                                                                                  'status': ['Weakness', 2]},
                                                                                                     'screech': {'phrase': 'Screech', 'block': 0,
                                                                                                                 'buff': 'None', 'heal': 0,
-                                                                                                                'status': 'None', 'damage': 15}}}}}},
+                                                                                                                'status': 'None', 'damage': 15}}}}},
                                       f)
         for i in range(self.levels):
             filename = "level_" + str(i)
