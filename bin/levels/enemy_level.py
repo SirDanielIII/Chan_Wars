@@ -10,7 +10,7 @@ from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.entities.enemy import Enemy
-import bin.levels.minigames.card_pair as card_pair
+import bin.levels.minigames.Card_Game.card_pair as card_pair
 
 
 class EnemyLevel(Level):
