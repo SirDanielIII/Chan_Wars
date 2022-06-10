@@ -54,7 +54,9 @@ class Boot(Level):
                     f_boot_render = f_boot.render("LOADING CONFIG FILE", True, white)
                     self.game_canvas.blit(f_boot_render, (140, 610))
                     rect_width += 10
-                    self.config.load_config()
+                    self.config.load_global_conf()
+                    self.config.load_boss_confs()
+                    self.config.load_level_confs()
                 elif seconds < 1:
                     f_boot_render = f_boot.render("Gathering the Chans", True, white)
                     self.game_canvas.blit(f_boot_render, (140, 610))

@@ -10,7 +10,7 @@ from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.entities.enemy import Enemy
-import bin.levels.minigames.card_pair as card_pair
+import bin.levels.minigames.Card_Game.card_pair as card_pair
 
 
 class EnemyLevel(Level):
@@ -40,7 +40,7 @@ class EnemyLevel(Level):
         self.enemy_attack = 0
         self.enemy_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.card_size
+        self.size = self.config.chan_card_size
         self.margins = (20, 30)
         self.pairs = None
         self.background = None
