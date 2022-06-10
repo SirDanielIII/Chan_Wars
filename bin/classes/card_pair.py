@@ -98,9 +98,13 @@ class MatchingScreen:
 
     def complete(self):
         count = 0
+        choices = {}
         for a in self.set:
-            if a[0].chosen1 + a[0].chosen2 == 2 and not self.acted:
-                attack = self.cards[a[0].card_type]
+            choices.get(a.card_type, 0)
+            choices[a.card_type] += 1
+        for card_type, number in choices.items():
+            if number == 2:
+                attack = self.cards[card_type]
                 if attack["buff"] != "None":
                     self.buff_bar[attack["buff"][0]] += attack["buff"][1]
                 if self.buff_bar["Lifesteal"]:
@@ -116,10 +120,9 @@ class MatchingScreen:
                     self.health = self.metadata["hp"]
                 self.block = attack["block"]
                 self.acted = True
-                print(self.status_bar, self.buff_bar, attack)
                 return 2, attack["damage"], attack["status"]
             else:
-                count += a[0].chosen1 + a[0].chosen2
+                count += number
         if count == 2:
             self.acted = True
         return count, 0, "None"
