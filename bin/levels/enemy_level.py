@@ -40,7 +40,8 @@ class EnemyLevel(Level):
         self.enemy_attack = 0
         self.enemy_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.chan_card_size
+        self.size = None
+        print(self.size)
         self.margins = (20, 30)
         self.pairs = None
         self.background = None
@@ -58,13 +59,15 @@ class EnemyLevel(Level):
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.level = 2
-        config = self.config.get_config()
-        self.name = random.choice(list(config["level_1"]["enemies"].keys()))
-        self.enemy_data = config["level_" + str(self.level)]["enemies"][self.name]
-        self.player_data = config["level_" + str(self.level)]["player"]
+        self.level = 1
+        config = self.config.get_config("level")
+        self.name = random.choice(list(config[0]["enemies"].keys()))
+        self.enemy_data = config[self.level]["enemies"][self.name]
+        self.player_data = config[self.level]["player"]
         self.player.metadata = self.player_data
+        print(self.player.metadata)
         self.enemy.metadata = self.enemy_data
+        self.size = self.config.chan_card_size
         self.turn_counter = 0
         self.enemy.initialize(self.name)
         self.player.initialize(self.config.image_dict)
@@ -97,6 +100,7 @@ class EnemyLevel(Level):
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
                 if not self.pairs:
+                    print(self.size, self.margins)
                     self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
                 self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:

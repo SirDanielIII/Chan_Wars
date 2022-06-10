@@ -1,152 +1,170 @@
-name: Devil Chan
-basic:
-  - devilish_stab
-  - 10
-columns: 3
-energy: 3
-hp: 60
-phrases:
-  dialogue:
-    0:
-      line: 1
-      text: 'FOR MY LOST LOVE!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-    1:
-      line: 1
-      text: 'WORLD SHAKING EXPLOSION FIST!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-    2:
-      line: 1
-      text: 'NORTH STAR SPEAR!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-    3:
-      line: 1
-      text: 'MILLION SOUL BOMB!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-    4:
-      line: 1
-      text: 'BURNING SUN BEAM!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-    5:
-      line: 1
-      text: '.2 ELECTRON VOLTS!!!'
-      delay: 0.1
-      shake: [ 2,2 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-  death:
-    - NOOOOOOO!!!
-    - THIS IS BLASPHEMYYYYYY!!! *dies*
-  intro:
-    0:
-      line: 1
-      text: "Angel Chan..."
-      delay: 0.1
-      shake: [ 0,0 ]
-      pause: 1.0
-      fade_in: true
-      fade_out: false
-      clear: false
-      wait: 0
-    1:
-      line: 2
-      text: 'I loved you!'
-      delay: 0.2
-      shake: [ 5,0 ]
-      pause: 1.3
-      fade_in: false
-      fade_out: true
-      clear: true
-      wait: 0.5
-    2:
-      line: 1
-      text: 'How could you do this to me!?'
-      delay: 0.1
-      shake: [ 20,20 ]
-      pause: 1.4
-      fade_in: true
-      fade_out: true
-      clear: true
-      wait: 1.0
-  special:
-    - That's a neat little hack that I found!
-    - With this hack, I'll steal your health for myself.
-    - I hope you're prepared for this.
-    - You know, I'm something of a scientist myself.
-rows: 4
-special:
-  - neat_hack
-  - 10
-  - 10
 MrPhone:
   basic:
-    - disappointment
-    - 0
+  - disappointment
+  - 0
   columns: 7
   energy: 4
   hp: 200
   kill:
-    - thinking_question
-    - 9999
+  - thinking_question
+  - 9999
   name: Mr. Phone
   phrases:
     attack:
-      - You need to touch grass.
-      - My son could beat you at this game.
-      - Easy choices hard life, hard choices easy life.
-      - It's only awkward if you make it awkward.
-      - You have to build capacity.
-      - You chose that? Come on, that's crazy talk!!!
-      - Can't you be doing more?
+    - You need to touch grass.
+    - My son could beat you at this game.
+    - Easy choices hard life, hard choices easy life.
+    - It's only awkward if you make it awkward.
+    - You have to build capacity.
+    - You chose that? Come on, that's crazy talk!!!
+    - Can't you be doing more?
     death:
-      - Huh.
-      - Looks like you did practice perfectly.
-      - Welp, I'll be on my way then.
-      - '*leaves*'
+    - Huh.
+    - Looks like you did practice perfectly.
+    - Welp, I'll be on my way then.
+    - '*leaves*'
     kill:
-      - Next time, just practice perfectly.
-      - My record just increased :p
+    - Next time, just practice perfectly.
+    - My record just increased :p
     opening:
-      - Did you write your TQP?
+    - Did you write your TQP?
     special:
-      - Almost everything is a choice... including breathing!
-      - Reflect, reflect, REFLECT HARDER!!!
-      - Face the monster... ME!
-      - Keep your head on a swivel!
+    - Almost everything is a choice... including breathing!
+    - Reflect, reflect, REFLECT HARDER!!!
+    - Face the monster... ME!
+    - Keep your head on a swivel!
   rows: 4
   special:
-    - emotional_damage
-    - 0
+  - emotional_damage
+  - 0
+basic:
+- devilish_stab
+- 10
+columns: 3
+energy: 3
+hp: 60
+name: Devil Chan
+phrases:
+  death:
+  - NOOOOOOO!!!
+  - THIS IS BLASPHEMYYYYYY!!! *dies*
+  dialogue:
+    0:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: FOR MY LOST LOVE!!!
+      wait: 1.0
+    1:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: WORLD SHAKING EXPLOSION FIST!!!
+      wait: 1.0
+    2:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: NORTH STAR SPEAR!!!
+      wait: 1.0
+    3:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: MILLION SOUL BOMB!!!
+      wait: 1.0
+    4:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: BURNING SUN BEAM!!!
+      wait: 1.0
+    5:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 2
+      - 2
+      text: .2 ELECTRON VOLTS!!!
+      wait: 1.0
+  intro:
+    0:
+      clear: false
+      delay: 0.1
+      fade_in: true
+      fade_out: false
+      line: 1
+      pause: 1.0
+      shake:
+      - 0
+      - 0
+      text: Angel Chan...
+      wait: 0
+    1:
+      clear: true
+      delay: 0.2
+      fade_in: false
+      fade_out: true
+      line: 2
+      pause: 1.3
+      shake:
+      - 5
+      - 0
+      text: I loved you!
+      wait: 0.5
+    2:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+      - 20
+      - 20
+      text: How could you do this to me!?
+      wait: 1.0
+  special:
+  - That's a neat little hack that I found!
+  - With this hack, I'll steal your health for myself.
+  - I hope you're prepared for this.
+  - You know, I'm something of a scientist myself.
+rows: 4
+special:
+- neat_hack
+- 10
+- 10

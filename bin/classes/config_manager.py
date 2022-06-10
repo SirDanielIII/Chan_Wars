@@ -39,9 +39,9 @@ class Config(object):
         self.levels = None
         self.bosses = None
         # Config File Data
-        self.global_conf = None
-        self.level_confs = None
-        self.boss_confs = None
+        self.global_conf = {}
+        self.level_confs = {}
+        self.boss_confs = {}
 
     def load_global_conf(self):
         if not os.path.exists(os.getcwd() + "/configuration/config.yml"):
@@ -65,14 +65,15 @@ class Config(object):
             self.bosses = self.global_conf["other"]["bosses"]
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
             self.boss_face_size = self.global_conf["other"]["boss_face_size"]
+            self.chan_card_size = self.global_conf["other"]["chan_card_size"]
 
     def load_level_confs(self):  # Run this after load_global_config() - Create files if they don't exist, and read from them
         for i in range(self.levels):
             filename = "level_" + str(i)
             if not os.path.exists(os.getcwd() + "/configuration/levels/" + filename + ".yml"):
-                with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "r+") as f:
+                with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "w") as f:
                     match i:
-                        case 1:
+                        case 0:
                             yaml.dump({'level_1': {'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
@@ -193,7 +194,7 @@ class Config(object):
                                                                                                                      'buff': 'None', 'heal': 0,
                                                                                                                      'status': ['Weakness', 1]}}}}}},
                                       f)
-                        case 2:
+                        case 1:
                             yaml.dump({'level_2': {'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
                                 'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
@@ -361,8 +362,10 @@ class Config(object):
                                                                                                                 'buff': 'None', 'heal': 0,
                                                                                                                 'status': 'None', 'damage': 15}}}}}},
                                       f)
-
-            self.level_confs[i] = yaml.safe_load(f)  # Save .yml file data into variable
+        for i in range(self.levels):
+            filename = "level_" + str(i)
+            with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "r") as f:
+                self.level_confs[i] = yaml.safe_load(f)
 
     def load_boss_confs(self):  # Run this after load_global_config()
         for i in self.bosses:
@@ -429,7 +432,9 @@ class Config(object):
                                                 'Face the monster... ME!', 'Keep your head on a swivel!']}, 'rows': 4,
                                        'special': ['emotional_damage', 0]}
                                       , f)
-            self.boss_confs[i] = yaml.safe_load(f)  # Save .yml file data into variable
+        for i in self.bosses:
+            with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "r") as f:
+                self.level_confs[i] = yaml.safe_load(f)
 
     def load_media(self):  # Fix the paths - will be broken after game restructure
         self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
@@ -437,7 +442,7 @@ class Config(object):
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_dict = {
             a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.chan_card_size).convert(), chan)
-            for a, chan in enumerate(self.global_conf["level_1"]["player"]["cards"])}
+            for a, chan in enumerate(self.level_confs[0]["player"]["cards"])}
         self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
         self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
                             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(),
@@ -450,8 +455,8 @@ class Config(object):
                                                         (1600, 900))}
         self.end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
                             pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
-        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\" + name + ".png").convert(), (100, 100)) for
-                               name in self.global_conf["level_1"]["enemies"]}
+        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\enemies\\" + name + ".png").convert(), (100, 100)) for
+                               name in self.level_confs[0]["enemies"]}
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 80)
@@ -466,10 +471,16 @@ class Config(object):
                                                                          self.boss_face_size).convert_alpha()
                                 for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}}
 
-    def get_config(self):
+    def get_config(self, name):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
         #       self.fps_show, self.fps_30, self.fps_60, self.fps_75, self.fps_165)
-        return self.global_conf
+        match name:
+            case "global":
+                return self.global_conf
+            case "level":
+                return self.level_confs
+            case "boss":
+                return self.boss_confs
 
     @staticmethod
     def load_audio_set(path_to_directory, extension):

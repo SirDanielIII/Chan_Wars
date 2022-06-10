@@ -73,8 +73,8 @@ class MatchingScreen:
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
 
-
     def generate_pairs(self, size, margins, X, Y):
+        print(size, margins)
         # ------------------------------------------------------------------------------------------------------------------
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         # Daniel made it so that the offset was calculated in the method and not in the parameters
@@ -100,8 +100,9 @@ class MatchingScreen:
         count = 0
         choices = {}
         for a in self.set:
-            choices.get(a.card_type, 0)
-            choices[a.card_type] += 1
+            choices[a[0].card_type] = choices.get(a[0].card_type, 0)
+            print(a[0].card_type, choices)
+            choices[a[0].card_type] += 1
         for card_type, number in choices.items():
             if number == 2:
                 attack = self.cards[card_type]
