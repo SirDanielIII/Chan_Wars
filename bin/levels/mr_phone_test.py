@@ -42,7 +42,7 @@ class BossMrPhone(Level):
         self.completed = True
         self.boss = None
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.card_size
+        self.size = self.config.chan_card_size
         self.margins = (20, 30)
         self.level = 3
         self.pairs = None

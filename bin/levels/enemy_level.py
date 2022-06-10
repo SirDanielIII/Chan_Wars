@@ -40,7 +40,7 @@ class EnemyLevel(Level):
         self.enemy_attack = 0
         self.enemy_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.card_size
+        self.size = self.config.chan_card_size
         self.margins = (20, 30)
         self.pairs = None
         self.background = None
