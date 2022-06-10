@@ -1,265 +1,328 @@
-level_1:
+
+  boss:
+    hp: 100
+    moves:
+      basic_1:
+        block: 0
+        buff: None
+        damage: 15
+        heal: 0
+        phrases:
+        - For Sean!
+        - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
+        status:
+        - Vulnerable
+        - 1
+      basic_2:
+        block: 0
+        buff: None
+        damage: 15
+        heal: 0
+        phrases:
+        - Don't ask me, use your brain.
+        - I have WELHpon *pulls out a meter stick*
+        status:
+        - Weakness
+        - 2
+      basic_3:
+        block: 20
+        buff: None
+        damage: 0
+        heal: 0
+        phrases:
+        - Do it on repl.it!!!
+        - One of them is a woman, the other has an Indian accent if you're into it.
+        status: None
+      death:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrases:
+        - why must you use... list comphrehension... *dies*
+        status: None
+      siberia:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrases:
+        - You!!! How did you escape Siberia!?
+        status: None
+      special:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrases:
+        - You! Go to Siberia!
+        - You deserve to go to Siberia!
+        status: None
+    name: Ms. G
+    phrases:
+      intro:
+      - Hello Sean!
+      - How are you doing?
+      - Wait, you're not Sean!
+  enemies:
+    bat:
+      attacks:
+        resonate:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Resonate
+          status:
+          - Weakness
+          - 2
+        sonic_attack:
+          block: 0
+          buff: None
+          damage: 15
+          heal: 0
+          phrase: Sonic Attack
+          status: None
+      hp: 40
+      name: Bat Chan
+    big:
+      attacks:
+        big_smack:
+          block: 0
+          buff: None
+          damage: 15
+          heal: 0
+          phrase: Biggus Smackus
+          status: None
+      hp: 100
+      name: Big Chan
+    dark:
+      attacks:
+        curse:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Dark Curse
+          status:
+          - Vulnerable
+          - 1
+        dark_orb:
+          block: 0
+          buff: None
+          damage: 20
+          heal: 0
+          phrase: Dark Orb
+          status: None
+        darkness:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Darkness
+          status:
+          - Weakness
+          - 2
+      hp: 50
+      name: Dark Chan
+    drowned:
+      attacks:
+        bloated_breath:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Bloated Breath
+          status:
+          - Vulnerable
+          - 1
+        corpse_explosion:
+          block: 0
+          buff: None
+          damage: 35
+          heal: -40
+          phrase: Corpse Explosion
+          status: None
+        drowned_glare:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Drowned Glare
+          status:
+          - Fear
+          - 2
+      hp: 40
+      name: Drowned Chan
+    flying:
+      attacks:
+        claw_strike:
+          block: 0
+          buff: None
+          damage: 15
+          heal: 0
+          phrase: Claw Strike
+          status: None
+        fly_Up:
+          block: 20
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Fly Up
+          status: None
+        swoop_in:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Swoop In
+          status:
+          - Fear
+          - 2
+      hp: 75
+      name: Flying Chan
+    goblin:
+      attacks:
+        evasive_maneuvers:
+          block: 20
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Evasive Maneuvers
+          status: None
+        hamstring:
+          block: 0
+          buff: None
+          damage: 0
+          heal: 0
+          phrase: Hamstring
+          status:
+          - Weakness
+          - 3
+        tiny_stab:
+          block: 0
+          buff: None
+          damage: 10
+          heal: 0
+          phrase: Tiny Stab
+          status: None
+      hp: 35
+      name: Goblin Chan
   player:
-    hp: 50
-    columns: 3
-    energy: 3
-    rows: 4
     cards:
       air_chan:
         block: 5
         buff: None
+        damage: 0
         heal: 5
         status:
-          - Weakness
-          - 2
-        damage: 0
+        - Weakness
+        - 2
       angel_chan:
         block: 0
         buff: None
+        damage: 5
         heal: 10
         status: None
-        damage: 5
       avatar_chan:
         block: 5
         buff:
-          - Power
-          - 1
+        - Power
+        - 1
+        damage: 5
         heal: 5
         status:
-          - Weakness
-          - 1
-        damage: 5
+        - Weakness
+        - 1
       earth_chan:
         block: 10
         buff:
-          - Armor
-          - 3
+        - Armor
+        - 3
+        damage: 0
         heal: 0
         status: None
-        damage: 0
       farquaad_chan:
         block: 0
         buff: None
-        heal: 0
-        status: None
-          - Marked
-          - 3
         damage: 10
+        heal: 0
+        status: None - Marked - 3
       fire_chan:
         block: 0
         buff:
-          - Power
-          - 2
+        - Power
+        - 2
+        damage: 10
         heal: 0
         status: None
-        damage: 10
       jackie_chan:
         block: 10
         buff:
-          - Energized
-          - 1
+        - Energized
+        - 1
+        damage: 0
         heal: 0
         status:
-          - Weakness
-          - 2
-        damage: 0
+        - Weakness
+        - 2
       jesus_chan:
         block: 0
         buff:
-          - Clairvoyant
-          - 2
+        - Clairvoyant
+        - 2
+        damage: 0
         heal: 15
         status: None
-        damage: 0
       oni_chan:
         block: 0
         buff:
-          - Power
-          - 2
-        heal: 0
-        status:
+        - Power
+        - 2
         damage: 10
+        heal: 0
+        status: null
       shrek_chan:
         block: 10
         buff: None
+        damage: 10
         heal: 0
         status: None
-        damage: 10
       square_chan:
         block: 0
         buff:
-          - Clairvoyant
-          - 2
+        - Clairvoyant
+        - 2
+        damage: 0
         heal: 0
         status:
-          - Marked
-          - 3
-        damage: 0
+        - Marked
+        - 3
       un-chany_chan:
         block: 0
         buff:
-          - Energized
-          - 1
+        - Energized
+        - 1
+        damage: 15
         heal: 0
         status: None
-        damage: 15
       upsidedown_chan:
         block: 10
         buff:
-          - Lifesteal
-          - 2
+        - Lifesteal
+        - 2
+        damage: 5
         heal: 0
         status: None
-        damage: 5
       water_chan:
         block: 0
         buff:
-          - Regeneration
-          - 5
+        - Regeneration
+        - 5
+        damage: 0
         heal: 10
         status: None
-        damage: 0
-  enemies:
-    flying:
-      hp: 50
-      name: Flying Chan
-      attacks:
-        swoop_in:
-          phrase: Swoop In
-          damage: 0
-          block: 0
-          status:
-            - Fear
-            - 1
-          buff: None
-          heal: 0
-        claw_strike:
-          phrase: Claw Strike
-          block: 0
-          status: None
-          damage: 10
-          buff: None
-          heal: 0
-        fly_up:
-          phrase: Fly Up
-          damage: 0
-          status: None
-          block: 10
-          buff: None
-          heal: 0
-    drowned:
-      hp: 30
-      name: Drowned Chan
-      attacks:
-        drowned_glare:
-          phrase: Drowned Glare
-          damage: 0
-          block: 0
-          status:
-            - Fear
-            - 1
-          buff: None
-          heal: 0
-        bloated_breath:
-          phrase: Bloated Breath
-          damage: 0
-          block: 0
-          status:
-            - Vulnerable
-            - 1
-          buff: None
-          heal: 0
-        corpse_explosion:
-          phrase: Corpse Explosion
-          block: 0
-          status: None
-          damage: 25
-          buff: None
-          heal: -30
-    big:
-      hp: 75
-      name: Big Chan
-      attacks:
-        big_smack:
-          phrase: Biggus Smackus
-          block: 0
-          status: None
-          buff: None
-          heal: 0
-          damage: 15
-    dark:
-      hp: 40
-      name: Dark Chan
-      attacks:
-        dark_orb:
-          phrase: Dark Orb
-          block: 0
-          buff: None
-          heal: 0
-          status: None
-          damage: 10
-        darkness:
-          phrase: Darkness
-          damage: 0
-          block: 0
-          buff: None
-          heal: 0
-          status:
-            - Weakness
-            - 2
-        dark_curse:
-          phrase: Dark Curse
-          damage: 0
-          buff: None
-          heal: 0
-          block: 0
-          status:
-            - Vulnerable
-            - 1
-    goblin:
-      hp: 30
-      name: Goblin Chan
-      attacks:
-        evasive_maneuvers:
-          phrase: Evasive Maneuvers
-          damage: 0
-          buff: None
-          heal: 0
-          status: None
-          block: 10
-        tiny_stab:
-          phrase: Tiny Stab
-          block: 0
-          status: None
-          buff: None
-          heal: 0
-          damage: 10
-        hamstring:
-          phrase: Hamstring
-          damage: 0
-          block: 0
-          buff: None
-          heal: 0
-          status:
-            - Weakness
-            - 2
-    bat:
-      hp: 40
-      name: Bat Chan
-      attacks:
-        sonic_attack:
-          phrase: Sonic Attack
-          block: 0
-          buff: None
-          heal: 0
-          status: None
-          damage: 10
-        resonate:
-          phrase: Resonate
-          damage: 0
-          block: 0
-          buff: None
-          heal: 0
-          status:
-            - Weakness
-            - 1
+    columns: 5
+    energy: 4
+    hp: 75
+    rows: 4
