@@ -8,7 +8,7 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-import bin.levels.minigames.card_pair as card_pair
+import bin.levels.minigames.Card_Game.card_pair as card_pair
 
 
 class BossMrPhone(Level):
@@ -42,7 +42,7 @@ class BossMrPhone(Level):
         self.completed = True
         self.boss = None
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.card_size
+        self.size = self.config.chan_card_size
         self.margins = (20, 30)
         self.level = 3
         self.pairs = None
