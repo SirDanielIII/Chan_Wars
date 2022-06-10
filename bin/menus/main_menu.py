@@ -2,9 +2,9 @@ import os
 import sys
 import time
 
-from ..classes.level import Level
+from bin.classes.level import Level
 from bin.colours import *
-from ..classes.buttons import ButtonRect
+from bin.classes.buttons import ButtonRect
 
 gameOn = False
 

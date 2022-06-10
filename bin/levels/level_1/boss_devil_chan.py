@@ -11,9 +11,8 @@ from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
 from bin.colours import *
-from bin.classes.card_pair import move_pos
-from bin.classes.bosses import DevilChan as DChan
-import bin.classes.card_pair as card_pair
+from bin.levels.minigames.card_pair import move_pos
+import bin.levels.minigames.card_pair as card_pair
 
 
 class BossDevilChan(Level):
