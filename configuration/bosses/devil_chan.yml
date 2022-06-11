@@ -1,47 +1,55 @@
-MrPhone:
-  basic:
-  - disappointment
-  - 0
-  columns: 7
-  energy: 4
-  hp: 200
-  kill:
-  - thinking_question
-  - 9999
-  name: Mr. Phone
-  phrases:
-    attack:
-    - You need to touch grass.
-    - My son could beat you at this game.
-    - Easy choices hard life, hard choices easy life.
-    - It's only awkward if you make it awkward.
-    - You have to build capacity.
-    - You chose that? Come on, that's crazy talk!!!
-    - Can't you be doing more?
-    death:
-    - Huh.
-    - Looks like you did practice perfectly.
-    - Welp, I'll be on my way then.
-    - '*leaves*'
-    kill:
-    - Next time, just practice perfectly.
-    - My record just increased :p
-    opening:
-    - Did you write your TQP?
-    special:
-    - Almost everything is a choice... including breathing!
-    - Reflect, reflect, REFLECT HARDER!!!
-    - Face the monster... ME!
-    - Keep your head on a swivel!
-  rows: 4
+moves:
+  basic_1:
+    block: 0
+    buff: None
+    damage: 15
+    heal: 0
+    phrases:
+      - For My Lost Love!
+      - World Shaking Explosion Fist!
+      - North Star Spear!
+    status: None
+  basic_2:
+    block: 0
+    buff:
+      - Armor
+      - 10
+    damage: 10
+    heal: 0
+    phrases:
+      - Million Soul Bomb!
+      - Burning Sun Beam!
+      - Point Two Electron Volts!
+    status:
+      - Weakness
+      - 2
+  basic_3:
+    block: 15
+    buff:
+      - Power
+      - 1
+    damage: 0
+    heal: 0
+    phrases:
+      - Face my wrath!
+      - Prepare yourself for the ultimate doom!
+      - You are not prepared!
+    status:
+      - Vulnerable
+      - 1
   special:
-  - emotional_damage
-  - 0
-basic:
-- devilish_stab
-- 10
-columns: 3
-energy: 3
+    block: 0
+    buff:
+      - Lifesteal
+      - 2
+    damage: 10
+    heal: 20
+    phrases:
+      - That's a neat little hack that I found!
+      - With this hack, I'll steal your health for myself.
+      - I hope you're prepared for this.
+      - You know, I'm something of a scientist myself.
+    status: None
 hp: 60
 name: Devil Chan
 phrases:
@@ -158,13 +166,3 @@ phrases:
       - 20
       text: How could you do this to me!?
       wait: 1.0
-  special:
-  - That's a neat little hack that I found!
-  - With this hack, I'll steal your health for myself.
-  - I hope you're prepared for this.
-  - You know, I'm something of a scientist myself.
-rows: 4
-special:
-- neat_hack
-- 10
-- 10

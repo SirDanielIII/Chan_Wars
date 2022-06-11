@@ -12,12 +12,12 @@ from bin.classes.config_manager import Config
 
 from bin.menus.boot import Boot
 from bin.levels.minigames.Card_Game.level_1.boss_devil_chan import BossDevilChan
-from bin.levels.enemy_level import EnemyLevel as BossMsG
+from bin.levels.minigames.Card_Game.enemy_level import EnemyLevel as BossMsG
 from bin.menus.credits import Credits
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
 from bin.menus.main_menu import MainMenu
-from bin.levels.mr_phone_test import BossMrPhone
+from bin.levels.minigames.Card_Game.level_3.boss_mr_phone import BossMrPhone
 from bin.menus.options import Options
 from bin.menus.death_screen import Death
 
