@@ -9,7 +9,7 @@ from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.entities.bosses import MsG
-import bin.levels.minigames.Card_Game.card_pair as card_pair
+import bin.levels.minigames.Card_Game.player as card_pair
 
 
 class BossMsG(Level):
@@ -38,7 +38,7 @@ class BossMsG(Level):
         # ------------------------------------------------------------------------------------------------------------------
         self.size = self.config.card_size
         self.margins = (20, 30)
-        self.player = card_pair.MatchingScreen(0, None, self.card_canvas)
+        self.player = card_pair.Player(0, None, self.card_canvas)
         self.pairs = None
         self.damage = 0
         self.action_stopwatch = Timer()

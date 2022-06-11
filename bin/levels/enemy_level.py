@@ -10,7 +10,7 @@ from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
 from bin.classes.entities.enemy import Enemy
-import bin.levels.minigames.Card_Game.card_pair as card_pair
+import bin.levels.minigames.Card_Game.player as card_pair
 
 
 class EnemyLevel(Level):
@@ -29,7 +29,7 @@ class EnemyLevel(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, self.player_data)
         self.player_attack = 0
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
@@ -37,13 +37,10 @@ class EnemyLevel(Level):
         self.enemy_data = None
         self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_bar_enemy = None
-        self.enemy_attack = 0
-        self.enemy_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         self.size = None
-        print(self.size)
         self.margins = (20, 30)
-        self.pairs = None
+        self.cards = None
         self.background = None
         self.level = None
         self.action_stopwatch = Timer()
@@ -65,15 +62,17 @@ class EnemyLevel(Level):
         self.enemy_data = config[self.level]["enemies"][self.name]
         self.player_data = config[self.level]["player"]
         self.player.metadata = self.player_data
-        print(self.player.metadata)
         self.enemy.metadata = self.enemy_data
         self.size = self.config.chan_card_size
         self.turn_counter = 0
         self.enemy.initialize(self.name)
-        self.player.initialize(self.config.image_dict)
+        deck = ('air_chan', 'angel_chan', 'avatar_chan', 'earth_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan')
+        self.player.initialize(self.config.image_dict, deck)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.enemies_images[self.name]
+        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+        print(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -99,23 +98,24 @@ class EnemyLevel(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
-                if not self.pairs:
-                    print(self.size, self.margins)
-                    self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-                self.card_complete = self.player.complete()
-                if self.card_complete[0] == 2:
+                if not self.cards:
+                    self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+                if self.card_complete[0] != 2:
+                    self.card_complete = self.player.complete()
+                else:
                     if not self.card_stopwatch.activate_timer:
                         self.card_stopwatch.time_start()
                     if self.card_stopwatch.seconds > 0.25:
                         self.player.energy -= 1
-                        if self.card_complete[0]:
-                            self.player_attack += self.card_complete[1]
-                            self.player_statuses.append(self.card_complete[2])
+                        self.player_attack += self.card_complete[1]
+                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
                         self.card_stopwatch.time_reset()
+                        self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0, self.player.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0,
+                                   self.player.energy and not self.card_stopwatch.seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made

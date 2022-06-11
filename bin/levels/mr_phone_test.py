@@ -8,7 +8,7 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-import bin.levels.minigames.Card_Game.card_pair as card_pair
+import bin.levels.minigames.Card_Game.player as card_pair
 
 
 class BossMrPhone(Level):
@@ -28,7 +28,7 @@ class BossMrPhone(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, self.player_data)
         self.player_attack = 0
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
@@ -57,8 +57,8 @@ class BossMrPhone(Level):
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config()["level_" + str(self.level)]["boss"]
-        self.player_data = self.config.get_config()["level_" + str(self.level)]["player"]
+        self.boss_data = self.config.get_config("level")[1]["boss"]
+        self.player_data = self.config.get_config()[1]["player"]
         self.player.metadata = self.player_data
         self.boss.metadata = self.boss_data
         self.boss.initialize()
