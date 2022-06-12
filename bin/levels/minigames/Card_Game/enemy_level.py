@@ -66,7 +66,9 @@ class EnemyLevel(Level):
         self.size = self.config.chan_card_size
         self.turn_counter = 0
         self.enemy.initialize(self.name)
-        deck = ('air_chan', 'angel_chan', 'avatar_chan', 'earth_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan')
+        deck = [{"type": 'air_chan', "upgrades": None}, {"type": 'angel_chan', "upgrades": None}, {"type": 'earth_chan', "upgrades": None}, {"type": 'avatar_chan', "upgrades": None},
+                {"type": 'farquaad_chan', "upgrades": None}, {"type": 'fire_chan', "upgrades": None}, {"type": 'jackie_chan', "upgrades": None}, {"type": 'jesus_chan', "upgrades": None},
+                {"type": 'oni_chan', "upgrades": None}, {"type": 'shrek_chan', "upgrades": None}]
         self.player.initialize(self.config.image_dict, deck)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)

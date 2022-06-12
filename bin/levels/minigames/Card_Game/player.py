@@ -88,11 +88,18 @@ class Player:
         count = 0
         self.choices = {}
         for a in self.deck:
-            self.choices[a.card_type] = self.choices.get(a.card_type, 0)
-            self.choices[a.card_type] += a.chosen
+            self.choices[a.card_type["type"]] = self.choices.get(a.card_type, 0)
+            self.choices[a.card_type["type"]] += a.chosen
         for card_type, number in self.choices.items():
             if number == 2 and not self.acted:
-                attack = self.cards[card_type]
+                attack = self.cards[card_type["type"]]
+                if card_type["upgrades"]:
+                    for upgrade in card_type["upgrades"]:
+                        attack["damage"] += self.cards[card_type["type"]]["upgrades"][upgrade]["damage"]
+                        attack["block"] += self.cards[card_type["type"]]["upgrades"][upgrade]["block"]
+                        attack["heal"] += self.cards[card_type["type"]]["upgrades"][upgrade]["heal"]
+                        attack["status"].append(self.cards[card_type["type"]]["upgrades"][upgrade]["status"])
+                        attack["buff"].append(self.cards[card_type["type"]]["upgrades"][upgrade]["buff"])
                 if attack["buff"] != "None":
                     self.buff_bar[attack["buff"][0]] += attack["buff"][1]
                 if self.buff_bar["Lifesteal"]:
@@ -149,4 +156,5 @@ class Player:
             if self.buff_bar[b]:
                 self.buff_bar[b] -= 1
         if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+            for effect in status_effects:
+                self.status_bar[effect] += status_effects[effect]

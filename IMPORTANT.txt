@@ -8,7 +8,7 @@
 # Vulnerable: Takes 25% more damage. Falls by one stack every turn.
 # Disappointment: Emotional damage. Falls by one stack every turn.
 # Marked: Takes one extra damage per stack after being attacked. Stacks do not disappear.
-# Poison: Takes one damage at the end of the turn per stack. Falls by one stack every turn.
+# Pained: Takes one damage at the end of the turn per stack. Falls by one stack every turn.
 #
 # Buffs:
 # Power: Deals 25% more damage. Falls by one stack every turn.

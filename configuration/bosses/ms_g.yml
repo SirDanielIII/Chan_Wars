@@ -17,8 +17,7 @@ moves:
       - For Sean!
       - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
     status:
-      - Vulnerable
-      - 1
+      Vulnerable: 1
   basic_2:
     block: 0
     buff: None
@@ -28,8 +27,7 @@ moves:
       - Don't ask me, use your brain.
       - I have WELHpon *pulls out a meter stick*
     status:
-      - Weakness
-      - 2
+      Weakness: 2
   basic_3:
     block: 20
     buff: None

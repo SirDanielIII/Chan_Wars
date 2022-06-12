@@ -12,8 +12,7 @@ moves:
   basic_2:
     block: 0
     buff:
-      - Armor
-      - 10
+      Armor: 10
     damage: 10
     heal: 0
     phrases:
@@ -21,13 +20,11 @@ moves:
       - Burning Sun Beam!
       - Point Two Electron Volts!
     status:
-      - Weakness
-      - 2
+      Weakness: 2
   basic_3:
     block: 15
     buff:
-      - Power
-      - 1
+      Power: 1
     damage: 0
     heal: 0
     phrases:
@@ -35,13 +32,11 @@ moves:
       - Prepare yourself for the ultimate doom!
       - You are not prepared!
     status:
-      - Vulnerable
-      - 1
+      Vulnerable: 1
   special:
     block: 0
     buff:
-      - Lifesteal
-      - 2
+      Lifesteal: 2
     damage: 10
     heal: 20
     phrases:

@@ -23,8 +23,7 @@ moves:
       - You chose that? Come on, that's crazy talk!!!
       - Can't you be doing more?
     status:
-      - disappointment
-      - 1
+      Disappointment: 1
   basic_2:
     block: 0
     buff: None
@@ -36,8 +35,7 @@ moves:
       - Face the monster... ME!
       - Keep your head on a swivel!
     status:
-      - Fear
-      - 2
+      Fear: 2
   special:
     block: 0
     buff: None
