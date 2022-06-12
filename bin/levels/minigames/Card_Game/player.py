@@ -46,7 +46,7 @@ class Player:
         self.rows = 0
         self.cards = None
         self.columns = 0
-        self.image_dict = None
+        self.image_dict = {}
         self.damage = 0
         self.block = 0
         self.health = 0
@@ -58,22 +58,23 @@ class Player:
         self.choices = {}
         self.deck = None
 
-    def initialize(self, image_dict, deck):
+    def initialize(self, image_dict):
         self.rows = self.metadata["rows"]
         self.cards = self.metadata["cards"]
         self.columns = self.metadata["columns"]
-        self.deck = deck
-        self.image_dict = {chan: image_dict[chan] for chan in self.deck}
-        self.image_dict["card_back"] = image_dict["card_back"]
+        self.image_dict = image_dict
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
 
-    def generate_pairs(self, size, margins, X, Y):
+    def generate_pairs(self, size, margins, X, Y, deck):
         # ------------------------------------------------------------------------------------------------------------------
+        self.deck = deck
+        images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         cards = random.sample(self.deck + self.deck, len(self.deck) * 2)
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
-        self.deck = [Card(self.image_dict[cards[a]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
+        print(self.image_dict, pos_list)
+        self.deck = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
         return self.deck
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
@@ -88,20 +89,28 @@ class Player:
         count = 0
         self.choices = {}
         for a in self.deck:
-            self.choices[a.card_type["type"]] = self.choices.get(a.card_type, 0)
-            self.choices[a.card_type["type"]] += a.chosen
+            self.choices[a.card_type] = self.choices.get(a.card_type, 0)
+            self.choices[a.card_type] += a.chosen
         for card_type, number in self.choices.items():
             if number == 2 and not self.acted:
-                attack = self.cards[card_type["type"]]
-                if card_type["upgrades"]:
-                    for upgrade in card_type["upgrades"]:
-                        attack["damage"] += self.cards[card_type["type"]]["upgrades"][upgrade]["damage"]
-                        attack["block"] += self.cards[card_type["type"]]["upgrades"][upgrade]["block"]
-                        attack["heal"] += self.cards[card_type["type"]]["upgrades"][upgrade]["heal"]
-                        attack["status"].append(self.cards[card_type["type"]]["upgrades"][upgrade]["status"])
-                        attack["buff"].append(self.cards[card_type["type"]]["upgrades"][upgrade]["buff"])
+                card = card_type.split(" ")
+                attack = self.cards[card[-1]]
+                if len(card) > 1:
+                    for upgrade in card[:-1]:
+                        attack["damage"] += self.cards[card[-1]]["upgrades"][upgrade]["damage"]
+                        attack["block"] += self.cards[card[-1]]["upgrades"][upgrade]["block"]
+                        attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
+                        if self.cards[card[-1]]["upgrades"][upgrade]["status"] != "None":
+                            for status in self.cards[card[-1]]["upgrades"][upgrade]["status"]:
+                                attack["status"][status] = attack["status"].get(status, 0)
+                                attack["status"][status] += self.cards[card[-1]]["upgrades"][upgrade]["status"][status]
+                        if self.cards[card[-1]]["upgrades"][upgrade]["buff"] != "None":
+                            for buff in self.cards[card[-1]]["upgrades"][upgrade]["buff"]:
+                                attack["buff"][buff] = attack["buff"].get(buff, 0)
+                                attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
                 if attack["buff"] != "None":
-                    self.buff_bar[attack["buff"][0]] += attack["buff"][1]
+                    for buff in attack["buff"]:
+                        self.buff_bar[buff] += attack["buff"][buff]
                 if self.buff_bar["Lifesteal"]:
                     attack["heal"] += attack["damage"]
                 if self.buff_bar["Armor"]:
@@ -115,6 +124,7 @@ class Player:
                     self.health = self.metadata["hp"]
                 self.block = attack["block"]
                 self.acted = True
+                print(attack)
                 return 2, attack["damage"], attack["status"]
             else:
                 count += number

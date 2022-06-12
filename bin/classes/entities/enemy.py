@@ -47,6 +47,7 @@ class Enemy:
         self.health += self.buff_bar["Regeneration"]
         self.health -= damage
         print(status_effects)
-        for effect in status_effects:
-            if effect != "None":
-                self.status_bar[effect[0]] += effect[1]
+        for action in status_effects:
+            if action != "None":
+                for effect in action:
+                    self.status_bar[effect] += action[effect]

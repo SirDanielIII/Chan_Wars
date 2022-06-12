@@ -66,14 +66,12 @@ class EnemyLevel(Level):
         self.size = self.config.chan_card_size
         self.turn_counter = 0
         self.enemy.initialize(self.name)
-        deck = [{"type": 'air_chan', "upgrades": None}, {"type": 'angel_chan', "upgrades": None}, {"type": 'earth_chan', "upgrades": None}, {"type": 'avatar_chan', "upgrades": None},
-                {"type": 'farquaad_chan', "upgrades": None}, {"type": 'fire_chan', "upgrades": None}, {"type": 'jackie_chan', "upgrades": None}, {"type": 'jesus_chan', "upgrades": None},
-                {"type": 'oni_chan', "upgrades": None}, {"type": 'shrek_chan', "upgrades": None}]
-        self.player.initialize(self.config.image_dict, deck)
+        deck = ['air_chan', 'angel_chan', 'earth_chan', 'avatar_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
+        self.player.initialize(self.config.image_dict)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.enemies_images[self.name]
-        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height, deck)
         print(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
@@ -95,13 +93,14 @@ class EnemyLevel(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
+        deck = ['air_chan', 'angel_chan', 'earth_chan', 'avatar_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         if self.card_canvas_y != self.height:
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
                 if not self.cards:
-                    self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+                    self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height, deck)
                 if self.card_complete[0] != 2:
                     self.card_complete = self.player.complete()
                 else:
