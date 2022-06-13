@@ -79,11 +79,11 @@ class Config(object):
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
                                 'earth_chan': {'block': 10, 'buff': ['Armor', 3], 'heal': 0, 'status': 'None', 'damage': 0},
-                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None - Marked - 3', 'damage': 10},
+                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': ["Marked", 3], 'damage': 10},
                                 'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
                                 'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
                                 'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': None, 'damage': 10},
+                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
                                 'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
                                 'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
                                 'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
@@ -200,11 +200,11 @@ class Config(object):
                                 'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
                                 'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
                                 'earth_chan': {'block': 10, 'buff': ['Armor', 3], 'heal': 0, 'status': 'None', 'damage': 0},
-                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None - Marked - 3', 'damage': 10},
+                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': ['Marked', 3], 'damage': 10},
                                 'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
                                 'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
                                 'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': None, 'damage': 10},
+                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
                                 'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
                                 'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
                                 'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
@@ -259,7 +259,7 @@ class Config(object):
                                 'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
                                 'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
                                 'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': None, 'damage': 10},
+                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': "None", 'damage': 10},
                                 'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
                                 'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
                                 'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
@@ -441,17 +441,17 @@ class Config(object):
         self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
         self.image_dict = {
-            a: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.chan_card_size).convert(), chan)
-            for a, chan in enumerate(self.level_confs[0]["player"]["cards"])}
+            chan: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.chan_card_size).convert())
+            for chan in self.level_confs[0]["player"]["cards"]}
         self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
         self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
-                            1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(),
+                            0: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(),
                                                         (1600, 900)),
-                            2: pg.transform.smoothscale(
+                            1: pg.transform.smoothscale(
                                 pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert(), (1600, 900)),
                             "siberia": pg.transform.smoothscale(
                                 pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert(), (1600, 900)),
-                            3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert(),
+                            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert(),
                                                         (1600, 900))}
         self.end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
                             pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))

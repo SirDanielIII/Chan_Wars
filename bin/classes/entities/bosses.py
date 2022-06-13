@@ -59,11 +59,21 @@ class DevilChan(Boss):
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
     def update(self, damage, status_effects):
-        self.energy = self.metadata["player"]["energy"]
-        self.health -= damage - self.block
-        self.block = 0 if self.block < damage else self.block - damage
-        if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+        if self.status_bar["Vulnerable"]:
+            damage *= 1.25
+        if self.status_bar["Marked"] and damage:
+            damage += self.status_bar["Marked"]
+        if self.block >= damage:
+            damage = 0
+        else:
+            damage -= self.block
+        self.block = 0
+        damage += self.status_bar["Poison"]
+        self.health += self.buff_bar["Regeneration"]
+        self.health -= damage
+        for effect in status_effects:
+            if effect != "None":
+                self.status_bar[effect] += status_effects[effect]
 
 
 class MsG(Boss):
@@ -110,13 +120,21 @@ class MsG(Boss):
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
     def update(self, damage, status_effects):
-        self.energy = self.metadata["player"]["energy"]
-        if self.siberia:
-            self.energy -= 1
-        self.health -= damage - self.block
-        self.block = 0 if self.block < damage else self.block - damage
-        if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+        if self.status_bar["Vulnerable"]:
+            damage *= 1.25
+        if self.status_bar["Marked"] and damage:
+            damage += self.status_bar["Marked"]
+        if self.block >= damage:
+            damage = 0
+        else:
+            damage -= self.block
+        self.block = 0
+        damage += self.status_bar["Poison"]
+        self.health += self.buff_bar["Regeneration"]
+        self.health -= damage
+        for effect in status_effects:
+            if effect != "None":
+                self.status_bar[effect] += status_effects[effect]
 
 
 class MrPhone(Boss):
@@ -158,11 +176,24 @@ class MrPhone(Boss):
         return move_type, move["phrases"][random.randint(0, len(move["phrases"]) - 1)], move["damage"], move["status"]
 
     def update(self, damage, status_effects):
-        self.energy = self.metadata["player"]["energy"]
+        if self.status_bar["Vulnerable"]:
+            damage *= 1.25
+        if self.status_bar["Marked"] and damage:
+            damage += self.status_bar["Marked"]
+        if self.block >= damage:
+            damage = 0
+        else:
+            damage -= self.block
+        self.block = 0
+        damage += self.status_bar["Poison"]
+        self.health += self.buff_bar["Regeneration"]
+        self.health -= damage
+        for effect in status_effects:
+            if effect != "None":
+                self.status_bar[effect] += status_effects[effect]
         self.damaged = False
         if damage:
             self.damaged = True
-        self.health -= damage - self.block
-        self.block = 0 if self.block < damage else self.block - damage
-        if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+        for effect in status_effects:
+            if effect != "None":
+                self.status_bar[effect] += status_effects[effect]

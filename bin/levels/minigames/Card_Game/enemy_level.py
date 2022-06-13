@@ -1,5 +1,6 @@
 import sys
 import time
+import random
 import math
 
 from bin.classes.stopwatch import Timer
@@ -8,10 +9,11 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-import bin.levels.minigames.Card_Game.card_pair as card_pair
+from bin.classes.entities.enemy import Enemy
+import bin.levels.minigames.Card_Game.player as card_pair
 
 
-class BossMrPhone(Level):
+class EnemyLevel(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
@@ -21,52 +23,56 @@ class BossMrPhone(Level):
         self.card_canvas_y = self.height
         self.card_game = False
         self.game_transition_in = False
-        self.game_transition_out = False  # Use this to stop the game\
-        self.energy = None
+        self.game_transition_out = False  # Use this to stop the game
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, self.player_data)
         self.player_attack = 0
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
-        # Boss Attributes
-        self.boss_data = None
-        self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
-        self.hp_bar_boss = None
-        self.boss_attack = 0
-        self.boss_statuses = []
-        self.acted = True
-        self.completed = True
-        self.boss = None
+        # Enemy Attributes
+        self.enemy_data = None
+        self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
+        self.hp_bar_enemy = None
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.chan_card_size
+        self.size = None
         self.margins = (20, 30)
-        self.level = 3
-        self.pairs = None
+        self.cards = None
+        self.background = None
+        self.level = None
         self.action_stopwatch = Timer()
         self.update_stopwatch = Timer()
         self.transition_stopwatch = Timer()
-        self.turn_counter = 0
+        self.turn_counter = None
         self.card_stopwatch = Timer()
         self.death_stopwatch = Timer()
         self.card_complete = [0]
+        self.enemy = Enemy(self.enemy_data)
+        self.name = None
         self.face = None
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config()["level_" + str(self.level)]["boss"]
-        self.player_data = self.config.get_config()["level_" + str(self.level)]["player"]
+        self.level = 1
+        config = self.config.get_config("level")
+        self.name = random.choice(list(config[0]["enemies"].keys()))
+        self.enemy_data = config[self.level]["enemies"][self.name]
+        self.player_data = config[self.level]["player"]
         self.player.metadata = self.player_data
-        self.boss.metadata = self.boss_data
-        self.boss.initialize()
+        self.enemy.metadata = self.enemy_data
+        self.size = self.config.chan_card_size
+        self.turn_counter = 0
+        self.enemy.initialize(self.name)
+        deck = ['air_chan', 'angel_chan', 'earth_chan', 'avatar_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         self.player.initialize(self.config.image_dict)
-        self.player.image_list = self.config.image_list
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.face = self.config.face_images[3]["normal"]
+        self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.face = self.config.enemies_images[self.name]
+        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height, deck)
+        print(self.name)
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -74,38 +80,43 @@ class BossMrPhone(Level):
         draw_text_left("You", white, self.config.f_hp_bar_name, self.text_canvas, self.hp_bar_player.x, self.hp_bar_player.y + self.hp_bar_player.h * 2 + 5)
         self.hp_bar_player.render(self.player.health, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
-        # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
-        self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
+        # Enemy Text & Health Bar
+        draw_text_right(str(math.ceil(self.enemy.health)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
+                        self.hp_bar_enemy.x + self.hp_bar_enemy.w + 10, self.hp_bar_enemy.y)
+        draw_text_right(self.enemy.name, white, self.config.f_hp_bar_name, self.text_canvas,
+                        self.hp_bar_enemy.x + self.hp_bar_enemy.w + 5, self.hp_bar_enemy.y + self.hp_bar_enemy.h * 2 + 5)
+        self.hp_bar_enemy.render(self.enemy.health, 0.3, dt, True)
 
-    def draw_boss(self, time_elapsed):
+    def draw_enemy(self, time_elapsed):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
         center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
+        deck = ['air_chan', 'angel_chan', 'earth_chan', 'avatar_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         if self.card_canvas_y != self.height:
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.energy and not self.game_transition_in and not self.game_transition_out:
+            if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
-                if not self.pairs:
-                    self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-                self.card_complete = self.player.complete()
-                if self.card_complete[0] == 2:
+                if not self.cards:
+                    self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height, deck)
+                if self.card_complete[0] != 2:
+                    self.card_complete = self.player.complete()
+                else:
                     if not self.card_stopwatch.activate_timer:
                         self.card_stopwatch.time_start()
                     if self.card_stopwatch.seconds > 0.25:
-                        self.player_attack += self.card_complete[2] * 10
-                        self.energy -= self.card_complete[1]
+                        self.player.energy -= 1
+                        self.player_attack += self.card_complete[1]
+                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
                         self.card_stopwatch.time_reset()
+                        self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.backgrounds["Card Game"], 0,
+                                   self.player.energy and not self.card_stopwatch.seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
@@ -122,13 +133,12 @@ class BossMrPhone(Level):
     def run(self):
         self.reload()
         acted = True
-        completed = False
+        completed = True
         updated = True
         milliseconds = pg.USEREVENT
         time_elapsed = Timer()
         time_elapsed.time_start()
         pg.time.set_timer(milliseconds, 10)
-        counter = 0
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -159,7 +169,8 @@ class BossMrPhone(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.backgrounds[3], (0, 0))
+            self.background = self.config.backgrounds[self.level]
+            self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
@@ -169,12 +180,12 @@ class BossMrPhone(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            if self.click and self.boss.health and self.player.health:
+            if self.click and self.enemy.health and self.player.health:
                 if not self.card_game and completed and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
                     self.game_transition_out = False
-                elif self.card_game and self.energy == 0 and not self.game_transition_in and not self.game_transition_out:
+                elif self.card_game and self.player.energy == 0 and not self.game_transition_in and not self.game_transition_out:
                     # There should probably be a unified transitioning variable to shorten these if statements and the one above in run_card_game
                     self.game_transition_in = False
                     self.game_transition_out = True
@@ -218,42 +229,36 @@ class BossMrPhone(Level):
                 if not self.action_stopwatch.activate_timer and not completed:
                     self.action_stopwatch.time_start()
                 if self.update_stopwatch.seconds > 1.5:
-                    self.boss.update(self.player_attack, counter)
-                    if self.player_attack:
-                        self.face = self.config.face_images[3]["hit"]
+                    self.enemy.update(self.player_attack, self.player_statuses)
                     self.player_attack = 0
+                    self.player_statuses = []
                     updated = True
                     self.update_stopwatch.time_reset()
                 if self.action_stopwatch.seconds > 2.5 and not acted:
-                    self.boss.trigger_method()
-                    action = self.boss.act()
-                    if action[0] != "die":
-                        self.boss_attack += action[1][0]
-                    self.face = self.config.face_images[3][action[1][-1]]
+                    action = self.enemy.act(self.turn_counter)
                     acted = True
-                    self.player.update(self.boss_attack, None)
-                elif self.action_stopwatch.seconds > 4 or (not counter and self.action_stopwatch.seconds > 2):
+                    self.player.update(action[2], action[3])
+                elif self.action_stopwatch.seconds > 4:
+                    self.turn_counter += 1
                     self.action_stopwatch.time_reset()
                     completed = True
-                    self.face = self.config.face_images[3]["normal"]
-                    counter += 1
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
-                self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
+                self.draw_enemy(time_elapsed)  # Draw Enemy' Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             if self.player.health <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.lose_screen, (0, 0))
-            elif self.boss.health <= 0:
+                    self.config.end_screens[0].set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.game_canvas.blit(self.config.end_screens[0], (0, 0))
+            elif self.enemy.health <= 0:
                 self.death_stopwatch.time_start()
                 if self.death_stopwatch.seconds > 1:
-                    self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.win_screen, (0, 0))
+                    self.config.end_screens[1].set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                    self.game_canvas.blit(self.config.end_screens[1], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.boss.health and self.player.health:
+            if self.enemy.health and self.player.health:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

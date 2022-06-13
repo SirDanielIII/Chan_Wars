@@ -16,45 +16,37 @@ def move_pos(in_out, elapsed_time, y, speed):
     return pos
 
 
-class CardPair(object):
+class Card(object):
     def __init__(self, image, pos, size, m, columns, o_set, card_type):
         self.size = size
-        self.position1 = [o_set[0] - columns + (size[0] + m[0]) * pos[0][0],
-                          o_set[1] + (size[1] + m[1]) * pos[0][1]]
-        self.position2 = [o_set[0] - columns + (size[0] + m[0]) * pos[1][0],
-                          o_set[1] + (size[1] + m[1]) * pos[1][1]]
+        self.position = [o_set[0] - columns + (size[0] + m[0]) * pos[0],
+                          o_set[1] + (size[1] + m[1]) * pos[1]]
         self.image = image
-        self.chosen1 = 0
-        self.chosen2 = 0
+        self.chosen = 0
         self.clairvoyant = False
         self.card_type = card_type
+        self.collision = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
 
-    def choose(self, m_pos, choose_boolean, rect_pair):
+    def choose(self, m_pos, choose_boolean):
         if choose_boolean:
-            if rect_pair[0].collidepoint(m_pos):
-                self.chosen1 = 1
-            if rect_pair[1].collidepoint(m_pos):
-                self.chosen2 = 1
+            if self.collision.collidepoint(m_pos):
+                self.chosen = 1
 
-    def draw_matching(self, default, screen, pos_mod):
-        if self.chosen1:
-            screen.blit(self.image, (self.position1[0], self.position1[1] + pos_mod))
+    def draw(self, default, screen, pos_mod):
+        if self.chosen:
+            screen.blit(self.image, (self.position[0], self.position[1] + pos_mod))
         else:
-            screen.blit(default, (self.position1[0], self.position1[1] + pos_mod))
-        if self.chosen2:
-            screen.blit(self.image, (self.position2[0], self.position2[1] + pos_mod))
-        else:
-            screen.blit(default, (self.position2[0], self.position2[1] + pos_mod))
+            screen.blit(default, (self.position[0], self.position[1] + pos_mod))
 
 
-class MatchingScreen:
+class Player:
     def __init__(self, screen, config):
         self.screen = screen
         self.metadata = config
         self.rows = 0
         self.cards = None
         self.columns = 0
-        self.image_dict = None
+        self.image_dict = {}
         self.damage = 0
         self.block = 0
         self.health = 0
@@ -62,8 +54,9 @@ class MatchingScreen:
         self.attack = []
         self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
-        self.set = []
         self.acted = False
+        self.choices = {}
+        self.deck = None
 
     def initialize(self, image_dict):
         self.rows = self.metadata["rows"]
@@ -73,41 +66,51 @@ class MatchingScreen:
         self.health = self.metadata["hp"]
         self.energy = self.metadata["energy"]
 
-    def generate_pairs(self, size, margins, X, Y):
-        print(size, margins)
+    def generate_pairs(self, size, margins, X, Y, deck):
         # ------------------------------------------------------------------------------------------------------------------
+        self.deck = deck
+        images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
-        # Daniel made it so that the offset was calculated in the method and not in the parameters
-        image_collection = random.sample([a for a in range(self.rows * self.columns)], self.rows * self.columns)
-        pos_list = [(a, b, image_collection.pop(-1)) for a in range(self.columns) for b in range(self.rows)]
-        card_set = [CardPair(self.image_dict[card1[2] // 2][0], ((card1[:2]), (card2[:2])), size, margins, self.columns, o_set, self.image_dict[card1[2] // 2][1])
-                    for card1 in pos_list for card2 in pos_list if card1[2] + 1 == card2[2] and card2[2] % 2]
-        rect_set = [(pg.Rect(card_pair.position1[0], card_pair.position1[1], card_pair.size[0], card_pair.size[1]),
-                     pg.Rect(card_pair.position2[0], card_pair.position2[1], card_pair.size[0], card_pair.size[1])) for card_pair in card_set]
-        self.set = [(card_set[i], rect_set[i]) for i in range(len(rect_set))]
-        # Here Daniel unified the card set and the rect set to make sure that neither order spontaneously changed while the program ran
-        return self.set
+        cards = random.sample(self.deck + self.deck, len(self.deck) * 2)
+        pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
+        print(self.image_dict, pos_list)
+        self.deck = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
+        return self.deck
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
-            for pair in self.set:
-                pair[0].choose(m_pos, choose_boolean, pair[1])
-        for pair in [cards[0] for cards in self.set]:
-            pair.draw_matching(self.image_dict["card_back"], self.screen, pos_mod)
+            for card in self.deck:
+                card.choose(m_pos, choose_boolean)
+        for card in self.deck:
+            card.draw(self.image_dict["card_back"], self.screen, pos_mod)
 
     def complete(self):
         count = 0
-        choices = {}
-        for a in self.set:
-            choices[a[0].card_type] = choices.get(a[0].card_type, 0)
-            print(a[0].card_type, choices)
-            choices[a[0].card_type] += 1
-        for card_type, number in choices.items():
-            if number == 2:
-                attack = self.cards[card_type]
+        self.choices = {}
+        for a in self.deck:
+            self.choices[a.card_type] = self.choices.get(a.card_type, 0)
+            self.choices[a.card_type] += a.chosen
+        for card_type, number in self.choices.items():
+            if number == 2 and not self.acted:
+                card = card_type.split(" ")
+                attack = self.cards[card[-1]]
+                if len(card) > 1:
+                    for upgrade in card[:-1]:
+                        attack["damage"] += self.cards[card[-1]]["upgrades"][upgrade]["damage"]
+                        attack["block"] += self.cards[card[-1]]["upgrades"][upgrade]["block"]
+                        attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
+                        if self.cards[card[-1]]["upgrades"][upgrade]["status"] != "None":
+                            for status in self.cards[card[-1]]["upgrades"][upgrade]["status"]:
+                                attack["status"][status] = attack["status"].get(status, 0)
+                                attack["status"][status] += self.cards[card[-1]]["upgrades"][upgrade]["status"][status]
+                        if self.cards[card[-1]]["upgrades"][upgrade]["buff"] != "None":
+                            for buff in self.cards[card[-1]]["upgrades"][upgrade]["buff"]:
+                                attack["buff"][buff] = attack["buff"].get(buff, 0)
+                                attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
                 if attack["buff"] != "None":
-                    self.buff_bar[attack["buff"][0]] += attack["buff"][1]
+                    for buff in attack["buff"]:
+                        self.buff_bar[buff] += attack["buff"][buff]
                 if self.buff_bar["Lifesteal"]:
                     attack["heal"] += attack["damage"]
                 if self.buff_bar["Armor"]:
@@ -121,6 +124,7 @@ class MatchingScreen:
                     self.health = self.metadata["hp"]
                 self.block = attack["block"]
                 self.acted = True
+                print(attack)
                 return 2, attack["damage"], attack["status"]
             else:
                 count += number
@@ -129,15 +133,16 @@ class MatchingScreen:
         return count, 0, "None"
 
     def reset(self):
-        for m, a in enumerate(self.set):
-            if a[0].chosen1 + a[0].chosen2 == 2:
-                self.set.pop(m)
-            a[0].chosen1 = 0
-            a[0].chosen2 = 0
+        remove_list = []
+        for m, a in enumerate(self.deck):
+            if a.chosen and self.choices[a.card_type] == 2:
+                remove_list.append(m)
+            a.chosen = 0
+        for index in remove_list[::-1]:
+            self.deck.pop(index)
         self.acted = False
 
     def update(self, damage, status_effects):
-        print(self.status_bar, self.buff_bar)
         self.energy = self.metadata["energy"]
         self.energy += self.buff_bar["Energized"]
         if self.status_bar["Vulnerable"]:
@@ -161,4 +166,5 @@ class MatchingScreen:
             if self.buff_bar[b]:
                 self.buff_bar[b] -= 1
         if status_effects != "None":
-            self.status_bar[status_effects[0]] += status_effects[1]
+            for effect in status_effects:
+                self.status_bar[effect] += status_effects[effect]

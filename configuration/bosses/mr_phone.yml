@@ -1,38 +1,47 @@
-basic:
-- disappointment
-- 0
-columns: 7
-energy: 4
 hp: 200
-kill:
-- thinking_question
-- 9999
 name: Mr. Phone
 phrases:
-  attack:
-  - You need to touch grass.
-  - My son could beat you at this game.
-  - Easy choices hard life, hard choices easy life.
-  - It's only awkward if you make it awkward.
-  - You have to build capacity.
-  - You chose that? Come on, that's crazy talk!!!
-  - Can't you be doing more?
   death:
   - Huh.
   - Looks like you did practice perfectly.
   - Welp, I'll be on my way then.
   - '*leaves*'
-  kill:
-  - Next time, just practice perfectly.
-  - My record just increased :p
   opening:
   - Did you write your TQP?
+moves:
+  basic_1:
+    block: 0
+    buff: None
+    damage: 0
+    heal: 0
+    phrases:
+      - You need to touch grass.
+      - My son could beat you at this game.
+      - Easy choices hard life, hard choices easy life.
+      - It's only awkward if you make it awkward.
+      - You have to build capacity.
+      - You chose that? Come on, that's crazy talk!!!
+      - Can't you be doing more?
+    status:
+      Disappointment: 1
+  basic_2:
+    block: 0
+    buff: None
+    damage: 0
+    heal: 0
+    phrases:
+      - Almost everything is a choice... including breathing!
+      - Reflect, reflect, REFLECT HARDER!!!
+      - Face the monster... ME!
+      - Keep your head on a swivel!
+    status:
+      Fear: 2
   special:
-  - Almost everything is a choice... including breathing!
-  - Reflect, reflect, REFLECT HARDER!!!
-  - Face the monster... ME!
-  - Keep your head on a swivel!
-rows: 4
-special:
-- emotional_damage
-- 0
+    block: 0
+    buff: None
+    damage: 999
+    heal: 0
+    phrases:
+      - Next time, just practice perfectly.
+      - My record just increased :p
+    status: None

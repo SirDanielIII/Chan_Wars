@@ -1,342 +1,360 @@
-
-  boss:
-    hp: 60
-    moves:
-      basic_1:
+enemies:
+  bat:
+    attacks:
+      resonate:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrase: Resonate
+        status:
+          Weakness: 1
+      sonic_attack:
+        block: 0
+        buff: None
+        damage: 10
+        heal: 0
+        phrase: Sonic Attack
+        status: None
+    hp: 40
+    name: Bat Chan
+  big:
+    attacks:
+      big_smack:
         block: 0
         buff: None
         damage: 15
         heal: 0
-        phrases:
-        - For My Lost Love!
-        - World Shaking Explosion Fist!
-        - North Star Spear!
+        phrase: Biggus Smackus
         status: None
-      basic_2:
-        block: 0
-        buff:
-        - Armor
-        - 10
-        damage: 10
-        heal: 0
-        phrases:
-        - Million Soul Bomb!
-        - Burning Sun Beam!
-        - Point Two Electron Volts!
-        status:
-        - Weakness
-        - 2
-      basic_3:
-        block: 15
-        buff:
-        - Power
-        - 1
-        damage: 0
-        heal: 0
-        phrases:
-        - Face my wrath!
-        - Prepare yourself for the ultimate doom!
-        - You are not prepared!
-        status:
-        - Vulnerable
-        - 1
-      death:
+    hp: 75
+    name: Big Chan
+  dark:
+    attacks:
+      dark_curse:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrases:
-        - NOOOOOOO!!!
-        - THIS IS BLASPHEMYYYYYY!!! *dies*
-        status: None
-      special:
-        block: 0
-        buff:
-        - Lifesteal
-        - 2
-        damage: 10
-        heal: 20
-        phrases:
-        - That's a neat little hack that I found!
-        - With this hack, I'll steal your health for myself.
-        - I hope you're prepared for this.
-        - You know, I'm something of a scientist myself.
-        status: None
-    name: Devil Chan
-    phrases:
-      intro:
-      - - Angel Chan...
-        - 0.1
-        - - 0
-          - 0
-        - 1.0
-      - - I loved you!
-        - 0.3
-        - - 5
-          - 0
-      - - How could you do this!?
-        - 0.2
-        - - 20
-          - 20
-  enemies:
-    bat:
-      attacks:
-        resonate:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Resonate
-          status:
-          - Weakness
-          - 1
-        sonic_attack:
-          block: 0
-          buff: None
-          damage: 10
-          heal: 0
-          phrase: Sonic Attack
-          status: None
-      hp: 40
-      name: Bat Chan
-    big:
-      attacks:
-        big_smack:
-          block: 0
-          buff: None
-          damage: 15
-          heal: 0
-          phrase: Biggus Smackus
-          status: None
-      hp: 75
-      name: Big Chan
-    dark:
-      attacks:
-        dark_curse:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Dark Curse
-          status:
-          - Vulnerable
-          - 1
-        dark_orb:
-          block: 0
-          buff: None
-          damage: 10
-          heal: 0
-          phrase: Dark Orb
-          status: None
-        darkness:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Darkness
-          status:
-          - Weakness
-          - 2
-      hp: 40
-      name: Dark Chan
-    drowned:
-      attacks:
-        bloated_breath:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Bloated Breath
-          status:
-          - Vulnerable
-          - 1
-        corpse_explosion:
-          block: 0
-          buff: None
-          damage: 25
-          heal: -30
-          phrase: Corpse Explosion
-          status: None
-        drowned_glare:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Drowned Glare
-          status:
-          - Fear
-          - 1
-      hp: 30
-      name: Drowned Chan
-    flying:
-      attacks:
-        claw_strike:
-          block: 0
-          buff: None
-          damage: 10
-          heal: 0
-          phrase: Claw Strike
-          status: None
-        fly_up:
-          block: 10
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Fly Up
-          status: None
-        swoop_in:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Swoop In
-          status:
-          - Fear
-          - 1
-      hp: 50
-      name: Flying Chan
-    goblin:
-      attacks:
-        evasive_maneuvers:
-          block: 10
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Evasive Maneuvers
-          status: None
-        hamstring:
-          block: 0
-          buff: None
-          damage: 0
-          heal: 0
-          phrase: Hamstring
-          status:
-          - Weakness
-          - 2
-        tiny_stab:
-          block: 0
-          buff: None
-          damage: 10
-          heal: 0
-          phrase: Tiny Stab
-          status: None
-      hp: 30
-      name: Goblin Chan
-  player:
-    cards:
-      air_chan:
-        block: 5
-        buff: None
-        damage: 0
-        heal: 5
+        phrase: Dark Curse
         status:
-        - Weakness
-        - 2
-      angel_chan:
-        block: 0
-        buff: None
-        damage: 5
-        heal: 10
-        status: None
-      avatar_chan:
-        block: 5
-        buff:
-        - Power
-        - 1
-        damage: 5
-        heal: 5
-        status:
-        - Weakness
-        - 1
-      earth_chan:
-        block: 10
-        buff:
-        - Armor
-        - 3
-        damage: 0
-        heal: 0
-        status: None
-      farquaad_chan:
+          Vulnerable: 1
+      dark_orb:
         block: 0
         buff: None
         damage: 10
         heal: 0
-        status: None - Marked - 3
-      fire_chan:
-        block: 0
-        buff:
-        - Power
-        - 2
-        damage: 10
-        heal: 0
+        phrase: Dark Orb
         status: None
-      jackie_chan:
-        block: 10
-        buff:
-        - Energized
-        - 1
+      darkness:
+        block: 0
+        buff: None
         damage: 0
         heal: 0
+        phrase: Darkness
         status:
-        - Weakness
-        - 2
-      jesus_chan:
+          Weakness: 2
+    hp: 40
+    name: Dark Chan
+  drowned:
+    attacks:
+      bloated_breath:
         block: 0
-        buff:
-        - Clairvoyant
-        - 2
+        buff: None
         damage: 0
-        heal: 15
-        status: None
-      oni_chan:
+        heal: 0
+        phrase: Bloated Breath
+        status:
+          Vulnerable: 1
+      corpse_explosion:
         block: 0
-        buff:
-        - Power
-        - 2
+        buff: None
+        damage: 25
+        heal: -30
+        phrase: Corpse Explosion
+        status: None
+      drowned_glare:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrase: Drowned Glare
+        status:
+          Fear: 1
+    hp: 30
+    name: Drowned Chan
+  flying:
+    attacks:
+      claw_strike:
+        block: 0
+        buff: None
         damage: 10
         heal: 0
-        status: null
-      shrek_chan:
+        phrase: Claw Strike
+        status: None
+      fly_up:
         block: 10
         buff: None
-        damage: 10
-        heal: 0
-        status: None
-      square_chan:
-        block: 0
-        buff:
-        - Clairvoyant
-        - 2
         damage: 0
         heal: 0
+        phrase: Fly Up
+        status: None
+      swoop_in:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrase: Swoop In
         status:
-        - Marked
-        - 3
-      un-chany_chan:
-        block: 0
-        buff:
-        - Energized
-        - 1
-        damage: 15
-        heal: 0
-        status: None
-      upsidedown_chan:
-        block: 10
-        buff:
-        - Lifesteal
-        - 2
-        damage: 5
-        heal: 0
-        status: None
-      water_chan:
-        block: 0
-        buff:
-        - Regeneration
-        - 5
-        damage: 0
-        heal: 10
-        status: None
-    columns: 3
-    energy: 3
+          Fear: 1
     hp: 50
-    rows: 4
+    name: Flying Chan
+  goblin:
+    attacks:
+      evasive_maneuvers:
+        block: 10
+        buff: None
+        damage: 0
+        heal: 0
+        phrase: Evasive Maneuvers
+        status: None
+      hamstring:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        phrase: Hamstring
+        status:
+          Weakness: 2
+      tiny_stab:
+        block: 0
+        buff: None
+        damage: 10
+        heal: 0
+        phrase: Tiny Stab
+        status: None
+    hp: 30
+    name: Goblin Chan
+player:
+  cards:
+    air_chan:
+      block: 5
+      buff: None
+      damage: 0
+      heal: 5
+      status:
+        Weakness: 2
+      upgrades:
+        flighty:
+          block: 5
+          buff:
+            Energized: 1
+          damage: 0
+          heal: 10
+          status: None
+    angel_chan:
+      block: 0
+      buff: None
+      damage: 5
+      heal: 10
+      status: None
+      upgrades:
+        bright:
+          block: 0
+          buff:
+              Regeneration: 5
+          damage: 5
+          heal: 5
+          status: None
+    avatar_chan:
+      block: 5
+      buff:
+        Power: 1
+      damage: 5
+      heal: 5
+      status:
+        Weakness: 1
+      upgrades:
+        master:
+          block: 5
+          buff:
+            Power: 1
+          damage: 5
+          heal: 0
+          status:
+            Weakness: 1
+    earth_chan:
+      block: 10
+      buff:
+        Armor: 3
+      damage: 0
+      heal: 0
+      status: None
+      upgrades:
+        tough:
+          block: 5
+          buff:
+            Armor: 3
+          damage: 0
+          heal: 0
+          status: None
+    farquaad_chan:
+      block: 0
+      buff: None
+      damage: 10
+      heal: 0
+      status:
+        Marked: 3
+      upgrades:
+        despotic:
+          block: 0
+          buff:
+            Armor: 5
+          damage: -5
+          heal: 0
+          status:
+            Marked: 2
+    fire_chan:
+      block: 0
+      buff:
+        Power: 2
+      damage: 10
+      heal: 0
+      status: None
+      upgrades:
+        burning:
+          block: 0
+          buff:
+            Power: 1
+          damage: 0
+          heal: 0
+          status:
+            Pained: 5
+    jackie_chan:
+      block: 10
+      buff:
+        Energized: 1
+      damage: 0
+      heal: 0
+      status:
+        Weakness: 2
+      upgrades:
+        famous:
+          block: 5
+          buff:
+            Clairvoyant: 1
+          damage: 0
+          heal: 0
+          status:
+            Weakness: 1
+    jesus_chan:
+      block: 0
+      buff:
+        Clairvoyant: 2
+      damage: 0
+      heal: 15
+      status: None
+      upgrades:
+        farsighted:
+          block: 5
+          buff:
+            Energized: 1
+          damage: 0
+          heal: 5
+          status: None
+    oni_chan:
+      block: 0
+      buff:
+        Power: 2
+      damage: 10
+      heal: 0
+      status: None
+      upgrades:
+        vicious:
+          block: 5
+          buff: None
+          damage: 5
+          heal: 0
+          status:
+            Vulnerable: 2
+    shrek_chan:
+      block: 10
+      buff: None
+      damage: 10
+      heal: 0
+      status: None
+      upgrades:
+        swampy:
+          block: 0
+          buff:
+            Lifesteal: 1
+          damage: 0
+          heal: 0
+          status:
+            Vulnerable: 2
+    square_chan:
+      block: 0
+      buff:
+        Clairvoyant: 2
+      damage: 0
+      heal: 0
+      status:
+        Marked: 3
+      upgrades:
+        symmetric:
+          block: 0
+          buff:
+            Energized: 1
+          damage: 0
+          heal: 0
+          status:
+            Pained: 4
+    un-chany_chan:
+      block: 0
+      buff:
+        Energized: 1
+      damage: 15
+      heal: 0
+      status: None
+      upgrades:
+        strange:
+          block: 0
+          buff: None
+          damage: -5
+          heal: 10
+          status:
+            Vulnerable: 2
+    upsidedown_chan:
+      block: 10
+      buff:
+        Lifesteal: 2
+      damage: 5
+      heal: 0
+      status: None
+      upgrades:
+        sinister:
+          block: 0
+          buff: None
+          damage: 5
+          heal: 10
+          status:
+            Marked: 2
+    water_chan:
+      block: 0
+      buff:
+        Regeneration: 5
+      damage: 0
+      heal: 10
+      status: None
+      upgrades:
+        raging:
+          block: 0
+          buff: None
+          damage: 10
+          heal: 0
+          status:
+            Weakness: 2
+  columns: 3
+  energy: 3
+  hp: 50
+  rows: 4

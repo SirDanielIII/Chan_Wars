@@ -11,8 +11,8 @@ from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
 from bin.colours import *
-from bin.levels.minigames.Card_Game.card_pair import move_pos
-import bin.levels.minigames.Card_Game.card_pair as card_pair
+from bin.levels.minigames.Card_Game.player import move_pos
+import bin.levels.minigames.Card_Game.player as card_pair
 
 
 class BossDevilChan(Level):
@@ -31,7 +31,7 @@ class BossDevilChan(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.MatchingScreen(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, self.player_data)
         self.player_attack = 0
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
@@ -65,12 +65,12 @@ class BossDevilChan(Level):
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
                            "update_delay": Timer()}
-
+        self.level = 0
         self.ran = 0
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config()["level_" + str(self.level)]["boss"]
-        self.player_data = self.config.get_config()["level_" + str(self.level)]["player"]
+        self.boss_data = self.config.get_config("level")[self.level]["boss"]
+        self.player_data = self.config.get_config("level")[self.level]["player"]
         self.player.metadata = self.player_data
         self.boss.metadata = self.boss_data
         self.boss.initialize()
