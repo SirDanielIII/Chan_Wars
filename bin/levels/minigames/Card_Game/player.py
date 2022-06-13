@@ -19,8 +19,7 @@ def move_pos(in_out, elapsed_time, y, speed):
 class Card(object):
     def __init__(self, image, pos, size, m, columns, o_set, card_type):
         self.size = size
-        self.position = [o_set[0] - columns + (size[0] + m[0]) * pos[0],
-                          o_set[1] + (size[1] + m[1]) * pos[1]]
+        self.position = [o_set[0] - columns + (size[0] + m[0]) * pos[0], o_set[1] + (size[1] + m[1]) * pos[1]]
         self.image = image
         self.chosen = 0
         self.clairvoyant = False
@@ -73,7 +72,6 @@ class Player:
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         cards = random.sample(self.deck + self.deck, len(self.deck) * 2)
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
-        print(self.image_dict, pos_list)
         self.deck = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
         return self.deck
 
