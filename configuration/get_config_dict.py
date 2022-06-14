@@ -1,5 +1,9 @@
-import os
+# --------------------------------------------------------------------------------------------
+# NOTE: THIS FILE REQUIRES THAT YOU INSTALL BOTH YAML AND PYPERCLIP IN ORDER FOR IT TO WORK
+# --------------------------------------------------------------------------------------------
 
+import os
+import pyperclip
 import yaml
 
 
@@ -16,4 +20,7 @@ def run():
 
 
 if __name__ == '__main__':
-    print(run())
+    output = run()
+    print(output)
+    pyperclip.copy(str(output))
+    print("\nThe dictionary has successfully been copied to your clipboard")

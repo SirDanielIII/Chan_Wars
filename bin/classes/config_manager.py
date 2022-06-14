@@ -8,13 +8,13 @@ import pygame as pg
 class Config(object):
     def __init__(self):
         # Images
-        self.menu_img = None
-        self.boss_card = None
-        self.end_screens = None
-        self.image_dict = None
-        self.face_images = None
-        self.backgrounds = None
-        self.enemies_images = None
+        self.img_menus = None
+        self.img_boss_cards = None
+        self.img_end_screens = None
+        self.img_chans = None
+        self.img_bosses = None
+        self.img_levels = None
+        self.img_enemies = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
         self.f_hp_bar_hp = None
@@ -46,12 +46,8 @@ class Config(object):
     def load_global_conf(self):
         if not os.path.exists(os.getcwd() + "/configuration/config.yml"):
             with open(os.getcwd() + "/configuration/config.yml", "w") as f:
-                yaml.dump(
-                    {'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
-                                  'fps': {'show': False, 'value': 165}, 'fullscreen': False},
-                     'other': {'levels': 3, 'bosses': ['devil_chan', 'mr_phone', 'ms_g'], 'boss_face_size': {'x': 500, 'y': 500},
-                               'highest_level_beat': 0}}
-                    , f)  # Create config file with default values if it doesn't exist
+                # Create config file with default values if it doesn't exist
+                yaml.dump({'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0}, 'fps': {'show': False, 'value': 165}, 'fullscreen': False}, 'other': {'levels': 3, 'bosses': ['devil_chan', 'mr_phone', 'ms_g'], 'chan_card_size': [120, 180], 'boss_face_size': [500, 500], 'highest_level_beat': 0}}, f)
 
         with open(os.getcwd() + "/configuration/config.yml", "r") as f:
             self.global_conf = yaml.safe_load(f)  # Save .yml file data into variable
@@ -68,301 +64,19 @@ class Config(object):
             self.chan_card_size = self.global_conf["other"]["chan_card_size"]
 
     def load_level_confs(self):  # Run this after load_global_config() - Create files if they don't exist, and read from them
-        for i in range(self.levels):
+        for i in range(1, self.levels + 1):
             filename = "level_" + str(i)
             if not os.path.exists(os.getcwd() + "/configuration/levels/" + filename + ".yml"):
                 with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "w") as f:
                     match i:
-                        case 0:
-                            yaml.dump({'player': {'hp': 50, 'columns': 3, 'energy': 3, 'rows': 4, 'cards': {
-                                'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
-                                'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
-                                'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
-                                'earth_chan': {'block': 10, 'buff': ['Armor', 3], 'heal': 0, 'status': 'None', 'damage': 0},
-                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': ["Marked", 3], 'damage': 10},
-                                'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
-                                'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
-                                'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
-                                'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
-                                'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
-                                'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
-                                'upsidedown_chan': {'block': 10, 'buff': ['Lifesteal', 2], 'heal': 0, 'status': 'None', 'damage': 5},
-                                'water_chan': {'block': 0, 'buff': ['Regeneration', 5], 'heal': 10, 'status': 'None', 'damage': 0}}}, 'boss': {
-                                'moves': {
-                                    'basic_1': {'phrases': ['For My Lost Love!', 'World Shaking Explosion Fist!', 'North Star Spear!'], 'damage': 15,
-                                                'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0},
-                                    'basic_2': {'phrases': ['Million Soul Bomb!', 'Burning Sun Beam!', 'Point Two Electron Volts!'], 'damage': 10,
-                                                'block': 0, 'status': ['Weakness', 2], 'buff': ['Armor', 10], 'heal': 0},
-                                    'basic_3': {'phrases': ['Face my wrath!', 'Prepare yourself for the ultimate doom!', 'You are not prepared!'],
-                                                'damage': 0, 'block': 15, 'buff': ['Power', 1], 'status': ['Vulnerable', 1], 'heal': 0}, 'special': {
-                                        'phrases': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.",
-                                                    "I hope you're prepared for this.", "You know, I'm something of a scientist myself."],
-                                        'damage': 10, 'block': 0, 'status': 'None', 'buff': ['Lifesteal', 2], 'heal': 20},
-                                    'death': {'phrases': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'], 'damage': 0, 'block': 0,
-                                              'status': 'None', 'buff': 'None', 'heal': 0}}, 'hp': 60, 'name': 'Devil Chan', 'phrases': {
-                                    'intro': [['Angel Chan...', 0.1, [0, 0], 1.0], ['I loved you!', 0.3, [5, 0]],
-                                              ['How could you do this!?', 0.2, [20, 20]]]}}, 'enemies': {'flying': {'hp': 50, 'name': 'Flying Chan',
-                                                                                                                    'attacks': {'swoop_in': {
-                                                                                                                        'phrase': 'Swoop In',
-                                                                                                                        'damage': 0, 'block': 0,
-                                                                                                                        'status': ['Fear', 1],
-                                                                                                                        'buff': 'None', 'heal': 0},
-                                                                                                                        'claw_strike': {
-                                                                                                                            'phrase': 'Claw Strike',
-                                                                                                                            'block': 0,
-                                                                                                                            'status': 'None',
-                                                                                                                            'damage': 10,
-                                                                                                                            'buff': 'None',
-                                                                                                                            'heal': 0},
-                                                                                                                        'fly_up': {
-                                                                                                                            'phrase': 'Fly Up',
-                                                                                                                            'damage': 0,
-                                                                                                                            'status': 'None',
-                                                                                                                            'block': 10,
-                                                                                                                            'buff': 'None',
-                                                                                                                            'heal': 0}}},
-                                                                                                         'drowned': {'hp': 30, 'name': 'Drowned Chan',
-                                                                                                                     'attacks': {'drowned_glare': {
-                                                                                                                         'phrase': 'Drowned Glare',
-                                                                                                                         'damage': 0, 'block': 0,
-                                                                                                                         'status': ['Fear', 1],
-                                                                                                                         'buff': 'None', 'heal': 0},
-                                                                                                                         'bloated_breath': {
-                                                                                                                             'phrase': 'Bloated Breath',
-                                                                                                                             'damage': 0,
-                                                                                                                             'block': 0,
-                                                                                                                             'status': [
-                                                                                                                                 'Vulnerable',
-                                                                                                                                 1],
-                                                                                                                             'buff': 'None',
-                                                                                                                             'heal': 0},
-                                                                                                                         'corpse_explosion': {
-                                                                                                                             'phrase': 'Corpse Explosion',
-                                                                                                                             'block': 0,
-                                                                                                                             'status': 'None',
-                                                                                                                             'damage': 25,
-                                                                                                                             'buff': 'None',
-                                                                                                                             'heal': -30}}},
-                                                                                                         'big': {'hp': 75, 'name': 'Big Chan',
-                                                                                                                 'attacks': {'big_smack': {
-                                                                                                                     'phrase': 'Biggus Smackus',
-                                                                                                                     'block': 0, 'status': 'None',
-                                                                                                                     'buff': 'None', 'heal': 0,
-                                                                                                                     'damage': 15}}},
-                                                                                                         'dark': {'hp': 40, 'name': 'Dark Chan',
-                                                                                                                  'attacks': {'dark_orb': {
-                                                                                                                      'phrase': 'Dark Orb',
-                                                                                                                      'block': 0, 'buff': 'None',
-                                                                                                                      'heal': 0, 'status': 'None',
-                                                                                                                      'damage': 10}, 'darkness': {
-                                                                                                                      'phrase': 'Darkness',
-                                                                                                                      'damage': 0, 'block': 0,
-                                                                                                                      'buff': 'None', 'heal': 0,
-                                                                                                                      'status': ['Weakness', 2]},
-                                                                                                                      'dark_curse': {
-                                                                                                                          'phrase': 'Dark Curse',
-                                                                                                                          'damage': 0,
-                                                                                                                          'buff': 'None',
-                                                                                                                          'heal': 0,
-                                                                                                                          'block': 0,
-                                                                                                                          'status': [
-                                                                                                                              'Vulnerable',
-                                                                                                                              1]}}},
-                                                                                                         'goblin': {'hp': 30, 'name': 'Goblin Chan',
-                                                                                                                    'attacks': {'evasive_maneuvers': {
-                                                                                                                        'phrase': 'Evasive Maneuvers',
-                                                                                                                        'damage': 0, 'buff': 'None',
-                                                                                                                        'heal': 0, 'status': 'None',
-                                                                                                                        'block': 10}, 'tiny_stab': {
-                                                                                                                        'phrase': 'Tiny Stab',
-                                                                                                                        'block': 0, 'status': 'None',
-                                                                                                                        'buff': 'None', 'heal': 0,
-                                                                                                                        'damage': 10}, 'hamstring': {
-                                                                                                                        'phrase': 'Hamstring',
-                                                                                                                        'damage': 0, 'block': 0,
-                                                                                                                        'buff': 'None', 'heal': 0,
-                                                                                                                        'status': ['Weakness', 2]}}},
-                                                                                                         'bat': {'hp': 40, 'name': 'Bat Chan',
-                                                                                                                 'attacks': {'sonic_attack': {
-                                                                                                                     'phrase': 'Sonic Attack',
-                                                                                                                     'block': 0, 'buff': 'None',
-                                                                                                                     'heal': 0, 'status': 'None',
-                                                                                                                     'damage': 10}, 'resonate': {
-                                                                                                                     'phrase': 'Resonate',
-                                                                                                                     'damage': 0, 'block': 0,
-                                                                                                                     'buff': 'None', 'heal': 0,
-                                                                                                                     'status': ['Weakness', 1]}}}}},
-                                      f)
                         case 1:
-                            yaml.dump({'player': {'hp': 75, 'columns': 5, 'energy': 4, 'rows': 4, 'cards': {
-                                'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
-                                'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
-                                'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
-                                'earth_chan': {'block': 10, 'buff': ['Armor', 3], 'heal': 0, 'status': 'None', 'damage': 0},
-                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': ['Marked', 3], 'damage': 10},
-                                'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
-                                'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
-                                'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
-                                'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
-                                'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
-                                'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
-                                'upsidedown_chan': {'block': 10, 'buff': ['Lifesteal', 2], 'heal': 0, 'status': 'None', 'damage': 5},
-                                'water_chan': {'block': 0, 'buff': ['Regeneration', 5], 'heal': 10, 'status': 'None', 'damage': 0}}}, 'boss': {
-                                'moves': {'basic_1': {'phrases': ['For Sean!', "I'll only give you 100% if youâ€™re one of my favourite students."],
-                                                      'damage': 15, 'block': 0, 'status': ['Vulnerable', 1], 'buff': 'None', 'heal': 0},
-                                          'basic_2': {'phrases': ["Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'],
-                                                      'damage': 15, 'block': 0, 'status': ['Weakness', 2], 'buff': 'None', 'heal': 0}, 'basic_3': {
-                                        'phrases': ['Do it on repl.it!!!',
-                                                    "One of them is a woman, the other has an Indian accent if you're into it."], 'damage': 0,
-                                        'block': 20, 'status': 'None', 'buff': 'None', 'heal': 0},
-                                          'special': {'phrases': ['You! Go to Siberia!', 'You deserve to go to Siberia!'], 'damage': 0, 'block': 0,
-                                                      'status': 'None', 'buff': 'None', 'heal': 0},
-                                          'death': {'phrases': ['why must you use... list comphrehension... *dies*'], 'damage': 0, 'block': 0,
-                                                    'status': 'None', 'buff': 'None', 'heal': 0},
-                                          'siberia': {'phrases': ['You!!! How did you escape Siberia!?'], 'damage': 0, 'block': 0, 'status': 'None',
-                                                      'buff': 'None', 'heal': 0}}, 'hp': 100, 'name': 'Ms. G',
-                                'phrases': {'intro': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"]}}, 'enemies': {
-                                'flying': {'hp': 75, 'name': 'Flying Chan', 'attacks': {
-                                    'swoop_in': {'phrase': 'Swoop In', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0, 'status': ['Fear', 2]},
-                                    'claw_strike': {'phrase': 'Claw Strike', 'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0, 'damage': 15},
-                                    'fly_Up': {'phrase': 'Fly Up', 'damage': 0, 'status': 'None', 'buff': 'None', 'heal': 0, 'block': 20}}},
-                                'drowned': {'hp': 40, 'name': 'Drowned Chan', 'attacks': {
-                                    'drowned_glare': {'phrase': 'Drowned Glare', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0,
-                                                      'status': ['Fear', 2]},
-                                    'bloated_breath': {'phrase': 'Bloated Breath', 'damage': 0, 'buff': 'None', 'heal': 0, 'block': 0,
-                                                       'status': ['Vulnerable', 1]},
-                                    'corpse_explosion': {'phrase': 'Corpse Explosion', 'block': 0, 'buff': 'None', 'heal': -40, 'status': 'None',
-                                                         'damage': 35}}}, 'big': {'hp': 100, 'name': 'Big Chan', 'attacks': {
-                                    'big_smack': {'phrase': 'Biggus Smackus', 'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0,
-                                                  'damage': 15}}}, 'dark': {'hp': 50, 'name': 'Dark Chan', 'attacks': {
-                                    'dark_orb': {'phrase': 'Dark Orb', 'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 20},
-                                    'darkness': {'phrase': 'Darkness', 'damage': 0, 'buff': 'None', 'heal': 0, 'block': 0, 'status': ['Weakness', 2]},
-                                    'curse': {'phrase': 'Dark Curse', 'damage': 0, 'buff': 'None', 'heal': 0, 'block': 0,
-                                              'status': ['Vulnerable', 1]}}}, 'goblin': {'hp': 35, 'name': 'Goblin Chan', 'attacks': {
-                                    'evasive_maneuvers': {'phrase': 'Evasive Maneuvers', 'damage': 0, 'status': 'None', 'buff': 'None', 'heal': 0,
-                                                          'block': 20},
-                                    'tiny_stab': {'phrase': 'Tiny Stab', 'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0, 'damage': 10},
-                                    'hamstring': {'phrase': 'Hamstring', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0,
-                                                  'status': ['Weakness', 3]}}}, 'bat': {'hp': 40, 'name': 'Bat Chan', 'attacks': {
-                                    'sonic_attack': {'phrase': 'Sonic Attack', 'block': 0, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 15},
-                                    'resonate': {'phrase': 'Resonate', 'damage': 0, 'block': 0, 'buff': 'None', 'heal': 0,
-                                                 'status': ['Weakness', 2]}}}}}, f)
+                            yaml.dump({'enemies': {'bat': {'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 1}}, 'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 40, 'name': 'Bat Chan'}, 'big': {'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 75, 'name': 'Big Chan'}, 'dark': {'attacks': {'dark_curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 1}}, 'dark_orb': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'}, 'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 2}}}, 'hp': 40, 'name': 'Dark Chan'}, 'drowned': {'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}}, 'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 25, 'heal': -30, 'phrase': 'Corpse Explosion', 'status': 'None'}, 'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 1}}}, 'hp': 30, 'name': 'Drowned Chan'}, 'flying': {'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'}, 'fly_up': {'block': 10, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'}, 'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 1}}}, 'hp': 50, 'name': 'Flying Chan'}, 'goblin': {'attacks': {'evasive_maneuvers': {'block': 10, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'}, 'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 2}}, 'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 30, 'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2}, 'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10, 'status': 'None'}}}, 'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}}, 'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1}, 'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0, 'status': {'Weakness': 1}}}}, 'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None', 'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None'}}}, 'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0, 'status': {'Marked': 2}}}}, 'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 5}}}}, 'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 2}, 'upgrades': {'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 1}}}}, 'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None', 'upgrades': {'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5, 'status': 'None'}}}, 'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 4}}}}, 'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None', 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10, 'status': {'Vulnerable': 2}}}}, 'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None', 'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': {'Marked': 2}}}}, 'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None', 'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Weakness': 2}}}}}, 'columns': 3, 'energy': 3, 'hp': 50, 'rows': 4}}, f)
                         case 2:
-                            yaml.dump({'player': {'hp': 100, 'columns': 7, 'energy': 5, 'rows': 4, 'cards': {
-                                'air_chan': {'block': 5, 'buff': 'None', 'heal': 5, 'status': ['Weakness', 2], 'damage': 0},
-                                'angel_chan': {'block': 0, 'buff': 'None', 'heal': 10, 'status': 'None', 'damage': 5},
-                                'avatar_chan': {'block': 5, 'buff': ['Power', 1], 'heal': 5, 'status': ['Weakness', 1], 'damage': 5},
-                                'earth_chan': {'block': 10, 'buff': ['Armor', 3], 'heal': 0, 'status': 'None', 'damage': 0},
-                                'farquaad_chan': {'block': 0, 'buff': 'None', 'heal': 0, 'status': ['Marked', 3], 'damage': 10},
-                                'fire_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': 'None', 'damage': 10},
-                                'jackie_chan': {'block': 10, 'buff': ['Energized', 1], 'heal': 0, 'status': ['Weakness', 2], 'damage': 0},
-                                'jesus_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 15, 'status': 'None', 'damage': 0},
-                                'oni_chan': {'block': 0, 'buff': ['Power', 2], 'heal': 0, 'status': "None", 'damage': 10},
-                                'shrek_chan': {'block': 10, 'buff': 'None', 'heal': 0, 'status': 'None', 'damage': 10},
-                                'square_chan': {'block': 0, 'buff': ['Clairvoyant', 2], 'heal': 0, 'status': ['Marked', 3], 'damage': 0},
-                                'un-chany_chan': {'block': 0, 'buff': ['Energized', 1], 'heal': 0, 'status': 'None', 'damage': 15},
-                                'upsidedown_chan': {'block': 10, 'buff': ['Lifesteal', 2], 'heal': 0, 'status': 'None', 'damage': 5},
-                                'water_chan': {'block': 0, 'buff': ['Regeneration', 5], 'heal': 10, 'status': 'None', 'damage': 0}}}, 'boss': {
-                                'moves': {'basic_1': {'phrases': ['You need to touch grass.', 'My son could beat you at this game.',
-                                                                  'Easy choices hard life, hard choices easy life.',
-                                                                  "It's only awkward if you make it awkward.", 'You have to build capacity.',
-                                                                  "You chose that? Come on, that's crazy talk!!!", "Can't you be doing more?"],
-                                                      'damage': 0, 'block': 0, 'status': ['disappointment', 1], 'buff': 'None', 'heal': 0},
-                                          'basic_2': {'phrases': ['Almost everything is a choice... including breathing!',
-                                                                  'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!',
-                                                                  'Keep your head on a swivel!'], 'damage': 0, 'block': 0, 'status': ['Fear', 2],
-                                                      'buff': 'None', 'heal': 0},
-                                          'special': {'phrases': ['Next time, just practice perfectly.', 'My record just increased :p'],
-                                                      'damage': 999, 'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0}, 'death': {
-                                        'phrases': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
-                                        'damage': 0, 'block': 0, 'status': 'None', 'buff': 'None', 'heal': 0}}, 'hp': 200, 'name': 'Mr. Phone',
-                                'phrases': {'intro': ['Did you write your TQP?']}}, 'enemies': {'flying': {'hp': 100, 'name': 'Flying Chan',
-                                                                                                           'attacks': {
-                                                                                                               'swoop_in': {'phrase': 'Swoop In',
-                                                                                                                            'damage': 0, 'block': 0,
-                                                                                                                            'buff': 'None', 'heal': 0,
-                                                                                                                            'status': ['Fear', 2]},
-                                                                                                               'claw_strike': {
-                                                                                                                   'phrase': 'Claw Strike',
-                                                                                                                   'block': 0, 'buff': 'None',
-                                                                                                                   'heal': 0, 'status': 'None',
-                                                                                                                   'damage': 20},
-                                                                                                               'fly_Up': {'phrase': 'Fly Up',
-                                                                                                                          'damage': 0, 'buff': 'None',
-                                                                                                                          'heal': 0, 'status': 'None',
-                                                                                                                          'block': 25}}},
-                                                                                                'drowned': {'hp': 50, 'name': 'Drowned Chan',
-                                                                                                            'attacks': {'drowned_glare': {
-                                                                                                                'phrase': 'Drowned Glare',
-                                                                                                                'damage': 0, 'block': 0,
-                                                                                                                'buff': 'None', 'heal': 0,
-                                                                                                                'status': ['Fear', 2]},
-                                                                                                                'bloated_breath': {
-                                                                                                                    'phrase': 'Bloated Breath',
-                                                                                                                    'damage': 0, 'block': 0,
-                                                                                                                    'buff': 'None', 'heal': 0,
-                                                                                                                    'status': ['Vulnerable',
-                                                                                                                               1]},
-                                                                                                                'corpse_explosion': {
-                                                                                                                    'phrase': 'Corpse Explosion',
-                                                                                                                    'block': 0,
-                                                                                                                    'status': 'None',
-                                                                                                                    'buff': 'None',
-                                                                                                                    'heal': -50,
-                                                                                                                    'damage': 50}}},
-                                                                                                'big': {'hp': 150, 'name': 'Big Chan', 'attacks': {
-                                                                                                    'big_smack': {'phrase': 'Biggus Smackus',
-                                                                                                                  'block': 0, 'buff': 'None',
-                                                                                                                  'heal': 0, 'status': 'None',
-                                                                                                                  'damage': 20}}},
-                                                                                                'dark': {'hp': 60, 'name': 'Dark Chan', 'attacks': {
-                                                                                                    'dark_orb': {'phrase': 'Dark Orb', 'block': 0,
-                                                                                                                 'status': 'None', 'buff': 'None',
-                                                                                                                 'heal': 0, 'damage': 20},
-                                                                                                    'darkness': {'phrase': 'Darkness', 'damage': 0,
-                                                                                                                 'block': 0, 'buff': 'None',
-                                                                                                                 'heal': 0,
-                                                                                                                 'status': ['Weakness', 3]},
-                                                                                                    'curse': {'phrase': 'Dark Curse', 'damage': 0,
-                                                                                                              'block': 0, 'buff': 'None', 'heal': 0,
-                                                                                                              'status': ['Vulnerable', 2]},
-                                                                                                    'dark_claw': {'phrase': 'Dark Claw', 'block': 0,
-                                                                                                                  'status': 'None', 'buff': 'None',
-                                                                                                                  'heal': 0, 'damage': 10}}},
-                                                                                                'goblin': {'hp': 50, 'name': 'Goblin Chan',
-                                                                                                           'attacks': {'evasive_maneuvers': {
-                                                                                                               'phrase': 'Evasive Maneuvers',
-                                                                                                               'damage': 0, 'buff': 'None', 'heal': 0,
-                                                                                                               'status': 'None', 'block': 25},
-                                                                                                               'tiny_stab': {
-                                                                                                                   'phrase': 'Tiny Stab',
-                                                                                                                   'block': 0, 'buff': 'None',
-                                                                                                                   'heal': 0,
-                                                                                                                   'status': 'None',
-                                                                                                                   'damage': 10},
-                                                                                                               'hamstring': {
-                                                                                                                   'phrase': 'Hamstring',
-                                                                                                                   'damage': 0,
-                                                                                                                   'buff': 'None', 'heal': 0,
-                                                                                                                   'block': 0,
-                                                                                                                   'status': ['Weakness',
-                                                                                                                              3]}}},
-                                                                                                'bat': {'hp': 50, 'name': 'Bat Chan', 'attacks': {
-                                                                                                    'sonic_attack': {'phrase': 'Sonic Attack',
-                                                                                                                     'block': 0, 'status': 'None',
-                                                                                                                     'damage': 20, 'buff': 'None',
-                                                                                                                     'heal': 0},
-                                                                                                    'resonate': {'phrase': 'Resonate', 'damage': 0,
-                                                                                                                 'block': 0, 'buff': 'None',
-                                                                                                                 'heal': 0,
-                                                                                                                 'status': ['Weakness', 2]},
-                                                                                                    'screech': {'phrase': 'Screech', 'block': 0,
-                                                                                                                'buff': 'None', 'heal': 0,
-                                                                                                                'status': 'None', 'damage': 15}}}}},
-                                      f)
-        for i in range(self.levels):
+                            yaml.dump({'enemies': {'bat': {'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}}, 'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 40, 'name': 'Bat Chan'}, 'big': {'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 100, 'name': 'Big Chan'}, 'dark': {'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 1}}, 'dark_orb': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'}, 'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 2}}}, 'hp': 50, 'name': 'Dark Chan'}, 'drowned': {'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}}, 'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 35, 'heal': -40, 'phrase': 'Corpse Explosion', 'status': 'None'}, 'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 2}}}, 'hp': 40, 'name': 'Drowned Chan'}, 'flying': {'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'}, 'fly_Up': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'}, 'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 2}}}, 'hp': 75, 'name': 'Flying Chan'}, 'goblin': {'attacks': {'evasive_maneuvers': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'}, 'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 3}}, 'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 35, 'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2}, 'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10, 'status': 'None'}}}, 'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}}, 'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1}, 'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0, 'status': {'Weakness': 1}}}}, 'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None', 'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None'}}}, 'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0, 'status': {'Marked': 2}}}}, 'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 5}}}}, 'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 2}, 'upgrades': {'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 1}}}}, 'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None', 'upgrades': {'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5, 'status': 'None'}}}, 'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 4}}}}, 'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None', 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10, 'status': {'Vulnerable': 2}}}}, 'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None', 'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': {'Marked': 2}}}}, 'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None', 'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Weakness': 2}}}}}, 'columns': 5, 'energy': 4, 'hp': 75, 'rows': 4}}, f)
+                        case 3:
+                            yaml.dump({'enemies': {'bat': {'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}}, 'screech': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Screech', 'status': 'None'}, 'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 50, 'name': 'Bat Chan'}, 'big': {'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 150, 'name': 'Big Chan'}, 'dark': {'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 2}}, 'dark_claw': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Dark Claw', 'status': 'None'}, 'dark_orb': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'}, 'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 3}}}, 'hp': 60, 'name': 'Dark Chan'}, 'drowned': {'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}}, 'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 50, 'heal': -50, 'phrase': 'Corpse Explosion', 'status': 'None'}, 'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 2}}}, 'hp': 50, 'name': 'Drowned Chan'}, 'flying': {'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'}, 'fly_Up': {'block': 25, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'}, 'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 2}}}, 'hp': 100, 'name': 'Flying Chan'}, 'goblin': {'attacks': {'evasive_maneuvers': {'block': 25, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'}, 'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 3}}, 'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 50, 'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2}, 'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10, 'status': 'None'}}}, 'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}}, 'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1}, 'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0, 'status': {'Weakness': 1}}}}, 'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None', 'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None'}}}, 'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0, 'status': {'Marked': 2}}}}, 'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 5}}}}, 'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 2}, 'upgrades': {'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0, 'status': {'Weakness': 1}}}}, 'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None', 'upgrades': {'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5, 'status': 'None'}}}, 'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0, 'status': {'Vulnerable': 2}}}}, 'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0, 'status': {'Marked': 3}, 'upgrades': {'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0, 'status': {'Pained': 4}}}}, 'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None', 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10, 'status': {'Vulnerable': 2}}}}, 'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None', 'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': {'Marked': 2}}}}, 'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None', 'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Weakness': 2}}}}}, 'columns': 7, 'energy': 5, 'hp': 100, 'rows': 4}}, f)
+
+        for i in range(1, self.levels + 1):
             filename = "level_" + str(i)
             with open(os.getcwd() + "/configuration/levels/" + filename + ".yml", "r") as f:
                 self.level_confs[i] = yaml.safe_load(f)
@@ -373,103 +87,60 @@ class Config(object):
                 with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "w") as f:
                     match i:
                         case "devil_chan":
-                            yaml.dump({'name': 'Devil Chan', 'basic': ['devilish_stab', 10], 'columns': 3, 'energy': 3, 'hp': 60, 'phrases': {
-                                'dialogue': {
-                                    0: {'line': 1, 'text': 'FOR MY LOST LOVE!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
-                                        'fade_out': True, 'clear': True, 'wait': 1.0},
-                                    1: {'line': 1, 'text': 'WORLD SHAKING EXPLOSION FIST!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4,
-                                        'fade_in': True, 'fade_out': True, 'clear': True, 'wait': 1.0},
-                                    2: {'line': 1, 'text': 'NORTH STAR SPEAR!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
-                                        'fade_out': True, 'clear': True, 'wait': 1.0},
-                                    3: {'line': 1, 'text': 'MILLION SOUL BOMB!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
-                                        'fade_out': True, 'clear': True, 'wait': 1.0},
-                                    4: {'line': 1, 'text': 'BURNING SUN BEAM!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
-                                        'fade_out': True, 'clear': True, 'wait': 1.0},
-                                    5: {'line': 1, 'text': '.2 ELECTRON VOLTS!!!', 'delay': 0.1, 'shake': [2, 2], 'pause': 1.4, 'fade_in': True,
-                                        'fade_out': True, 'clear': True, 'wait': 1.0}}, 'death': ['NOOOOOOO!!!', 'THIS IS BLASPHEMYYYYYY!!! *dies*'],
-                                'intro': {0: {'line': 1, 'text': 'Angel Chan...', 'delay': 0.1, 'shake': [0, 0], 'pause': 1.0, 'fade_in': True,
-                                              'fade_out': False, 'clear': False, 'wait': 0},
-                                          1: {'line': 2, 'text': 'I loved you!', 'delay': 0.2, 'shake': [5, 0], 'pause': 1.3, 'fade_in': False,
-                                              'fade_out': True, 'clear': True, 'wait': 0.5},
-                                          2: {'line': 1, 'text': 'How could you do this to me!?', 'delay': 0.1, 'shake': [20, 20], 'pause': 1.4,
-                                              'fade_in': True, 'fade_out': True, 'clear': True, 'wait': 1.0}},
-                                'special': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.",
-                                            "I hope you're prepared for this.", "You know, I'm something of a scientist myself."]}, 'rows': 4,
-                                       'special': ['neat_hack', 10, 10],
-                                       'MrPhone': {'basic': ['disappointment', 0], 'columns': 7, 'energy': 4, 'hp': 200,
-                                                   'kill': ['thinking_question', 9999], 'name': 'Mr. Phone', 'phrases': {
-                                               'attack': ['You need to touch grass.', 'My son could beat you at this game.',
-                                                          'Easy choices hard life, hard choices easy life.',
-                                                          "It's only awkward if you make it awkward.", 'You have to build capacity.',
-                                                          "You chose that? Come on, that's crazy talk!!!", "Can't you be doing more?"],
-                                               'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.",
-                                                         '*leaves*'], 'kill': ['Next time, just practice perfectly.', 'My record just increased :p'],
-                                               'opening': ['Did you write your TQP?'],
-                                               'special': ['Almost everything is a choice... including breathing!',
-                                                           'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!',
-                                                           'Keep your head on a swivel!']}, 'rows': 4, 'special': ['emotional_damage', 0]}}
-                                      , f)
+                            yaml.dump({'moves': {'basic': {0: {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'status': 'None'}, 1: {'block': 0, 'buff': {'Armor': 10}, 'damage': 10, 'heal': 0, 'status': {'weakness': 2}}, 2: {'block': 15, 'buff': {'power': 1}, 'damage': 0, 'heal': 0, 'status': {'vulnerable': 1}}}, 'special': {'block': 0, 'buff': {'lifesteal': 2}, 'damage': 10, 'heal': 20, 'status': 'None'}}, 'hp': 60, 'name': 'Devil Chan', 'phrases': {'special': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.", "I hope you're prepared for this.", "You know, I'm something of a scientist myself."], 'death': {0: {'clear': False, 'delay': 0.12, 'fade_in': True, 'fade_out': False, 'line': 1, 'pause': 0.5, 'shake': [3, 3], 'text': 'NOOOOOOO!!!', 'wait': 0}, 1: {'clear': True, 'delay': 0.08, 'fade_in': False, 'fade_out': True, 'line': 2, 'pause': 1.4, 'shake': [15, 15], 'text': 'THIS IS BLASPHEMYYYYYY!!! *dies*', 'wait': 1.0}}, 'basic': {0: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': 'FOR MY LOST LOVE!!!', 'wait': 1.0}, 1: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': 'WORLD SHAKING EXPLOSION FIST!!!', 'wait': 1.0}, 2: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': 'NORTH STAR SPEAR!!!', 'wait': 1.0}, 3: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': 'MILLION SOUL BOMB!!!', 'wait': 1.0}, 4: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': 'BURNING SUN BEAM!!!', 'wait': 1.0}, 5: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [2, 2], 'text': '.2 ELECTRON VOLTS!!!', 'wait': 1.0}}, 'intro': {0: {'clear': False, 'delay': 0.1, 'fade_in': True, 'fade_out': False, 'line': 1, 'pause': 1.0, 'shake': [0, 0], 'text': 'Angel Chan...', 'wait': 0}, 1: {'clear': True, 'delay': 0.2, 'fade_in': False, 'fade_out': True, 'line': 2, 'pause': 1.3, 'shake': [5, 0], 'text': 'I loved you!', 'wait': 0.5}, 2: {'clear': True, 'delay': 0.1, 'fade_in': True, 'fade_out': True, 'line': 1, 'pause': 1.4, 'shake': [20, 20], 'text': 'How could you do this to me!?', 'wait': 1.0}}}}, f)
                         case "ms_g":
-                            yaml.dump({'name': 'Ms. G', 'basic': ['roast', 15], 'columns': 4, 'energy': 4, 'hp': 100, 'phrases': {
-                                'attack': ['For Sean!', "One of them is a woman, the other has an Indian accent if you're into it.",
-                                           "I'll only give you 100% if youâ€™re one of my favourite students.", 'Do it on repl.it!!!',
-                                           "Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'],
-                                'death': ['why must you use... list comphrehension... *dies*'],
-                                'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"],
-                                'special': ['You! Go to Siberia!', 'You deserve to go to Siberia!']}, 'rows': 5, 'special': ['siberia', 'siberia']}
-                                      , f)
+                            yaml.dump({'hp': 100, 'name': 'Ms. G', 'phrases': {'death': ['why must you use... list comphrehension... *dies*'], 'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"]}, 'moves': {'basic_1': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrases': ['For Sean!', "I'll only give you 100% if youâ€™re one of my favourite students."], 'status': {'Vulnerable': 1}}, 'basic_2': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrases': ["Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'], 'status': {'Weakness': 2}}, 'basic_3': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['Do it on repl.it!!!', "One of them is a woman, the other has an Indian accent if you're into it."], 'status': 'None'}, 'siberia': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You!!! How did you escape Siberia!?'], 'status': 'None'}, 'special': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You! Go to Siberia!', 'You deserve to go to Siberia!'], 'status': 'None'}}}, f)
                         case "mr_phone":
-                            yaml.dump({'name': 'Mr. Phone', 'basic': ['disappointment', 0], 'columns': 7, 'energy': 4, 'hp': 200,
-                                       'kill': ['thinking_question', 9999], 'phrases': {
-                                    'attack': ['You need to touch grass.', 'My son could beat you at this game.',
-                                               'Easy choices hard life, hard choices easy life.', "It's only awkward if you make it awkward.",
-                                               'You have to build capacity.', "You chose that? Come on, that's crazy talk!!!",
-                                               "Can't you be doing more?"],
-                                    'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
-                                    'kill': ['Next time, just practice perfectly.', 'My record just increased :p'],
-                                    'opening': ['Did you write your TQP?'],
-                                    'special': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!',
-                                                'Face the monster... ME!', 'Keep your head on a swivel!']}, 'rows': 4,
-                                       'special': ['emotional_damage', 0]}
-                                      , f)
+                            yaml.dump({'hp': 200, 'name': 'Mr. Phone', 'phrases': {'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'], 'opening': ['Did you write your TQP?']}, 'moves': {'basic_1': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You need to touch grass.', 'My son could beat you at this game.', 'Easy choices hard life, hard choices easy life.', "It's only awkward if you make it awkward.", 'You have to build capacity.', "You chose that? Come on, that's crazy talk!!!", "Can't you be doing more?"], 'status': {'Disappointment': 1}}, 'basic_2': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!', 'Keep your head on a swivel!'], 'status': {'Fear': 2}}, 'special': {'block': 0, 'buff': 'None', 'damage': 999, 'heal': 0, 'phrases': ['Next time, just practice perfectly.', 'My record just increased :p'], 'status': 'None'}}}, f)
         for i in self.bosses:
             with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "r") as f:
                 self.level_confs[i] = yaml.safe_load(f)
 
-    def load_media(self):  # Fix the paths - will be broken after game restructure
-        self.menu_img = self.load_images_resize(os.getcwd() + "/resources/menus", (1600, 900))
-        self.boss_card = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
+    def load_media(self):
         # ----------------------------------------------------------------------------------------------------------------------------
-        self.image_dict = {
-            chan: (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/chans/" + chan + ".png"), self.chan_card_size).convert())
-            for chan in self.level_confs[0]["player"]["cards"]}
-        self.image_dict["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
-        self.backgrounds = {"Card Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/bliss.jpg").convert(), (1600, 900)),
-                            0: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/Chan_background.png").convert(),
-                                                        (1600, 900)),
-                            1: pg.transform.smoothscale(
-                                pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_non-siberia_background.jpg").convert(), (1600, 900)),
-                            "siberia": pg.transform.smoothscale(
-                                pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/ms_g_siberia_background.jpg").convert(), (1600, 900)),
-                            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/mr_phone_background.jpg").convert(),
-                                                        (1600, 900))}
-        self.end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
-                            pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
-        self.enemies_images = {name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\enemies\\" + name + ".png").convert(), (100, 100)) for
-                               name in self.level_confs[0]["enemies"]}
-        self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 125)
-        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 50)
-        self.f_boss_text = pg.font.Font(os.getcwd() + "\\resources\\EXEPixelPerfect.ttf", 80)
-        self.f_options_title = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 75)
-        self.f_options_sub = pg.font.Font(os.getcwd() + "\\resources\\Herculanum-Regular.ttf", 40)
-        self.face_images = {1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_01-devil_chan/devil_chan.png").convert_alpha(),
-                                                        self.boss_face_size),
-                            2: {filename[5:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_02-ms_g/" + filename),
-                                                                         self.boss_face_size).convert_alpha()
-                                for filename in os.listdir(os.getcwd() + "/resources/boss_02-ms_g/") if filename.endswith(".png")},
-                            3: {filename[6:-4]: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/boss_03-mr_phone/" + filename),
-                                                                         self.boss_face_size).convert_alpha()
-                                for filename in os.listdir(os.getcwd() + "/resources/boss_03-mr_phone/") if filename.endswith(".png")}}
+        # Menu Backgrounds
+        self.img_menus = self.load_images_dict(os.getcwd() + "/resources/menus", (1600, 900))
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Level Select Images
+        self.img_boss_cards = self.load_images_dict(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Cards for Card Game
+        self.img_chans = self.load_images_dict("/resources/chan_cards/", self.chan_card_size)
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Card Backside
+        self.img_chans["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Level backgrounds
+        self.img_levels = {
+            1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (1600, 900)),
+            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (1600, 900)),
+            3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (1600, 900)),
+            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia_.jpg").convert(), (1600, 900))
+        }
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Boss Faces
+        self.img_bosses = {
+            1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/boss/devil_chan.png").convert_alpha(), self.boss_face_size),
+            2: self.load_images_dict("/resources/level_2/boss/", self.boss_face_size, True),
+            3: self.load_images_dict("/resources/level_3/boss/", self.boss_face_size, True)
+        }
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Enemies
+        self.img_enemies = {
+            name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\enemies\\" + name + ".png").convert(), (100, 100)) for
+            name in self.level_confs[0]["enemies"]
+        }
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # End Screens
+        self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
+                                pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Fonts
+        self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
+        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
+        self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
+        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 75)
+        self.f_options_sub = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 40)
 
     def get_config(self, name):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
@@ -511,6 +182,31 @@ class Config(object):
                 path = os.path.join(path_to_directory, filename)
                 image_list.append(pg.image.load(path).convert())
         return image_list
+
+    @staticmethod
+    def load_images_dict(path_to_directory, resize=None, alpha=False):
+        """
+        Args:
+            path_to_directory:string:
+                Directory of images
+            resize:tuple:
+                Size to resize images to
+            alpha:boolean:
+                Whether to convert the image to alpha or not
+        """
+        image_dict = {}
+        for filename in os.listdir(path_to_directory):
+            if filename.endswith('.png') or filename.endswith('.jpg'):
+                path = os.path.join(path_to_directory, filename)
+                if resize is not None:
+                    image = pg.transform.smoothscale(pg.image.load(path), resize)
+                else:
+                    image = pg.image.load(path)
+                if alpha:
+                    image_dict[(os.path.basename(filename).split(".")[0]).lower()] = image.convert_alpha()
+                else:
+                    image_dict[(os.path.basename(filename).split(".")[0]).lower()] = image.convert()
+        return image_dict
 
     @staticmethod
     def load_images_alpha(path_to_directory):

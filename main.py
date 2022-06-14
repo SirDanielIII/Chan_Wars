@@ -11,13 +11,13 @@ from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 
 from bin.menus.boot import Boot
-from bin.levels.minigames.Card_Game.level_1.boss_devil_chan import BossDevilChan
-from bin.levels.minigames.Card_Game.enemy_level import EnemyLevel as BossMsG
+from bin.levels.minigames.card_game.level_1.boss_devil_chan import BossDevilChan
+from bin.levels.minigames.card_game.enemy_level import EnemyLevel as BossMsG
 from bin.menus.credits import Credits
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
 from bin.menus.main_menu import MainMenu
-from bin.levels.minigames.Card_Game.level_3.boss_mr_phone import BossMrPhone
+from bin.levels.minigames.card_game.level_3.boss_mr_phone import BossMrPhone
 from bin.menus.options import Options
 from bin.menus.death_screen import Death
 
@@ -30,7 +30,7 @@ class Main(object):
     def __init__(self):
         self.width = 1600
         self.height = 900
-        self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
+        self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
         self.game_canvas = pg.Surface((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
         self.clock = pg.time.Clock()
         self.FPS = 165

@@ -40,7 +40,7 @@ class GameMenu(Level):
             elif self.freeze:  # To prevent the transition from happening offscreen
                 self.freeze = False
             self.fill_screens()
-            self.game_canvas.blit(self.config.boss_card[self.choose_lvl], (0, 0))
+            self.game_canvas.blit(self.config.img_boss_cards[self.choose_lvl], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True

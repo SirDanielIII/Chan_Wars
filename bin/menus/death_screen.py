@@ -16,7 +16,7 @@ class Death(Level):
 
     def set_background(self, winning_state):
         self.death_stopwatch.time_reset()
-        self.background = self.config.end_screens[winning_state]
+        self.background = self.config.img_end_screens[winning_state]
 
     def run(self):
         self.alpha_game = 255
