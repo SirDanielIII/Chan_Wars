@@ -3,16 +3,24 @@ import pygame as pg
 
 
 class ShopKeep:
-    def __init__(self, config, images, screen):
+    def __init__(self, screen):
         self.deck = None
         self.screen = screen
         self.stock = None
-        self.cards = config["player"]["cards"]
-        self.image_dict = images
+        self.cards = None
+        self.image_dict = None
+        self.width = 50
+        self.height = 50
 
-    def initialize(self, deck):
+    def initialize(self, config, deck, images):
+        self.image_dict = images
         self.deck = deck
-        self.stock = {card: [random.randint(100, 150), pg.Rect(100 * num, 100 * num, 50, 50), self.image_dict[card]] for num, card in enumerate(random.sample(self.cards, 6))}
+        self.cards = config
+
+    def create_stock(self):
+        pos_list = [((a % 3) * 150, (a % 2) * 200) for a in range(6)]
+        self.stock = {card[0]: [random.randint(100, 150), pg.Rect(pos_list[num][0], pos_list[num][1], self.width, self.height),
+                                self.image_dict[card[0]], card[1]] for num, card in enumerate(random.sample(list(self.cards.items()), 6))}
 
     def sell(self, mouse_pos):
         for card in self.stock:
