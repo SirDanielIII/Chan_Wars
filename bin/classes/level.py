@@ -21,7 +21,7 @@ class Level(ABC):
         # ------------------------------------------------------------------------------------------------------------------
         # Level Switching
         self.alpha_game = 0  # Game Canvas Opacity
-        self.alpha_text = 0  # Text Canvas Opacity
+        self.alpha_text = 255  # Text Canvas Opacity
         self.fade_in = True  # Game Canvas Fade In
         self.fade_out = False  # Game Canvas Fade Out
         self.fade_in_text = False  # Text Canvas Fade In
@@ -193,6 +193,10 @@ class Level(ABC):
     #     draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abstractmethod
+    def reload(self):
+        pass
+
     @abstractmethod
     def run(self):
         pass

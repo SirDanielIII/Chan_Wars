@@ -9,32 +9,25 @@ enemies:
         phrase: Resonate
         status:
           Weakness: 2
-      screech:
+      sonic_attack:
         block: 0
         buff: None
         damage: 15
         heal: 0
-        phrase: Screech
-        status: None
-      sonic_attack:
-        block: 0
-        buff: None
-        damage: 20
-        heal: 0
         phrase: Sonic Attack
         status: None
-    hp: 50
+    hp: 40
     name: Bat Chan
   big:
     attacks:
       big_smack:
         block: 0
         buff: None
-        damage: 20
+        damage: 15
         heal: 0
         phrase: Biggus Smackus
         status: None
-    hp: 150
+    hp: 100
     name: Big Chan
   dark:
     attacks:
@@ -45,14 +38,7 @@ enemies:
         heal: 0
         phrase: Dark Curse
         status:
-          Vulnerable: 2
-      dark_claw:
-        block: 0
-        buff: None
-        damage: 10
-        heal: 0
-        phrase: Dark Claw
-        status: None
+          Vulnerable: 1
       dark_orb:
         block: 0
         buff: None
@@ -67,8 +53,8 @@ enemies:
         heal: 0
         phrase: Darkness
         status:
-          Weakness: 3
-    hp: 60
+          Weakness: 2
+    hp: 50
     name: Dark Chan
   drowned:
     attacks:
@@ -83,8 +69,8 @@ enemies:
       corpse_explosion:
         block: 0
         buff: None
-        damage: 50
-        heal: -50
+        damage: 35
+        heal: -40
         phrase: Corpse Explosion
         status: None
       drowned_glare:
@@ -95,19 +81,19 @@ enemies:
         phrase: Drowned Glare
         status:
           Fear: 2
-    hp: 50
+    hp: 40
     name: Drowned Chan
   flying:
     attacks:
       claw_strike:
         block: 0
         buff: None
-        damage: 20
+        damage: 15
         heal: 0
         phrase: Claw Strike
         status: None
       fly_Up:
-        block: 25
+        block: 20
         buff: None
         damage: 0
         heal: 0
@@ -121,12 +107,12 @@ enemies:
         phrase: Swoop In
         status:
           Fear: 2
-    hp: 100
+    hp: 75
     name: Flying Chan
   goblin:
     attacks:
       evasive_maneuvers:
-        block: 25
+        block: 20
         buff: None
         damage: 0
         heal: 0
@@ -147,7 +133,7 @@ enemies:
         heal: 0
         phrase: Tiny Stab
         status: None
-    hp: 50
+    hp: 35
     name: Goblin Chan
 player:
   cards:
@@ -368,7 +354,7 @@ player:
           heal: 0
           status:
             Weakness: 2
-  columns: 7
-  energy: 5
-  hp: 100
+  columns: 5
+  energy: 4
+  hp: 75
   rows: 4

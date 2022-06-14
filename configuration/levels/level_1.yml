@@ -8,11 +8,11 @@ enemies:
         heal: 0
         phrase: Resonate
         status:
-          Weakness: 2
+          Weakness: 1
       sonic_attack:
         block: 0
         buff: None
-        damage: 15
+        damage: 10
         heal: 0
         phrase: Sonic Attack
         status: None
@@ -27,11 +27,11 @@ enemies:
         heal: 0
         phrase: Biggus Smackus
         status: None
-    hp: 100
+    hp: 75
     name: Big Chan
   dark:
     attacks:
-      curse:
+      dark_curse:
         block: 0
         buff: None
         damage: 0
@@ -42,7 +42,7 @@ enemies:
       dark_orb:
         block: 0
         buff: None
-        damage: 20
+        damage: 10
         heal: 0
         phrase: Dark Orb
         status: None
@@ -54,7 +54,7 @@ enemies:
         phrase: Darkness
         status:
           Weakness: 2
-    hp: 50
+    hp: 40
     name: Dark Chan
   drowned:
     attacks:
@@ -69,8 +69,8 @@ enemies:
       corpse_explosion:
         block: 0
         buff: None
-        damage: 35
-        heal: -40
+        damage: 25
+        heal: -30
         phrase: Corpse Explosion
         status: None
       drowned_glare:
@@ -80,20 +80,20 @@ enemies:
         heal: 0
         phrase: Drowned Glare
         status:
-          Fear: 2
-    hp: 40
+          Fear: 1
+    hp: 30
     name: Drowned Chan
   flying:
     attacks:
       claw_strike:
         block: 0
         buff: None
-        damage: 15
+        damage: 10
         heal: 0
         phrase: Claw Strike
         status: None
-      fly_Up:
-        block: 20
+      fly_up:
+        block: 10
         buff: None
         damage: 0
         heal: 0
@@ -106,13 +106,13 @@ enemies:
         heal: 0
         phrase: Swoop In
         status:
-          Fear: 2
-    hp: 75
+          Fear: 1
+    hp: 50
     name: Flying Chan
   goblin:
     attacks:
       evasive_maneuvers:
-        block: 20
+        block: 10
         buff: None
         damage: 0
         heal: 0
@@ -125,7 +125,7 @@ enemies:
         heal: 0
         phrase: Hamstring
         status:
-          Weakness: 3
+          Weakness: 2
       tiny_stab:
         block: 0
         buff: None
@@ -133,7 +133,7 @@ enemies:
         heal: 0
         phrase: Tiny Stab
         status: None
-    hp: 35
+    hp: 30
     name: Goblin Chan
 player:
   cards:
@@ -354,7 +354,7 @@ player:
           heal: 0
           status:
             Weakness: 2
-  columns: 5
-  energy: 4
-  hp: 75
+  columns: 3
+  energy: 3
+  hp: 50
   rows: 4

@@ -11,10 +11,14 @@ from bin.colours import *
 class Credits(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/menus/05_credits_menu.png"), (self.width, self.height))
+        self.background = None
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
+    def reload(self):
+        self.background = self.config.img_menus["credits"]
+
     def run(self):
+        self.reload()
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -38,8 +42,8 @@ class Credits(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.fill(white)
-            self.game_canvas.blit(self.background, (0, 0))
+            # self.game_canvas.fill(white)
+            # self.game_canvas.blit(self.background, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True

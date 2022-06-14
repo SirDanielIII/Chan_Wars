@@ -11,10 +11,14 @@ from bin.colours import *
 class HowToPlay(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.background = pg.image.load(os.getcwd() + "/resources/menus/06_help_menu.png").convert()
+        self.background = None
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
 
+    def reload(self):
+        self.background = self.config.img_menus["help"]
+
     def run(self):
+        self.reload()
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -40,14 +44,14 @@ class HowToPlay(Level):
             self.fill_screens()
             self.game_canvas.fill(white)
             self.game_canvas.blit(self.background, (0, 0))
-            # ------------------------------------------------------------------------------------------------------------------
-            if self.back_button.run(mx, my, cw_light_blue, self.click):
-                self.fade_out = True
-                self.next_level = 1
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 return self.next_level
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.back_button.run(mx, my, cw_light_blue, self.click):
+                self.fade_out = True
+                self.next_level = 1
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)

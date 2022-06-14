@@ -7,27 +7,24 @@ import pygame as pg
 
 class Config(object):
     def __init__(self):
+        # ----------------------------------------------------------------------------------------------------------------------------
         # Images
-        self.img_menus = None
-        self.img_boss_cards = None
+        self.img_menus = {}
+        self.img_levels = {}
+        self.img_chans = {}
+        self.img_enemies = {}
+        self.img_bosses = {}
+        self.img_boss_cards = {}
         self.img_end_screens = None
-        self.img_chans = None
-        self.img_bosses = None
-        self.img_levels = None
-        self.img_enemies = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
         self.f_hp_bar_hp = None
         self.f_hp_bar_name = None
         self.f_boss_text = None
         self.f_options_title = None
-        self.f_options_sub = None
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Other
-        self.highest_level_beat = None
-        self.boss_face_size = None
-        self.chan_card_size = None
-        self.boss_face_size = None
+        self.f_regular = None
+        self.f_regular_small = None
+        self.f_regular_big = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Settings
         self.enable_music = None
@@ -38,6 +35,13 @@ class Config(object):
         self.fps_value = 165  # Needs to have a value set due to boot menu
         self.levels = None
         self.bosses = None
+        # ----------------------------------------------------------------------------------------------------------------------------
+        # Other
+        self.highest_level_beat = None
+        self.boss_face_size = None
+        self.chan_card_size = None
+        self.boss_face_size = None
+        # ----------------------------------------------------------------------------------------------------------------------------
         # Config File Data
         self.global_conf = {}
         self.level_confs = {}
@@ -47,7 +51,10 @@ class Config(object):
         if not os.path.exists(os.getcwd() + "/configuration/config.yml"):
             with open(os.getcwd() + "/configuration/config.yml", "w") as f:
                 # Create config file with default values if it doesn't exist
-                yaml.dump({'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0}, 'fps': {'show': False, 'value': 165}, 'fullscreen': False}, 'other': {'levels': 3, 'bosses': ['devil_chan', 'mr_phone', 'ms_g'], 'chan_card_size': [120, 180], 'boss_face_size': [500, 500], 'highest_level_beat': 0}}, f)
+                yaml.dump({'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
+                                        'fps': {'show': False, 'value': 165}, 'fullscreen': False},
+                           'other': {'levels': 3, 'bosses': ['devil_chan', 'mr_phone', 'ms_g'], 'chan_card_size': [120, 180],
+                                     'boss_face_size': [500, 500], 'highest_level_beat': 0}}, f)
 
         with open(os.getcwd() + "/configuration/config.yml", "r") as f:
             self.global_conf = yaml.safe_load(f)  # Save .yml file data into variable
@@ -102,12 +109,10 @@ class Config(object):
         self.img_menus = self.load_images_dict(os.getcwd() + "/resources/menus", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
         # Level Select Images
-        self.img_boss_cards = self.load_images_dict(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
+        self.img_boss_cards = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
         # ----------------------------------------------------------------------------------------------------------------------------
-        # Cards for Card Game
-        self.img_chans = self.load_images_dict("/resources/chan_cards/", self.chan_card_size)
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Card Backside
+        # Cards & Card Back for Card Game
+        self.img_chans = self.load_images_dict(os.getcwd() + "/resources/chan_cards/", self.chan_card_size)
         self.img_chans["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
         # ----------------------------------------------------------------------------------------------------------------------------
         # Level backgrounds
@@ -115,21 +120,21 @@ class Config(object):
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (1600, 900)),
             2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (1600, 900)),
             3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (1600, 900)),
-            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia_.jpg").convert(), (1600, 900))
+            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900))
         }
         # ----------------------------------------------------------------------------------------------------------------------------
         # Boss Faces
         self.img_bosses = {
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/boss/devil_chan.png").convert_alpha(), self.boss_face_size),
-            2: self.load_images_dict("/resources/level_2/boss/", self.boss_face_size, True),
-            3: self.load_images_dict("/resources/level_3/boss/", self.boss_face_size, True)
+            2: self.load_images_dict(os.getcwd() + "/resources/level_2/boss/", self.boss_face_size, True),
+            3: self.load_images_dict(os.getcwd() + "/resources/level_3/boss/", self.boss_face_size, True)
         }
         # ----------------------------------------------------------------------------------------------------------------------------
         # Enemies
-        self.img_enemies = {
-            name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "\\resources\\enemies\\" + name + ".png").convert(), (100, 100)) for
-            name in self.level_confs[0]["enemies"]
-        }
+        # print(self.level_confs)
+        # self.img_enemies = {
+        #     name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/enemies/" + name + ".png").convert(), (100, 100)) for name in self.level_confs[0]["enemies"]
+        # }
         # ----------------------------------------------------------------------------------------------------------------------------
         # End Screens
         self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
@@ -139,8 +144,12 @@ class Config(object):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
+
+        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
+        self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 40)
+        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 100)
+
         self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 75)
-        self.f_options_sub = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 40)
 
     def get_config(self, name):
         # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,

@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9168df90-ddc8-437a-8e15-6f9bb216cc3d" name="Changes" comment="Comit">
-      <change afterPath="$PROJECT_DIR$/bin/levels/mr_phone_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/boss_03-mr_phone/mr_phone_background.jpg" afterDir="false" />
+    <list default="true" id="9168df90-ddc8-437a-8e15-6f9bb216cc3d" name="Changes" comment="Clean through config_manager.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/classes/bosses.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/bosses.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/classes/card_pair.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/card_pair.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/classes/config_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/config_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/levels/card_game_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/card_game_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/levels/ms_g_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/ms_g_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/classes/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_1/boss_devil_chan.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl1_devil_chan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_2/boss_ms_g.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl2_boss_ms_g.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_3/boss_mr_phone.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl3_mr_phone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/boot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/boot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/credits.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/credits.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/death_screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/death_screen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/game_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/game_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/how_to_play.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/how_to_play.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/main_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/main_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/menus/options.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/options.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/bosses/devil_chan.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/bosses/mr_phone.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/bosses/ms_g.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/levels/level_0.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/levels/level_1.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration/levels/level_2.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +60,9 @@
       <recent name="C:\Users\massi\IdeaProjects\Chan_Wars\bin\levels" />
       <recent name="C:\Users\massi\IdeaProjects\Chan_Wars\resources\boss_03-mr_phone" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel Z\Downloads\Coding\Westmount\Grade_12_CS\ICS4U1-01\Games\Chan_Wars\bin\levels" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="Chicken Factory" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -64,6 +78,48 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../inputs/BIOGAME_Heterozygous/Chicken Factory.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="get_config_dict" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Chan_Wars" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/configuration" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/configuration/get_config_dict.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="level" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Chan_Wars" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/classes" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bin/classes/level.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -96,6 +152,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.get_config_dict" />
+        <item itemvalue="Python.level" />
         <item itemvalue="Python.Chicken Factory" />
       </list>
     </recent_temporary>
@@ -137,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650043183512</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Clean through config_manager.py">
+      <created>1655221045654</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1655221045654</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -154,6 +219,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="kermit the frog is pleased with your sacrifices." />
     <MESSAGE value="Comit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Comit" />
+    <MESSAGE value="Clean through config_manager.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clean through config_manager.py" />
   </component>
 </project>
