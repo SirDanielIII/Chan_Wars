@@ -33,8 +33,8 @@ class Config(object):
         self.sfx_vol = None
         self.fps_show = None
         self.fps_value = 165  # Needs to have a value set due to boot menu
-        self.levels = None
-        self.bosses = None
+        self.levels = 3
+        self.bosses = ["devil_chan", "ms_g", "mr_phone"]
         # ----------------------------------------------------------------------------------------------------------------------------
         # Other
         self.highest_level_beat = None
@@ -64,8 +64,6 @@ class Config(object):
             self.sfx_vol = self.global_conf["settings"]["audio"]["sfx_vol"]
             self.fps_show = self.global_conf["settings"]["fps"]["show"]
             self.fps_value = self.global_conf["settings"]["fps"]["value"]
-            self.levels = self.global_conf["other"]["levels"]
-            self.bosses = self.global_conf["other"]["bosses"]
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
             self.boss_face_size = self.global_conf["other"]["boss_face_size"]
             self.chan_card_size = self.global_conf["other"]["chan_card_size"]
@@ -101,7 +99,7 @@ class Config(object):
                             yaml.dump({'hp': 200, 'name': 'Mr. Phone', 'phrases': {'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'], 'opening': ['Did you write your TQP?']}, 'moves': {'basic_1': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You need to touch grass.', 'My son could beat you at this game.', 'Easy choices hard life, hard choices easy life.', "It's only awkward if you make it awkward.", 'You have to build capacity.', "You chose that? Come on, that's crazy talk!!!", "Can't you be doing more?"], 'status': {'Disappointment': 1}}, 'basic_2': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['Almost everything is a choice... including breathing!', 'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!', 'Keep your head on a swivel!'], 'status': {'Fear': 2}}, 'special': {'block': 0, 'buff': 'None', 'damage': 999, 'heal': 0, 'phrases': ['Next time, just practice perfectly.', 'My record just increased :p'], 'status': 'None'}}}, f)
         for i in self.bosses:
             with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "r") as f:
-                self.level_confs[i] = yaml.safe_load(f)
+                self.boss_confs[i] = yaml.safe_load(f)
 
     def load_media(self):
         # ----------------------------------------------------------------------------------------------------------------------------
@@ -132,9 +130,8 @@ class Config(object):
         # ----------------------------------------------------------------------------------------------------------------------------
         # Enemies
         # print(self.level_confs)
-        # self.img_enemies = {
-        #     name: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/enemies/" + name + ".png").convert(), (100, 100)) for name in self.level_confs[0]["enemies"]
-        # }
+        self.img_enemies = {level: {} for level in range(1, 3)}
+        self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True)
         # ----------------------------------------------------------------------------------------------------------------------------
         # End Screens
         self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),

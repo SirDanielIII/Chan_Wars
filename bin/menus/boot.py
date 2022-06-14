@@ -92,8 +92,6 @@ class Boot(Level):
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
-                # Debug
-                print(self.config.img_menus)
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

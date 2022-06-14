@@ -65,12 +65,10 @@ class BossDevilChan(Level):
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
                            "update_delay": Timer()}
-        self.level = 0
-        self.ran = 0
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config("level")[self.level]["boss"]
-        self.player_data = self.config.get_config("level")[self.level]["player"]
+        self.boss_data = self.config.get_config("boss")["devil_chan"]
+        self.player_data = self.config.get_config("level")[1]["player"]
         self.player.metadata = self.player_data
         self.boss.metadata = self.boss_data
         self.boss.initialize()
@@ -193,7 +191,7 @@ class BossDevilChan(Level):
     def attack(self):
         # ------------------------------------------------------------------------------------------------------------------
         # Matching Game Triggers
-        if self.boss.health and self.hp_player:
+        if self.boss.health:
             if not self.card_game and self.completed and not self.timer_dict["transition"].seconds:
                 self.trigger_in()
             elif self.card_game and self.player.health == 0 and not self.timer_dict["transition"].seconds:
