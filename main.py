@@ -11,13 +11,13 @@ from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 
 from bin.menus.boot import Boot
-from bin.levels.minigames.card_game.level_1.boss_devil_chan import BossDevilChan
+from bin.levels.lvl1_devil_chan import BossDevilChan
 from bin.levels.minigames.card_game.enemy_level import EnemyLevel as BossMsG
 from bin.menus.credits import Credits
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
 from bin.menus.main_menu import MainMenu
-from bin.levels.minigames.card_game.level_3.boss_mr_phone import BossMrPhone
+from bin.levels.lvl3_mr_phone import BossMrPhone
 from bin.menus.options import Options
 from bin.menus.death_screen import Death
 
@@ -55,6 +55,9 @@ class Main(object):
         self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
         # ------------------------------------------------------------------------------------------------------------------
+
+    def reload(self):
+        pass
 
     def handler(self):
         run = None

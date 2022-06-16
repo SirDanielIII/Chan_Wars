@@ -14,6 +14,9 @@ class Boot(Level):
         self.alpha_game = 255
         self.fade_in = False
 
+    def reload(self):
+        pass
+
     def run(self):
         # ------------------------------------------------------------------------------------------------------------------
         # || WARNING ||
@@ -46,34 +49,34 @@ class Boot(Level):
             seconds = (pg.time.get_ticks() - start_ticks) / 1000  # Timer
             pg.draw.rect(self.game_canvas, white, (150, self.height - 200, rect_width, 50))  # Loading Bar
             gfxdraw.rectangle(self.game_canvas, (140, self.height - 210, self.width - 280, 70), white)  # Bar Outline
-            if rect_width < 1300 and seconds < 4:  # Bug Fix - Timer doesn't count when dragging window; snaps to end
+            if rect_width < 1300 and seconds < 6.8:  # Bug Fix - Timer doesn't count when dragging window; snaps to end
                 if play_sfx == 0:  # Plays the sound effect once
                     pg.mixer.Channel(0).play(boot_sound)
                     play_sfx = 1  # Change value to avoid loop
-                if seconds < 0.25:
-                    f_boot_render = f_boot.render("LOADING CONFIG FILE", True, white)
+                if seconds < 1:
+                    f_boot_render = f_boot.render("LOADING CONFIG FILES", True, white)
                     self.game_canvas.blit(f_boot_render, (140, 610))
-                    rect_width += 10
+                    rect_width += 7
                     self.config.load_global_conf()
                     self.config.load_boss_confs()
                     self.config.load_level_confs()
-                elif seconds < 1:
+                elif seconds < 1.5:
                     f_boot_render = f_boot.render("Gathering the Chans", True, white)
                     self.game_canvas.blit(f_boot_render, (140, 610))
-                    rect_width += 2
-                elif seconds < 3:
+                    rect_width += 6
+                elif seconds < 5:
                     loading_render = f_boot.render("CONFIG FILE LOADED", True, white)
                     self.game_canvas.blit(loading_render, (140, 610))
-                    rect_width += 2
+                    rect_width += 1
                     self.config.load_media()
-                elif seconds < 3.5:
+                elif seconds < 5.5:
                     loading_render = f_boot.render("Finishing The TQP", True, white)
                     self.game_canvas.blit(loading_render, (140, 610))
-                    rect_width += 10
-                elif seconds < 4:
+                    rect_width += 5
+                elif seconds < 6:
                     loading_render = f_boot.render("Running Away From Mr. Phone", True, white)
                     self.game_canvas.blit(loading_render, (140, 610))
-                    rect_width += 1
+                    rect_width += 0.5
             else:
                 if play_sfx == 1:
                     play_sfx = 2  # Avoids loop

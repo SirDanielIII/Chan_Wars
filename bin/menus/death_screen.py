@@ -18,8 +18,11 @@ class Death(Level):
         self.death_stopwatch.time_reset()
         self.background = self.config.img_end_screens[winning_state]
 
-    def run(self):
+    def reload(self):
         self.alpha_game = 255
+
+    def run(self):
+        self.reload()
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
         while True:

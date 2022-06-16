@@ -9,11 +9,6 @@ settings:
     value: 165
   fullscreen: false
 other:
-  levels: 3
-  bosses:
-    - devil_chan
-    - mr_phone
-    - ms_g
   chan_card_size:
     - 120
     - 180
