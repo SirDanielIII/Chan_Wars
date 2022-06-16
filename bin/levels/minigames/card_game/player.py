@@ -55,7 +55,7 @@ class Player:
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
         self.choices = {}
-        self.deck = ['air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
+        self.deck = ['oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         self.played_cards = None
 
     def initialize(self, image_dict):
@@ -130,6 +130,8 @@ class Player:
                     self.health = self.metadata["hp"]
                 self.block = attack["block"]
                 self.acted = True
+                print(attack)
+                print(self.buff_bar)
                 return 2, attack["damage"], attack["status"]
             else:
                 count += number
