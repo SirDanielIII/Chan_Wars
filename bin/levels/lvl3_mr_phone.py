@@ -99,7 +99,8 @@ class BossMrPhone(Level):
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
                 if not self.player.cards:
                     self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-                self.card_complete = self.player.complete()
+                if self.card_complete[0] != 2:
+                    self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
@@ -110,6 +111,7 @@ class BossMrPhone(Level):
                         self.player.reset()
                         self.timer_dict["card"].time_reset()
                         self.card_complete = self.player.complete()
+                        print(self.player_attack, self.player_statuses, "immediate")
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
@@ -216,6 +218,7 @@ class BossMrPhone(Level):
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
+                    print(self.player_attack, self.player_statuses, "final")
                     self.boss.update(self.player_attack, self.player_statuses)
                     if self.player_attack:
                         self.face = self.config.img_bosses[3]["hit"]

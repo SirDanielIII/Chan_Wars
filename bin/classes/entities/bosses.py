@@ -159,14 +159,15 @@ class MrPhone(Boss):
 
     def initialize(self):
         print(self.metadata)
-        self.moves = {a: self.metadata["moves"][b] for a, b in enumerate(self.metadata["moves"]) if "basic" in b}
+        self.moves = {b: self.metadata["moves"][b] for b in enumerate(self.metadata["moves"]) if "basic" in b}
         self.moves["special"] = self.metadata["moves"]["special"]
         self.phrases = self.metadata["phrases"]
         self.health = self.metadata["hp"]
 
     def act(self, turn_counter):
-        move_type = "basic"
-        move = self.moves[turn_counter % (len(self.moves) - 2)]
+        print(self.moves)
+        move_type = "basic_" + str((turn_counter % (len(self.moves) - 2)) + 1)
+        move = self.moves[move_type]
         if not self.damaged:
             move_type = "special"
             move = self.moves["special"]

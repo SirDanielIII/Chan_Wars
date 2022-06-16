@@ -127,7 +127,8 @@ class BossDevilChan(Level):
         if self.card_canvas_y != self.height:
             self.card_canvas.fill(white)
             if self.player.health and not self.game_transition_in and not self.game_transition_out:
-                self.card_complete = self.player.complete()
+                if self.card_complete[0] != 2:
+                    self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
