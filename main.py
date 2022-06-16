@@ -12,7 +12,7 @@ from bin.classes.config_manager import Config
 
 from bin.menus.boot import Boot
 from bin.levels.lvl1_devil_chan import BossDevilChan
-from bin.levels.minigames.card_game.enemy_level import EnemyLevel as BossMsG
+from bin.levels.minigames.Card_Game.enemy_level import EnemyLevel as BossMsG
 from bin.menus.credits import Credits
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay

@@ -8,8 +8,9 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-import bin.levels.minigames.card_game.player as card_pair
+import bin.levels.minigames.Card_Game.player as card_pair
 from bin.classes.entities.bosses import MrPhone
+from bin.classes.entities.shopkeeper import ShopKeep
 
 
 class BossMrPhone(Level):
@@ -22,53 +23,55 @@ class BossMrPhone(Level):
         self.card_canvas_y = self.height
         self.card_game = False
         self.game_transition_in = False
-        self.game_transition_out = False  # Use this to stop the game\
-        self.energy = None
+        self.game_transition_out = False  # Use this to stop the game
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
-        self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.Player(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, None)
         self.player_attack = 0
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
-        self.boss_data = None
+        self.name = "mr_phone"
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_bar_boss = None
-        self.boss_attack = 0
-        self.boss_statuses = []
         self.acted = True
+        self.updated = True
         self.completed = True
-        self.boss = MrPhone(self.boss_data)
+        self.boss = MrPhone(None)
         # ------------------------------------------------------------------------------------------------------------------
-        self.size = self.config.chan_card_size
+        self.size = None
+        self.level = None
         self.margins = (20, 30)
-        self.level = 3
-        self.pairs = None
-        self.action_stopwatch = Timer()
-        self.update_stopwatch = Timer()
-        self.transition_stopwatch = Timer()
-        self.turn_counter = 0
-        self.card_stopwatch = Timer()
-        self.death_stopwatch = Timer()
+        self.cards = None
+        self.background = None
+        self.level = None
+        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
+                           "update_delay": Timer()}
         self.card_complete = [0]
-        self.name = "mr_phone"
+        self.turn_counter = 0
         self.face = None
+        # ------------------------------------------------------------------------------------------------------------------
+        # Shop Attributes
+        self.shop_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
+        self.shopkeeper = ShopKeep(self.shop_canvas)
         # Attributes added by Daniel to make the code work. As far as I can tell, all of these are necessary
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config("boss")[self.name]
-        self.player_data = self.config.get_config()[1]["player"]
-        self.player.metadata = self.player_data
-        self.boss.metadata = self.boss_data
-        self.boss.initialize()
+        self.level = 3
+        self.player.metadata = self.config.get_config("boss")[self.name]
+        self.boss.metadata = self.config.get_config("level")[self.level]["player"]
+        self.size = self.config.chan_card_size
+        self.turn_counter = 0
+        self.boss.initialize(self.name)
         self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.image_list
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.img_bosses[3]["normal"]
+        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+        self.shopkeeper.initialize(self.config.get_config("level")[self.level]["player"]["cards"], self.player.deck, self.config.img_chans)
+        self.shopkeeper.create_stock()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -123,14 +126,10 @@ class BossMrPhone(Level):
 
     def run(self):
         self.reload()
-        acted = True
-        completed = False
-        updated = True
         milliseconds = pg.USEREVENT
         time_elapsed = Timer()
         time_elapsed.time_start()
         pg.time.set_timer(milliseconds, 10)
-        counter = 0
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -172,11 +171,11 @@ class BossMrPhone(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.click and self.boss.health and self.player.health:
-                if not self.card_game and completed and not self.game_transition_in and not self.game_transition_out:
+                if not self.card_game and self.completed and not self.game_transition_in and not self.game_transition_out:
                     # Daniel made it so that clicking won't interrupt the transitioning process
                     self.game_transition_in = True
                     self.game_transition_out = False
-                elif self.card_game and self.energy == 0 and not self.game_transition_in and not self.game_transition_out:
+                elif self.card_game and self.player.energy == 0 and not self.game_transition_in and not self.game_transition_out:
                     # There should probably be a unified transitioning variable to shorten these if statements and the one above in run_card_game
                     self.game_transition_in = False
                     self.game_transition_out = True
@@ -206,39 +205,37 @@ class BossMrPhone(Level):
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
-                    acted = False
-                    completed = False
-                    updated = False
+                    self.cted = False
+                    self.completed = False
+                    self.updated = False
                     self.transition_stopwatch.time_reset()
             # The stopwatch was used to do the transitions
             # I chose to just use fixed values because the impact of the framerate is practically negligible and it is so much easier to code with just the fixed values
             # Taking the derivative of the function is already a nightmare, let alone trying to implement it into the game.
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
-                if not self.update_stopwatch.activate_timer and not updated and not completed:
-                    self.update_stopwatch.time_start()
-                if not self.action_stopwatch.activate_timer and not completed:
-                    self.action_stopwatch.time_start()
-                if self.update_stopwatch.seconds > 1.5:
-                    self.boss.update(self.player_attack, counter)
+                if not self.timer_dict["update_delay"].activate_timer and not self.updated and not self.completed:
+                    self.timer_dict["update_delay"].time_start()
+                if not self.timer_dict["action"].activate_timer and not self.completed:
+                    self.timer_dict["action"].time_start()
+                if self.timer_dict["update_delay"].seconds > 1.5:
+                    self.boss.update(self.player_attack, self.player_statuses)
                     if self.player_attack:
                         self.face = self.config.img_bosses[3]["hit"]
                     self.player_attack = 0
-                    updated = True
-                    self.update_stopwatch.time_reset()
-                if self.action_stopwatch.seconds > 2.5 and not acted:
-                    self.boss.trigger_method()
-                    action = self.boss.act()
-                    if action[0] != "die":
-                        self.boss_attack += action[1][0]
+                    self.player_statuses = []
+                    self.updated = True
+                    self.timer_dict["update_delay"].time_reset()
+                if self.timer_dict["action"].seconds > 2.5 and not self.acted:
+                    action = self.boss.act(self.turn_counter)
                     self.face = self.config.img_bosses[3][action[1][-1]]
-                    acted = True
-                    self.player.update(self.boss_attack, None)
-                elif self.action_stopwatch.seconds > 4 or (not counter and self.action_stopwatch.seconds > 2):
-                    self.action_stopwatch.time_reset()
-                    completed = True
+                    self.acted = True
+                    self.player.update(action[2], action[3])
+                elif self.timer_dict["action"].seconds > 4:
+                    self.turn_counter += 1
+                    self.timer_dict["action"].time_reset()
                     self.face = self.config.img_bosses[3]["normal"]
-                    counter += 1
+                    self.completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss(time_elapsed)  # Draw Boss' Image (See Method Above)
                 # Textbox

@@ -118,7 +118,8 @@ class Config(object):
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (1600, 900)),
             2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (1600, 900)),
             3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (1600, 900)),
-            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900))
+            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900)),
+            "Card_Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900))
         }
         # ----------------------------------------------------------------------------------------------------------------------------
         # Boss Faces
