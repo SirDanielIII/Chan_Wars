@@ -10,9 +10,10 @@ from bin.classes.level import Level
 from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
+from bin.classes.entities.bosses import DevilChan
 from bin.colours import *
-from bin.levels.minigames.Card_Game.player import move_pos
-import bin.levels.minigames.Card_Game.player as card_pair
+from bin.levels.minigames.card_game.player import move_pos
+import bin.levels.minigames.card_game.player as card_pair
 
 
 class BossDevilChan(Level):
@@ -29,21 +30,24 @@ class BossDevilChan(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
-        self.player_data = None
         self.hp_bar_player = None
-        self.player = card_pair.Player(self.card_canvas, self.player_data)
+        self.player = card_pair.Player(self.card_canvas, None)
         self.player_attack = 0
+        self.margins = (20, 30)
+        self.card_complete = [0]
+        self.size = None
         self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
-        self.boss_data = None
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_bar_boss = None
-        self.boss_attack = 0
-        self.boss_statuses = []
         self.acted = True
+        self.name = "devil_chan"
+        self.level = None
+        self.turn_counter = None
         self.completed = True
-        self.boss = None
+        self.updated = True
+        self.boss = DevilChan(None)
         self.face = None
         # ------------------------------------------------------------------------------------------------------------------
         # Text Bar Attributes
@@ -67,16 +71,16 @@ class BossDevilChan(Level):
                            "update_delay": Timer()}
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
-        self.boss_data = self.config.get_config("boss")["devil_chan"]
-        self.player_data = self.config.get_config("level")[1]["player"]
-        self.player.metadata = self.player_data
-        self.boss.metadata = self.boss_data
+        self.level = 1
+        self.boss.metadata = self.config.get_config("boss")[self.name]
+        self.player.metadata = self.config.get_config("level")[self.level]["player"]
         self.boss.initialize()
         self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.image_list
+        self.player.image_list = self.config.img_chans
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.face = self.config.img_bosses[3]["normal"]
+        self.face = self.config.img_bosses[3]
+        self.size = self.config.chan_card_size
         # ------------------------------------------------------------------------------------------------------------------
         # Text Box & Typewriter Attributes
         self.typ_transition_in = False
@@ -99,16 +103,16 @@ class BossDevilChan(Level):
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
         # Player Text & Health Bar
-        draw_text_left(str(math.ceil(self.hp_player)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
+        draw_text_left(str(math.ceil(self.player.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                        self.hp_bar_player.x, self.hp_bar_player.y - self.hp_bar_player.h * 3)
         draw_text_left("You", white, self.config.f_hp_bar_name, self.game_canvas, self.hp_bar_player.x,
                        self.hp_bar_player.y + self.hp_bar_player.h + 5)
-        self.hp_bar_player.render(self.hp_player, 0.3, dt)
+        self.hp_bar_player.render(self.player.health, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.game_canvas,
+        draw_text_right(self.boss.metadata["name"], white, self.config.f_hp_bar_name, self.game_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
         self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
 
@@ -118,24 +122,26 @@ class BossDevilChan(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        if not self.pairs:
-            self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+        if not self.player.cards:
+            self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
         if self.card_canvas_y != self.height:
             self.card_canvas.fill(white)
             if self.player.health and not self.game_transition_in and not self.game_transition_out:
                 self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
-                    if not self.timer_dict["action"].activate_timer:
-                        self.timer_dict["action"].time_start()
-                    if self.timer_dict["action"].seconds > 0.25:
-                        self.damage += self.card_complete[2] * 10
-                        self.player.health -= self.card_complete[1]
+                    if not self.timer_dict["card"].activate_timer:
+                        self.timer_dict["card"].time_start()
+                    if self.timer_dict["card"].seconds > 0.25:
+                        self.player.energy -= 1
+                        self.player_attack += self.card_complete[1]
+                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
-                        self.timer_dict["action"].time_reset()
+                        self.timer_dict["card"].time_reset()
+                        self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.background, 0,
-                                   self.player.health and not self.timer_dict["action"].seconds > 500)
+                                   self.player.health and not self.timer_dict["card"].seconds > 500)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
@@ -219,6 +225,7 @@ class BossDevilChan(Level):
                 self.card_canvas_y = self.height
                 self.game_transition_out = False
                 self.acted = False
+                self.updated = False
                 self.completed = False
                 self.timer_dict["transition"].time_reset()
 
@@ -339,21 +346,24 @@ class BossDevilChan(Level):
             self.game_canvas.blit(self.config.img_levels[1], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
+                if not self.timer_dict["update_delay"].activate_timer and not self.updated and not self.completed:
+                    self.timer_dict["update_delay"].time_start()
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
-                if not self.timer_dict["death"].activate_timer:
-                    if self.timer_dict["action"].seconds > 1:
-                        self.boss.update(self.player_attack)
-                        self.player_attack = 0
-                    if self.timer_dict["action"].seconds > 1.5 and not self.acted:
-                        self.boss.trigger_method()
-                        action = self.boss.act()
-                        if action[0] != "die":
-                            self.hp_player -= action[1][0]
-                        self.acted = True
-                    elif self.timer_dict["action"].seconds > 2:
-                        self.timer_dict["action"].time_reset()
-                        self.completed = True
+                if self.timer_dict["update_delay"].seconds > 1.5:
+                    self.boss.update(self.player_attack, self.player_statuses)
+                    self.player_attack = 0
+                    self.player_statuses = []
+                    self.updated = True
+                    self.timer_dict["update_delay"].time_reset()
+                if self.timer_dict["action"].seconds > 2.5 and not self.acted:
+                    action = self.boss.act(self.turn_counter)
+                    self.acted = True
+                    self.player.update(action[2], action[3])
+                elif self.timer_dict["action"].seconds > 4:
+                    self.turn_counter += 1
+                    self.timer_dict["action"].time_reset()
+                    self.completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 self.draw_boss()  # Draw Boss' Image (See Method Above)
                 # Textbox
@@ -370,7 +380,7 @@ class BossDevilChan(Level):
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            if self.hp_player <= 0:
+            if self.player.health <= 0:
                 if not self.timer_dict["death"].activate_timer:
                     self.timer_dict["death"].time_start()
                 if self.timer_dict["death"].seconds > 1.5:
@@ -381,7 +391,7 @@ class BossDevilChan(Level):
                 if self.timer_dict["death"].seconds > 1.5:
                     return 14
             # ------------------------------------------------------------------------------------------------------------------
-            if self.boss.health and self.hp_player:
+            if self.boss.health and self.player.health:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens(self.card_canvas, 0, self.card_canvas_y)
