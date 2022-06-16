@@ -3,30 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="9168df90-ddc8-437a-8e15-6f9bb216cc3d" name="Changes" comment="Clean through config_manager.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/classes/config_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/config_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/classes/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/classes/level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_1/boss_devil_chan.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl1_devil_chan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_2/boss_ms_g.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl2_boss_ms_g.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/levels/minigames/card_game/level_3/boss_mr_phone.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl3_mr_phone.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/boot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/boot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/credits.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/credits.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/death_screen.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/death_screen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/game_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/game_menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/how_to_play.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/how_to_play.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/main_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/main_menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/menus/options.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/menus/options.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/bosses/devil_chan.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/bosses/mr_phone.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/bosses/ms_g.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/levels/level_0.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/levels/level_1.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/levels/level_2.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/levels/lvl1_devil_chan.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl1_devil_chan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/levels/lvl3_mr_phone.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/levels/lvl3_mr_phone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/level_3/boss/phone_disappointment.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/level_3/boss/phone_special.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="master" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -202,7 +189,28 @@
       <option name="project" value="LOCAL" />
       <updated>1655221045654</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Huge changes.Fixed many variables, changed teh format of devil chan to be similar to that of the enemy level. Am currently working on doing the same with Mr. Phone and Ms. G">
+      <created>1655345011620</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1655345011620</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Changed to card_game from Card_Game">
+      <created>1655388647968</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1655388647968</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Clean through config_manager.py">
+      <created>1655389248218</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1655389248218</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -219,6 +227,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="kermit the frog is pleased with your sacrifices." />
     <MESSAGE value="Comit" />
+    <MESSAGE value="Huge changes.Fixed many variables, changed teh format of devil chan to be similar to that of the enemy level. Am currently working on doing the same with Mr. Phone and Ms. G" />
+    <MESSAGE value="Changed to card_game from Card_Game" />
     <MESSAGE value="Clean through config_manager.py" />
     <option name="LAST_COMMIT_MESSAGE" value="Clean through config_manager.py" />
   </component>

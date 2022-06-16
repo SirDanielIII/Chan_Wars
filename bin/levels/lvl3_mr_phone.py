@@ -112,10 +112,8 @@ class BossMrPhone(Level):
                         self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card Game"], 0, self.player.energy and not self.timer_dict["card"].seconds > 500)
-            # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
-            # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
-            # and finally blits it all after getting the mouses position if a click has been made
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
+                                   self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
             '''
             RUN THE CARD GAME CODE HERE
@@ -183,31 +181,31 @@ class BossMrPhone(Level):
             # Card Game Display Driver
             # Transition In
             if self.game_transition_in:
-                if not self.transition_stopwatch.activate_timer:
-                    self.transition_stopwatch.time_start()
+                if not self.timer_dict["transition"].activate_timer:
+                    self.timer_dict["transition"].time_start()
                 if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_pos(True, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                 elif self.card_canvas_y <= 1:
                     self.card_canvas_y = 0
                     self.game_transition_in = False
                     self.card_game = True
-                    self.transition_stopwatch.time_reset()
+                    self.timer_dict["transition"].time_reset()
             # Transition Out
             if self.game_transition_out:
-                if not self.transition_stopwatch.activate_timer:
-                    self.transition_stopwatch.time_start()
+                if not self.timer_dict["transition"].activate_timer:
+                    self.timer_dict["transition"].time_start()
                 if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_pos(False, self.transition_stopwatch.seconds, self.height, 25)
+                    self.card_canvas_y = card_pair.move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
                     # Here, Daniel rejected velocity and returned to fixed values
                     self.card_game = False
                 elif self.card_canvas_y >= self.height - 1:
                     self.card_canvas_y = self.height
                     self.game_transition_out = False
-                    self.cted = False
+                    self.acted = False
                     self.completed = False
                     self.updated = False
-                    self.transition_stopwatch.time_reset()
+                    self.timer_dict["transition"].time_reset()
             # The stopwatch was used to do the transitions
             # I chose to just use fixed values because the impact of the framerate is practically negligible and it is so much easier to code with just the fixed values
             # Taking the derivative of the function is already a nightmare, let alone trying to implement it into the game.
@@ -227,7 +225,9 @@ class BossMrPhone(Level):
                     self.timer_dict["update_delay"].time_reset()
                 if self.timer_dict["action"].seconds > 2.5 and not self.acted:
                     action = self.boss.act(self.turn_counter)
-                    self.face = self.config.img_bosses[3][action[1][-1]]
+                    print(action)
+                    print(self.config.img_bosses)
+                    self.face = self.config.img_bosses[3][action[0]]
                     self.acted = True
                     self.player.update(action[2], action[3])
                 elif self.timer_dict["action"].seconds > 4:
@@ -241,14 +241,14 @@ class BossMrPhone(Level):
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
             if self.player.health <= 0:
-                self.death_stopwatch.time_start()
-                if self.death_stopwatch.seconds > 1:
-                    self.config.lose_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                self.timer_dict["death"].time_start()
+                if self.timer_dict["death"].seconds > 1:
+                    self.config.lose_screen.set_alpha((self.timer_dict["death"].seconds - 1) * 250)
                     self.game_canvas.blit(self.config.lose_screen, (0, 0))
             elif self.boss.health <= 0:
-                self.death_stopwatch.time_start()
-                if self.death_stopwatch.seconds > 1:
-                    self.config.win_screen.set_alpha((self.death_stopwatch.seconds - 1) * 250)
+                self.timer_dict["death"].time_start()
+                if self.timer_dict["death"].seconds > 1:
+                    self.config.win_screen.set_alpha((self.timer_dict["death"].seconds - 1) * 250)
                     self.game_canvas.blit(self.config.win_screen, (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.boss.health and self.player.health:
