@@ -26,21 +26,18 @@ class DevilChan(Boss):
         self.metadata = config
         self.special = 0
         self.health = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
-        self.energy = None
+        self.status_bar = {"Weakness": 0, "Vulnerable": 0, "Disappointment": 0, "Pained": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Armor": 0}
         self.moves = None
         self.images = {"background": None, "face": None}
         self.block = 0
         self.phrases = None
 
     def initialize(self):
-        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
-        self.phrases = self.metadata["boss"]["phrases"]
-        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
-        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
-        self.health = self.metadata["boss"]["hp"]
-        self.energy = self.metadata["player"]["energy"]
+        self.moves = {a: self.metadata["moves"][b] for a, b in enumerate(self.metadata["moves"]) if "basic" in b}
+        self.phrases = self.metadata["phrases"]
+        self.moves["special"] = self.metadata["moves"]["special"]
+        self.health = self.metadata["hp"]
 
     def act(self, turn_counter):
         move_type = "basic"
@@ -49,9 +46,14 @@ class DevilChan(Boss):
             move_type = "special"
             move = self.moves["special"]
             self.special = 1
-        if self.health <= 0:
-            move_type = "death"
-            move = self.moves["death"]
+        if self.buff_bar["Lifesteal"]:
+            move["heal"] += move["damage"]
+        if self.buff_bar["Armor"]:
+            move["block"] += self.buff_bar["Armor"]
+        if self.status_bar["Weakness"]:
+            move["damage"] *= 0.75
+        if self.buff_bar["Power"]:
+            move["damage"] *= 1.25
         self.health += move["heal"]
         self.block += move["block"]
         if move["buff"] != "None":
@@ -68,7 +70,7 @@ class DevilChan(Boss):
         else:
             damage -= self.block
         self.block = 0
-        damage += self.status_bar["Poison"]
+        damage += self.status_bar["Pained"]
         self.health += self.buff_bar["Regeneration"]
         self.health -= damage
         for effect in status_effects:
@@ -80,23 +82,22 @@ class MsG(Boss):
     def __init__(self, config):
         super().__init__()
         self.metadata = config
+        self.special = 0
         self.health = None
-        self.energy = None
+        self.status_bar = {"Weakness": 0, "Vulnerable": 0, "Disappointment": 0, "Pained": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Armor": 0}
         self.moves = None
+        self.images = {"background": None, "face": None}
         self.block = 0
-        self.siberia = False
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.siberia = False
 
     def initialize(self):
-        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
-        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
-        self.moves["siberia"] = self.metadata["boss"]["moves"]["siberia"]
-        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
-        self.phrases = self.metadata["boss"]["phrases"]
-        self.health = self.metadata["boss"]["hp"]
-        self.energy = self.metadata["player"]["energy"]
+        self.moves = {a: self.metadata["moves"][b] for a, b in enumerate(self.metadata["moves"]) if "basic" in b}
+        self.moves["special"] = self.metadata["moves"]["special"]
+        self.moves["siberia"] = self.metadata["moves"]["siberia"]
+        self.phrases = self.metadata["phrases"]
+        self.health = self.metadata["hp"]
 
     def act(self, turn_counter):
         move_type = "basic"
@@ -106,13 +107,18 @@ class MsG(Boss):
             move_type = "special"
             move = self.moves["special"]
             self.siberia = True
-        elif self.health <= self.metadata["boss"]["hp"] // 2 and self.siberia:
+        elif self.health <= self.metadata["hp"] // 2 and self.siberia:
             move_type = "special"
             move = self.moves["siberia"]
             self.siberia = False
-        if self.health <= 0:
-            move_type = "death"
-            move = self.moves["death"]
+        if self.buff_bar["Lifesteal"]:
+            move["heal"] += move["damage"]
+        if self.buff_bar["Armor"]:
+            move["block"] += self.buff_bar["Armor"]
+        if self.status_bar["Weakness"]:
+            move["damage"] *= 0.75
+        if self.buff_bar["Power"]:
+            move["damage"] *= 1.25
         self.health += move["heal"]
         self.block += move["block"]
         if move["buff"] != "None":
@@ -129,7 +135,7 @@ class MsG(Boss):
         else:
             damage -= self.block
         self.block = 0
-        damage += self.status_bar["Poison"]
+        damage += self.status_bar["Pained"]
         self.health += self.buff_bar["Regeneration"]
         self.health -= damage
         for effect in status_effects:
@@ -141,23 +147,21 @@ class MrPhone(Boss):
     def __init__(self, config):
         super().__init__()
         self.metadata = config
-        self.health = None
-        self.energy = None
-        self.moves = None
-        self.block = 0
         self.special = 0
-        self.damaged = True
+        self.health = None
+        self.status_bar = {"Weakness": 0, "Vulnerable": 0, "Disappointment": 0, "Pained": 0, "Marked": 0}
+        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Armor": 0}
+        self.moves = None
+        self.images = {"background": None, "face": None}
+        self.block = 0
         self.phrases = None
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
-        self.buff_bar = {"Power": 0, "Thorns": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.damaged = True
 
     def initialize(self):
-        self.moves = {a: self.metadata["boss"]["moves"][b] for a, b in enumerate(self.metadata["boss"]["moves"]) if "basic" in b}
-        self.moves["special"] = self.metadata["boss"]["moves"]["special"]
-        self.moves["death"] = self.metadata["boss"]["moves"]["death"]
-        self.phrases = self.metadata["boss"]["phrases"]
-        self.health = self.metadata["boss"]["hp"]
-        self.energy = self.metadata["player"]["energy"]
+        self.moves = {a: self.metadata["moves"][b] for a, b in enumerate(self.metadata["moves"]) if "basic" in b}
+        self.moves["special"] = self.metadata["moves"]["special"]
+        self.phrases = self.metadata["phrases"]
+        self.health = self.metadata["hp"]
 
     def act(self, turn_counter):
         move_type = "basic"
@@ -166,9 +170,14 @@ class MrPhone(Boss):
             move_type = "special"
             move = self.moves["special"]
             self.special = True
-        if self.health <= 0:
-            move_type = "death"
-            move = self.moves["death"]
+        if self.buff_bar["Lifesteal"]:
+            move["heal"] += move["damage"]
+        if self.buff_bar["Armor"]:
+            move["block"] += self.buff_bar["Armor"]
+        if self.status_bar["Weakness"]:
+            move["damage"] *= 0.75
+        if self.buff_bar["Power"]:
+            move["damage"] *= 1.25
         self.health += move["heal"]
         if move["buff"] != "None":
             self.buff_bar[move["buff"][0]] = move["buff"][1]
@@ -185,7 +194,7 @@ class MrPhone(Boss):
         else:
             damage -= self.block
         self.block = 0
-        damage += self.status_bar["Poison"]
+        damage += self.status_bar["Pained"]
         self.health += self.buff_bar["Regeneration"]
         self.health -= damage
         for effect in status_effects:
