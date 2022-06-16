@@ -158,6 +158,7 @@ class MrPhone(Boss):
         self.damaged = True
 
     def initialize(self):
+        print(self.metadata)
         self.moves = {a: self.metadata["moves"][b] for a, b in enumerate(self.metadata["moves"]) if "basic" in b}
         self.moves["special"] = self.metadata["moves"]["special"]
         self.phrases = self.metadata["phrases"]

@@ -56,6 +56,7 @@ class Player:
         self.acted = False
         self.choices = {}
         self.deck = ['air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
+        self.played_cards = None
 
     def initialize(self, image_dict):
         self.rows = self.metadata["rows"]
@@ -73,21 +74,21 @@ class Player:
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         cards = random.sample(self.deck + self.deck, len(self.deck) * 2)
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
-        self.deck = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
-        return self.deck
+        self.played_cards = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
+        return self.played_cards
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
-            for card in self.deck:
+            for card in self.played_cards:
                 card.choose(m_pos, choose_boolean)
-        for card in self.deck:
+        for card in self.played_cards:
             card.draw(self.image_dict["card_back"], self.screen, pos_mod)
 
     def complete(self):
         count = 0
         self.choices = {}
-        for a in self.deck:
+        for a in self.played_cards:
             self.choices[a.card_type] = self.choices.get(a.card_type, 0)
             self.choices[a.card_type] += a.chosen
         for card_type, number in self.choices.items():
@@ -138,12 +139,12 @@ class Player:
 
     def reset(self):
         remove_list = []
-        for m, a in enumerate(self.deck):
+        for m, a in enumerate(self.played_cards):
             if a.chosen and self.choices[a.card_type] == 2:
                 remove_list.append(m)
             a.chosen = 0
         for index in remove_list[::-1]:
-            self.deck.pop(index)
+            self.played_cards.pop(index)
         self.acted = False
 
     def update(self, damage, status_effects):

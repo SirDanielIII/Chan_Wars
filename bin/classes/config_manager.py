@@ -125,8 +125,8 @@ class Config(object):
         # Boss Faces
         self.img_bosses = {
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/boss/devil_chan.png").convert_alpha(), self.boss_face_size),
-            2: self.load_images_dict(os.getcwd() + "/resources/level_2/boss/", self.boss_face_size, True),
-            3: self.load_images_dict(os.getcwd() + "/resources/level_3/boss/", self.boss_face_size, True)
+            2: self.load_images_dict(os.getcwd() + "/resources/level_2/boss/", self.boss_face_size, True, "ms_g_"),
+            3: self.load_images_dict(os.getcwd() + "/resources/level_3/boss/", self.boss_face_size, True, "phone_")
         }
         # ----------------------------------------------------------------------------------------------------------------------------
         # Enemies
@@ -191,7 +191,7 @@ class Config(object):
         return image_list
 
     @staticmethod
-    def load_images_dict(path_to_directory, resize=None, alpha=False):
+    def load_images_dict(path_to_directory, resize=None, alpha=False, exclude=""):
         """
         Args:
             path_to_directory:string:
@@ -200,8 +200,11 @@ class Config(object):
                 Size to resize images to
             alpha:boolean:
                 Whether to convert the image to alpha or not
+            exclude:string:
+                String of characters not wanted in the keys
         """
         image_dict = {}
+        name = None
         for filename in os.listdir(path_to_directory):
             if filename.endswith('.png') or filename.endswith('.jpg'):
                 path = os.path.join(path_to_directory, filename)
@@ -210,9 +213,11 @@ class Config(object):
                 else:
                     image = pg.image.load(path)
                 if alpha:
-                    image_dict[(os.path.basename(filename).split(".")[0]).lower()] = image.convert_alpha()
+                    name = (os.path.basename(filename).split(".")[0]).lower()
+                    image_dict[name.replace(exclude, "")] = image.convert_alpha()
                 else:
-                    image_dict[(os.path.basename(filename).split(".")[0]).lower()] = image.convert()
+                    name = (os.path.basename(filename).split(".")[0]).lower()
+                    image_dict[name.replace(exclude, "")] = image.convert()
         return image_dict
 
     @staticmethod
