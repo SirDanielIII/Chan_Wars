@@ -8,7 +8,7 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
-import bin.levels.minigames.Card_Game.player as card_pair
+import bin.levels.minigames.card_game.player as card_pair
 from bin.classes.entities.bosses import MrPhone
 from bin.classes.entities.shopkeeper import ShopKeep
 
@@ -60,11 +60,11 @@ class BossMrPhone(Level):
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.level = 3
-        self.player.metadata = self.config.get_config("boss")[self.name]
-        self.boss.metadata = self.config.get_config("level")[self.level]["player"]
+        self.player.metadata = self.config.get_config("level")[self.level]["player"]
+        self.boss.metadata = self.config.get_config("boss")[self.name]
         self.size = self.config.chan_card_size
         self.turn_counter = 0
-        self.boss.initialize(self.name)
+        self.boss.initialize()
         self.player.initialize(self.config.img_chans)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
