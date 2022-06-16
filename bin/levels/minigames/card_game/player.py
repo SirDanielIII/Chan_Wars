@@ -55,7 +55,7 @@ class Player:
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
         self.choices = {}
-        self.deck = ['air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
+        self.deck = ['air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         self.played_cards = None
 
     def initialize(self, image_dict):

@@ -82,7 +82,7 @@ class BossMrPhone(Level):
         # Boss Text & Health Bar
         draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss_data["boss"]["name"], white, self.config.f_hp_bar_name, self.text_canvas,
+        draw_text_right(self.boss.metadata["name"], white, self.config.f_hp_bar_name, self.text_canvas,
                         self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 5)
         self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
 
@@ -95,22 +95,24 @@ class BossMrPhone(Level):
         if self.card_canvas_y != self.height:
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
-            if self.energy and not self.game_transition_in and not self.game_transition_out:
+            if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
-                if not self.pairs:
-                    self.pairs = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+                if not self.player.cards:
+                    self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
                 self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
-                    if not self.card_stopwatch.activate_timer:
-                        self.card_stopwatch.time_start()
-                    if self.card_stopwatch.seconds > 0.25:
-                        self.player_attack += self.card_complete[2] * 10
-                        self.energy -= self.card_complete[1]
+                    if not self.timer_dict["card"].activate_timer:
+                        self.timer_dict["card"].time_start()
+                    if self.timer_dict["card"].seconds > 0.25:
+                        self.player.energy -= 1
+                        self.player_attack += self.card_complete[1]
+                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
-                        self.card_stopwatch.time_reset()
+                        self.timer_dict["card"].time_reset()
+                        self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card Game"], 0, self.player.energy and not self.timer_dict["card"].seconds > 500)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made
@@ -147,11 +149,8 @@ class BossMrPhone(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
                 if event.type == milliseconds:
-                    self.transition_stopwatch.stopwatch()
-                    self.update_stopwatch.stopwatch()
-                    self.action_stopwatch.stopwatch()
-                    self.card_stopwatch.stopwatch()
-                    self.death_stopwatch.stopwatch()
+                    for timer in self.timer_dict:  # Loop through timers and run them
+                        self.timer_dict[timer].stopwatch()  # If `self.activate_timer = False` then this won't update
                     time_elapsed.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_out and not self.freeze:
