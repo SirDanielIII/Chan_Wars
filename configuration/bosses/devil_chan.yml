@@ -139,8 +139,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-      - 5
-      - 5
+      - 0
+      - 0
       text: Angel Chan...
       wait: 0
     1:
@@ -163,7 +163,7 @@ phrases:
       line: 1
       pause: 1.4
       shake:
-      - 20
+      - 15
       - 20
       text: How could you do this to me!?
       wait: 1.0
