@@ -50,7 +50,7 @@ class Player:
         self.block = 0
         self.health = 0
         self.energy = 0
-        self.attack = []
+        self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
         self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
@@ -94,45 +94,51 @@ class Player:
         for card_type, number in self.choices.items():
             if number == 2 and not self.acted:
                 card = card_type.split(" ")
-                attack = self.cards[card[-1]]
+                mod = 1
+                if self.status_bar["Weakness"]:
+                    mod *= 0.75
+                if self.buff_bar["Power"]:
+                    mod *= 1.25
+                self.attack["damage"] += self.cards[card[-1]]["damage"] * mod
+                self.attack["block"] += self.cards[card[-1]]["block"]
+                self.attack["heal"] += self.cards[card[-1]]["heal"]
+                if self.cards[card[-1]]["status"] != "None":
+                    for status in self.cards[card[-1]]["status"]:
+                        self.attack["status"][status] = self.attack["status"].get(status, 0)
+                        self.attack["status"][status] += self.cards[card[-1]]["status"][status]
+                if self.cards[card[-1]]["buff"] != "None":
+                    for buff in self.cards[card[-1]]["buff"]:
+                        self.attack["buff"][buff] = self.attack["buff"].get(buff, 0)
+                        self.attack["buff"][buff] += self.cards[card[-1]]["buff"][buff]
                 if len(card) > 1:
                     for upgrade in card[:-1]:
-                        attack["damage"] += self.cards[card[-1]]["upgrades"][upgrade]["damage"]
-                        attack["block"] += self.cards[card[-1]]["upgrades"][upgrade]["block"]
-                        attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
+                        self.attack["damage"] += self.cards[card[-1]]["upgrades"][upgrade]["damage"]
+                        self.attack["block"] += self.cards[card[-1]]["upgrades"][upgrade]["block"]
+                        self.attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
                         if self.cards[card[-1]]["upgrades"][upgrade]["status"] != "None":
                             for status in self.cards[card[-1]]["upgrades"][upgrade]["status"]:
                                 if status == "None":
-                                    attack["status"] = {status: self.cards[card[-1]]["upgrades"][upgrade]["status"][status]}
+                                    self.attack["status"] = {status: self.cards[card[-1]]["upgrades"][upgrade]["status"][status]}
                                 else:
-                                    attack["status"][status] = attack["status"].get(status, 0)
-                                    attack["status"][status] += self.cards[card[-1]]["upgrades"][upgrade]["status"][status]
+                                    self.attack["status"][status] = self.attack["status"].get(status, 0)
+                                    self.attack["status"][status] += self.cards[card[-1]]["upgrades"][upgrade]["status"][status]
                         if self.cards[card[-1]]["upgrades"][upgrade]["buff"] != "None":
                             for buff in self.cards[card[-1]]["upgrades"][upgrade]["buff"]:
-                                if attack["buff"] == "None":
-                                    attack["buff"] = {buff: self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]}
+                                if self.attack["buff"] == "None":
+                                    self.attack["buff"] = {buff: self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]}
                                 else:
-                                    attack["buff"][buff] = attack["buff"].get(buff, 0)
-                                    attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
-                if attack["buff"] != "None":
-                    for buff in attack["buff"]:
-                        self.buff_bar[buff] += attack["buff"][buff]
+                                    self.attack["buff"][buff] = self.attack["buff"].get(buff, 0)
+                                    self.attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
                 if self.buff_bar["Lifesteal"]:
-                    attack["heal"] += attack["damage"]
+                    self.attack["heal"] += self.attack["damage"]
                 if self.buff_bar["Armor"]:
-                    attack["block"] += self.buff_bar["Armor"]
-                if self.status_bar["Weakness"]:
-                    attack["damage"] *= 0.75
-                if self.buff_bar["Power"]:
-                    attack["damage"] *= 1.25
-                self.health += attack["heal"]
+                    self.attack["block"] += self.buff_bar["Armor"]
+                self.health += self.attack["heal"]
                 if self.health > self.metadata["hp"]:
                     self.health = self.metadata["hp"]
-                self.block = attack["block"]
+                self.block = self.attack["block"]
                 self.acted = True
-                print(attack)
-                print(self.buff_bar)
-                return 2, attack["damage"], attack["status"]
+                return 2, self.attack["damage"], self.attack["status"]
             else:
                 count += number
         if count == 2:
@@ -175,3 +181,6 @@ class Player:
         if status_effects != "None":
             for effect in status_effects:
                 self.status_bar[effect] += status_effects[effect]
+        if self.attack["buff"] != "None":
+            for buff in self.attack["buff"]:
+                self.buff_bar[buff] += self.attack["buff"][buff]

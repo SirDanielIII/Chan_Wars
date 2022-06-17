@@ -105,13 +105,14 @@ class BossMrPhone(Level):
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
                     if self.timer_dict["card"].seconds > 0.25:
+                        print(self.card_complete, "bur")
                         self.player.energy -= 1
                         self.player_attack += self.card_complete[1]
                         self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
                         self.timer_dict["card"].time_reset()
                         self.card_complete = self.player.complete()
-                        print(self.player_attack, self.player_statuses, "immediate")
+                        print(self.player_attack, self.player_statuses, "hey")
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
@@ -218,18 +219,14 @@ class BossMrPhone(Level):
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
-                    print(self.player_attack, self.player_statuses, "final")
-                    self.boss.update(self.player_attack, self.player_statuses)
-                    if self.player_attack:
+                    self.boss.update(self.player.attack["damage"], self.player.attack["status"])
+                    if self.player.attack["damage"]:
                         self.face = self.config.img_bosses[3]["hit"]
-                    self.player_attack = 0
-                    self.player_statuses = []
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.updated = True
                     self.timer_dict["update_delay"].time_reset()
                 if self.timer_dict["action"].seconds > 2.5 and not self.acted:
                     action = self.boss.act(self.turn_counter)
-                    print(action)
-                    print(self.config.img_bosses)
                     self.face = self.config.img_bosses[3][action[0]]
                     self.acted = True
                     self.player.update(action[2], action[3])
