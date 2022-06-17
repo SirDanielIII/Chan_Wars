@@ -139,8 +139,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-      - 0
-      - 0
+      - 5
+      - 5
       text: Angel Chan...
       wait: 0
     1:

@@ -20,7 +20,7 @@ class Queue:
     def peek(self, offset=0):
         """ Returns the top item from the queue but does not remove it.
            It needs no parameters. The queue is not modified."""
-        return self.items[len(self.items) - 1 - offset]
+        return self.items[-1 - offset]
 
     def size(self):
         """ Returns the number of items on the queue.

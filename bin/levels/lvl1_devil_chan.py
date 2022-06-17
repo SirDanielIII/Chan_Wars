@@ -62,6 +62,7 @@ class BossDevilChan(Level):
         self.typ_box_align_y2 = 730
         self.typ_queue = Queue()
         self.typ_queue_update = True
+        self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
         self.event = "intro"
@@ -77,7 +78,8 @@ class BossDevilChan(Level):
         self.boss.initialize()
         self.player.initialize(self.config.img_chans)
         self.player.image_list = self.config.img_chans
-        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
+                                       cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.img_bosses[3]
         self.size = self.config.chan_card_size
@@ -94,6 +96,7 @@ class BossDevilChan(Level):
         self.typ_box_align_y2 = 730
         self.typ_queue = Queue()
         self.typ_queue_update = True
+        self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
@@ -142,7 +145,8 @@ class BossDevilChan(Level):
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
-                                   self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+                                   self.player.energy and not self.timer_dict[
+                                                                  "card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
@@ -180,16 +184,17 @@ class BossDevilChan(Level):
                         self.typ_queue.enqueue(self.boss.phrases[e][key])  # Queue all messages in order
                 case "dialogue":
                     self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])  # Choose random message
-        print(self.typ_queue.items)
+        # print(self.typ_queue.items)
 
     def intro(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
         clear = self.typ_queue.peek()["clear"]
         wait = self.typ_queue.peek()["wait"]
-
         if seconds > delay:
             if self.typ_queue.size() != 0:
+                print('work here')
                 self.typewriter_render(self.typ_queue, dt, clear, wait, self.typ_queue.peek()["fade_in"], self.typ_queue.peek()["fade_out"])
+                print('work after')
             else:  # Reset settings when queue is empty
                 self.event = "attack"
                 self.typ_queue_update = True
@@ -266,10 +271,10 @@ class BossDevilChan(Level):
                     # Render first line
                     if messages.size() > 1:  # Need to check this as messages gets popped when its finished blitting below
                         self.typ_l1.render(self.text_canvas,
-                                           messages.peek(-1)["delay"],
+                                           0,
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
-                                           messages.peek(-1)["shake"],
-                                           messages.peek(-1)["pause"], 0)
+                                           self.typ_last_shake,
+                                           0, 0)
                     # # Render second line
                     self.typ_finished = \
                         self.typ_l2.render(self.text_canvas,
@@ -279,6 +284,7 @@ class BossDevilChan(Level):
                                            messages.peek()["pause"], 0)
         # ----------------------------------------------------------------------------------------------------------
         if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
+            self.typ_last_shake = messages.peek()["shake"]  # Store last shake variable for the first line when blitting the second line
             if self.fade_out_text:  # Fades out textbox if required
                 if self.fade_screen_out("text", self.text_canvas, self.transition_speed, dt):
                     if clear:  # Clears textbox if true & after the textbox finishes fading out
@@ -289,7 +295,7 @@ class BossDevilChan(Level):
                 if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
                     self.typ_l1.clear()
                     self.typ_l2.clear()
-                    self.next_msg(wait)
+                self.next_msg(wait)
 
     def next_msg(self, wait):
         if self.timer_dict["update_delay"].seconds < wait:  # Seconds is initially at 0
@@ -301,6 +307,7 @@ class BossDevilChan(Level):
             self.typ_l1.unlock()
             self.typ_l2.unlock()
             self.typ_queue.dequeue()  # Pop last element (dictionary) in lst
+            print(self.typ_queue.items)
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
