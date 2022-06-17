@@ -30,8 +30,6 @@ class EnemyLevel(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.hp_bar_player = None
         self.player = card_pair.Player(self.card_canvas, None)
-        self.player_attack = 0
-        self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes
         self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
@@ -108,8 +106,6 @@ class EnemyLevel(Level):
                         self.timer_dict["card"].time_start()
                     if self.timer_dict["card"].seconds > 0.25:
                         self.player.energy -= 1
-                        self.player_attack += self.card_complete[1]
-                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
                         self.timer_dict["card"].time_reset()
                         self.card_complete = self.player.complete()
@@ -216,9 +212,8 @@ class EnemyLevel(Level):
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
-                    self.enemy.update(self.player_attack, self.player_statuses)
-                    self.player_attack = 0
-                    self.player_statuses = []
+                    self.enemy.update(self.player.attack["damage"], self.player.attack["status"])
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.updated = True
                     self.timer_dict["update_delay"].time_reset()
                 if self.timer_dict["action"].seconds > 2.5 and not self.acted:

@@ -32,11 +32,9 @@ class BossDevilChan(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.hp_bar_player = None
         self.player = card_pair.Player(self.card_canvas, None)
-        self.player_attack = 0
         self.margins = (20, 30)
         self.card_complete = [0]
         self.size = None
-        self.player_statuses = []
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
@@ -73,6 +71,7 @@ class BossDevilChan(Level):
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.level = 1
+        self.turn_counter = 0
         self.boss.metadata = self.config.get_config("boss")[self.name]
         self.player.metadata = self.config.get_config("level")[self.level]["player"]
         self.boss.initialize()
@@ -125,11 +124,13 @@ class BossDevilChan(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        if not self.player.cards:
-            self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
         if self.card_canvas_y != self.height:
-            self.card_canvas.fill(white)
-            if self.player.health and not self.game_transition_in and not self.game_transition_out:
+            if not self.player.played_cards:
+                self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
+            self.card_canvas.fill((255, 255, 255))
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.player.energy and not self.game_transition_in and not self.game_transition_out:
+                # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
                 if self.card_complete[0] != 2:
                     self.card_complete = self.player.complete()
                 if self.card_complete[0] == 2:
@@ -137,16 +138,13 @@ class BossDevilChan(Level):
                         self.timer_dict["card"].time_start()
                     if self.timer_dict["card"].seconds > 0.25:
                         self.player.energy -= 1
-                        self.player_attack += self.card_complete[1]
-                        self.player_statuses.append(self.card_complete[2])
                         self.player.reset()
                         self.timer_dict["card"].time_reset()
                         self.card_complete = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
-                                   self.player.energy and not self.timer_dict[
-                                                                  "card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+                                   self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
     def trigger_in(self):
@@ -166,11 +164,8 @@ class BossDevilChan(Level):
                 self.intro(1.0, dt)
             case "attack":
                 self.attack()
-            case "special":
-                self.special()
-            case "dialogue":
-                self.typewriter_queue("dialogue")
-                self.dialogue(dt, self.boss.phrases["dialogue"])
+            case "boss":
+                self.boss()
             case "death":
                 self.game_over(dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
@@ -182,7 +177,7 @@ class BossDevilChan(Level):
                 case "intro":
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])  # Queue all messages in order
-                case "dialogue":
+                case "basic":
                     self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])  # Choose random message
         # print(self.typ_queue.items)
 
@@ -204,7 +199,7 @@ class BossDevilChan(Level):
         if self.boss.health:
             if not self.card_game and self.completed and not self.timer_dict["transition"].seconds:
                 self.trigger_in()
-            elif self.card_game and self.player.health == 0 and not self.timer_dict["transition"].seconds:
+            elif self.card_game and self.player.health != 0 and not self.timer_dict["transition"].seconds and not self.player.energy:
                 self.trigger_out()
         # ------------------------------------------------------------------------------------------------------------------
         if self.game_transition_in:
@@ -233,11 +228,8 @@ class BossDevilChan(Level):
                 self.completed = False
                 self.timer_dict["transition"].time_reset()
 
-    def special(self):
-        pass
-
-    def dialogue(self, dialogue_dict, dt):
-        pass
+    def boss(self):
+        self.typewriter_queue("basic")
 
     def game_over(self, dt):
         pass
@@ -320,6 +312,7 @@ class BossDevilChan(Level):
         time_elapsed = Timer()
         time_elapsed.time_start()
         while True:
+            print(self.player.attack, self.player.buff_bar, self.boss.buff_bar, "check")
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -356,16 +349,16 @@ class BossDevilChan(Level):
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
-                    self.boss.update(self.player_attack, self.player_statuses)
-                    self.player_attack = 0
-                    self.player_statuses = []
+                    self.boss.update(self.player.attack["damage"], self.player.attack["status"])
                     self.updated = True
                     self.timer_dict["update_delay"].time_reset()
                 if self.timer_dict["action"].seconds > 2.5 and not self.acted:
-                    action = self.boss.act(self.turn_counter)
+                    phrase = self.boss.act(self.turn_counter)
                     self.acted = True
-                    self.player.update(action[2], action[3])
+                    self.player.update(self.boss.move["damage"], self.boss.move["status"])
                 elif self.timer_dict["action"].seconds > 4:
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                    self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True
@@ -374,9 +367,6 @@ class BossDevilChan(Level):
                 # Textbox
                 pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
-                # ------------------------------------------------------------------------------------------------------------------
-                if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
-                    self.event_handler(dt)
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
@@ -395,6 +385,9 @@ class BossDevilChan(Level):
                     self.timer_dict["death"].time_start()
                 if self.timer_dict["death"].seconds > 1.5:
                     return 14
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
+                self.event_handler(dt)
             # ------------------------------------------------------------------------------------------------------------------
             if self.boss.health and self.player.health:
                 self.run_card_game(self.click)
