@@ -188,13 +188,11 @@ class BossDevilChan(Level):
 
     def intro(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
-        clear = self.typ_queue.peek()["clear"]
-        wait = self.typ_queue.peek()["wait"]
         if seconds > delay:
-            if self.typ_queue.size() != 0:
-                print('work here')
+            if not self.typ_queue.is_empty():
+                clear = self.typ_queue.peek()["clear"]
+                wait = self.typ_queue.peek()["wait"]
                 self.typewriter_render(self.typ_queue, dt, clear, wait, self.typ_queue.peek()["fade_in"], self.typ_queue.peek()["fade_out"])
-                print('work after')
             else:  # Reset settings when queue is empty
                 self.event = "attack"
                 self.typ_queue_update = True
@@ -307,7 +305,6 @@ class BossDevilChan(Level):
             self.typ_l1.unlock()
             self.typ_l2.unlock()
             self.typ_queue.dequeue()  # Pop last element (dictionary) in lst
-            print(self.typ_queue.items)
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
