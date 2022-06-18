@@ -1,5 +1,6 @@
 import random
 import pygame as pg
+from math import floor
 
 pg.font.init()
 
@@ -75,7 +76,7 @@ class Player:
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
-        self.played_cards = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
+        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):

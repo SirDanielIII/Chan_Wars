@@ -156,7 +156,6 @@ class BossDevilChan(Level):
             self.game_transition_out = True
 
     def event_handler(self, dt):
-        print(5)
         match self.event:
             case "intro":
                 self.typewriter_queue("intro")
@@ -170,18 +169,14 @@ class BossDevilChan(Level):
                 self.typewriter_queue("basic")
                 self.dialogue(1.0, dt)
             case "boss_death":
-                print(7)
                 self.typewriter_queue("boss_death")
                 self.dialogue(1.0, dt)
             case "player_death":
-                print(8)
                 self.typewriter_queue("player_death")
                 self.dialogue(1.0, dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
     def typewriter_queue(self, e):
-        print(9)
-        print(e)
         if self.typ_queue_update:  # Only runs once
             self.typ_queue_update = False
             self.timer_dict["dialogue"].time_start()
@@ -195,18 +190,14 @@ class BossDevilChan(Level):
                     self.typ_queue.enqueue(self.boss.phrases["basic"][random.randint(0, len(self.boss.phrases["basic"]) - 1)])  # Choose random message
                 # Currently pulls from the basic messages. Should eventually pull from teh special move messages.
                 case "boss_death":
-                    print(10)
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])
                 case "player_death":
-                    print(11)
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])
-                    print(self.typ_queue.items, 12)
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
-        print(13)
         seconds = self.timer_dict["dialogue"].seconds
         if seconds > delay:
             if not self.typ_queue.is_empty():
@@ -219,7 +210,6 @@ class BossDevilChan(Level):
                 self.timer_dict["dialogue"].time_reset()
                 self.typ_queue_update = True
                 self.typ_update = True
-        print(14)
 
     def attack(self):
         # ------------------------------------------------------------------------------------------------------------------
@@ -380,7 +370,6 @@ class BossDevilChan(Level):
                     elif "special" in phrase:
                         self.event = "boss_special"
                     self.acted = True
-                    print(self.boss.move, "devil chan level")
                 elif self.timer_dict["action"].seconds > 4 and "death" not in self.event:
                     self.player.update(self.boss.move["damage"], self.boss.move["status"])
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
@@ -401,20 +390,15 @@ class BossDevilChan(Level):
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            print(self.typ_queue.items)
             if self.typ_queue.is_empty():
                 if "death" in self.event:
-                    print(1)
                     return 13 if self.player.health <= 0 else 14
                 if self.player.health <= 0:
                     self.event = "player_death"
-                    print(2)
                 elif self.boss.health <= 0:
-                    print(3)
                     self.event = "boss_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
-                print(4)
                 self.event_handler(dt)
             # ------------------------------------------------------------------------------------------------------------------
             if self.boss.health and self.player.health:

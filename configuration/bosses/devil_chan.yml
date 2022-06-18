@@ -14,7 +14,7 @@ moves:
       damage: 10
       heal: 0
       status:
-        weakness: 2
+        Weakness: 2
     2:
       block: 15
       buff:
