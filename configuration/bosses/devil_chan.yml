@@ -32,7 +32,7 @@ moves:
     status: None
 name: Devil Chan
 phrases:
-  basic:
+  boss_basic:
     0:
       clear: true
       delay: 0.1
@@ -155,7 +155,7 @@ phrases:
         - 15
       text: THIS ISN'T BLASPHEMYYYYYY!!! *does not die*
       wait: 1.0
-  intro:
+  boss_intro:
     0:
       clear: false
       delay: 0.1
@@ -192,7 +192,7 @@ phrases:
       - 20
       text: How could you do this to me!?
       wait: 1.0
-  special:
+  boss_special:
   - That's a neat little hack that I found!
   - With this hack, I'll steal your health for myself.
   - I hope you're prepared for this.

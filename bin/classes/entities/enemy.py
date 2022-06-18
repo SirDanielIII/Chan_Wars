@@ -20,8 +20,8 @@ class Enemy:
         self.health = self.metadata["hp"]
         self.phrases = phrases_data
         self.phrases["intro"]["text"] = self.phrases["intro"]["text"].replace("---", self.metadata["name"])
-        self.phrases["player_death"][0]["text"] = self.phrases["player_death"][0]["text"].replace("---", self.name)
-        self.phrases["enemy_death"]["text"] = self.phrases["enemy_death"]["text"].replace("---", self.name)
+        self.phrases["enemy_player_death"][0]["text"] = self.phrases["player_death"][0]["text"].replace("---", self.metadata["name"])
+        self.phrases["enemy_death"]["text"] = self.phrases["enemy_death"]["text"].replace("---", self.metadata["name"])
 
     def act(self, turn_counter):
         attack = self.attacks[turn_counter % len(self.attacks)]
@@ -47,8 +47,8 @@ class Enemy:
         if self.buff_bar["Armor"]:
             self.attack["block"] += self.buff_bar["Armor"]
         self.block = self.attack["block"]
-        self.attack["phrase"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
-                                 "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [0, 0], "wait": 0.5}
+        self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
+                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [0, 0], "wait": 0.5}
 
     def update(self, damage, status_effects):
         if self.status_bar["Vulnerable"]:
