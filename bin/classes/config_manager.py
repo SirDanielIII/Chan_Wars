@@ -132,7 +132,7 @@ class Config(object):
         # Enemies
         # print(self.level_confs)
         self.img_enemies = {level: {} for level in range(1, 3)}
-        self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True)
+        self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True, "_chan")
         # ----------------------------------------------------------------------------------------------------------------------------
         # End Screens
         self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),

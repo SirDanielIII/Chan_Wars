@@ -9,9 +9,10 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.colours import *
+from bin.classes.typewriter import Typewriter
 from bin.classes.entities.enemy import Enemy
 import bin.levels.minigames.card_game.player as card_pair
-from bin.classes.entities.shopkeeper import ShopKeep
+from bin.classes.queue import Queue
 
 
 class EnemyLevel(Level):
@@ -30,6 +31,9 @@ class EnemyLevel(Level):
         self.hp_player_rect = pg.Rect(100, 545, 330, 35)
         self.hp_bar_player = None
         self.player = card_pair.Player(self.card_canvas, None)
+        self.margins = (20, 30)
+        self.card_complete = [0]
+        self.size = None
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes
         self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
@@ -37,40 +41,61 @@ class EnemyLevel(Level):
         self.acted = True
         self.completed = True
         self.updated = True
-        # ------------------------------------------------------------------------------------------------------------------
-        self.size = None
-        self.margins = (20, 30)
-        self.cards = None
-        self.background = None
-        self.level = None
-        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "death": Timer(),
-                           "update_delay": Timer()}
-        self.turn_counter = None
-        self.card_complete = [0]
-        self.enemy = Enemy(None)
         self.name = None
+        self.level = None
+        self.turn_counter = None
+        self.enemy = Enemy(None)
         self.face = None
         # ------------------------------------------------------------------------------------------------------------------
-        # Shop Attributes
-        self.shop_canvas = pg.Surface((self.width, self.height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
-        self.shopkeeper = ShopKeep(self.shop_canvas)
+        # Text Bar Attributes
+        self.typ_transition_in = False
+        self.typ_transition_out = False
+        self.typ_l1 = Typewriter()
+        self.typ_l2 = Typewriter()
+        self.typ_finished = False
+        self.typ_update = True
+        self.typ_box_align_x = 130
+        self.typ_box_align_y1 = 670
+        self.typ_box_align_y2 = 730
+        self.typ_queue = Queue()
+        self.typ_queue_update = True
+        self.typ_last_shake = [0, 0]
+        # ------------------------------------------------------------------------------------------------------------------
+        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer()}
+        self.event = "intro"
 
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.level = 1
+        self.turn_counter = 0
         config = self.config.get_config("level")
-        self.name = random.choice(list(config[1]["enemies"].keys()))
+        self.name = random.choice(list(config[self.level]["enemies"].keys())[:-1])
         self.player.metadata = config[self.level]["player"]
         self.enemy.metadata = config[self.level]["enemies"][self.name]
-        self.size = self.config.chan_card_size
-        self.turn_counter = 0
-        self.enemy.initialize(self.name)
+        self.enemy.initialize(self.name, config[self.level]["enemies"]["phrases"])
         self.player.initialize(self.config.img_chans)
+        self.player.image_list = self.config.img_chans
+        self.size = self.config.chan_card_size
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.img_enemies[self.name]
-        self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-        self.shopkeeper.initialize(config[self.level]["player"]["cards"], self.player.deck, self.config.img_chans)
-        self.shopkeeper.create_stock()
+        # ------------------------------------------------------------------------------------------------------------------
+        # Text Box & Typewriter Attributes
+        self.typ_transition_in = False
+        self.typ_l1 = Typewriter()
+        self.typ_l2 = Typewriter()
+        self.typ_finished = False
+        self.typ_update = True
+        self.typ_box_align_x = 130
+        self.typ_box_align_y1 = 670
+        self.typ_box_align_y2 = 730
+        self.typ_queue = Queue()
+        self.typ_queue_update = True
+        self.typ_last_shake = [0, 0]
+        # ------------------------------------------------------------------------------------------------------------------
+        # Game Attributes Initialization
+        self.fade_in = True
+        for timer in self.timer_dict:
+            self.timer_dict[timer].time_reset()
 
     def draw_bars(self, dt):  # Draw Health bars
         # Player Text & Health Bar
@@ -91,17 +116,16 @@ class EnemyLevel(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        deck = ['flighty air_chan', 'bright angel_chan', 'earth_chan', 'avatar_chan', 'farquaad_chan', 'fire_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
         if self.card_canvas_y != self.height:
+            if not self.player.played_cards:
+                self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
                 # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
-                if not self.cards:
-                    self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height, deck)
                 if self.card_complete[0] != 2:
                     self.card_complete = self.player.complete()
-                else:
+                if self.card_complete[0] == 2:
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
                     if self.timer_dict["card"].seconds > 0.25:
@@ -113,18 +137,178 @@ class EnemyLevel(Level):
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
                                    self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
-            self.shopkeeper.draw()
-            # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
-            # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
-            # and finally blits it all after getting the mouses position if a click has been made
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
+    def trigger_in(self):
+        if not self.card_game:
+            self.game_transition_in = True
+            self.game_transition_out = False
+
+    def trigger_out(self):
+        if self.card_game:
+            self.game_transition_in = False
+            self.game_transition_out = True
+
+    def event_handler(self, dt):
+        match self.event:
+            case "intro":
+                self.typewriter_queue("intro")
+                self.dialogue(1.0, dt)
+            case "attack":
+                self.attack()
+            case "basic":
+                self.typewriter_queue("basic")
+                self.dialogue(1.0, dt)
+            case "enemy_death":
+                self.typewriter_queue("enemy_death")
+                self.dialogue(1.0, dt)
+            case "player_death":
+                self.typewriter_queue("player_death")
+                self.dialogue(1.0, dt)
+        # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
+
+    def typewriter_queue(self, e):
+        if self.typ_queue_update:  # Only runs once
+            self.typ_queue_update = False
+            self.timer_dict["dialogue"].time_start()
+            match e:
+                case "intro":
+                    self.typ_queue.enqueue(self.enemy.phrases[e])  # Queue all messages in order
+                case "basic":
+                    self.typ_queue.enqueue(self.enemy.attack["phrase"])  # Choose random message
+                case "enemy_death":
+                    self.typ_queue.enqueue(self.enemy.phrases[e])
+                case "player_death":
+                    for key in self.enemy.phrases[e]:
+                        self.typ_queue.enqueue(self.enemy.phrases[e][key])
+        # print(self.typ_queue.items)
+
+    def dialogue(self, delay, dt):
+        seconds = self.timer_dict["dialogue"].seconds
+        if seconds > delay:
+            if not self.typ_queue.is_empty():
+                clear = self.typ_queue.peek()["clear"]
+                wait = self.typ_queue.peek()["wait"]
+                self.typewriter_render(self.typ_queue, dt, clear, wait, self.typ_queue.peek()["fade_in"], self.typ_queue.peek()["fade_out"])
+            if self.typ_queue.is_empty():
+                if "death" not in self.event:
+                    self.event = "attack"
+                self.timer_dict["dialogue"].time_reset()
+                self.typ_queue_update = True
+                self.typ_update = True
+
+    def attack(self):
+        # ------------------------------------------------------------------------------------------------------------------
+        # Matching Game Triggers
+        if self.enemy.health:
+            if not self.card_game and self.completed and not self.timer_dict["transition"].seconds:
+                self.trigger_in()
+            elif self.card_game and self.player.health != 0 and not self.timer_dict["transition"].seconds and not self.player.energy:
+                self.trigger_out()
+        # ------------------------------------------------------------------------------------------------------------------
+        if self.game_transition_in:
+            if not self.timer_dict["transition"].activate_timer:
+                self.timer_dict["transition"].time_start()
+            if self.card_canvas_y > 1:
+                self.card_canvas_y = card_pair.move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
+            elif self.card_canvas_y <= 1:
+                self.card_canvas_y = 0
+                self.game_transition_in = False
+                self.card_game = True
+                self.timer_dict["transition"].time_reset()
+        # ------------------------------------------------------------------------------------------------------------------
+        # Transition Out
+        if self.game_transition_out:
+            if not self.timer_dict["transition"].activate_timer:
+                self.timer_dict["transition"].time_start()
+            if self.card_canvas_y < self.height - 1:
+                self.card_canvas_y = card_pair.move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
+                self.card_game = False
+            elif self.card_canvas_y >= self.height - 1:
+                self.card_canvas_y = self.height
+                self.game_transition_out = False
+                self.acted = False
+                self.updated = False
+                self.completed = False
+                self.timer_dict["transition"].time_reset()
+
+    def typewriter_render(self, messages, dt, clear, wait, fade_in, fade_out):
+        if self.typ_update:  # Update these values once per message update
+            self.typ_update = False
+            self.fade_in_text = fade_in
+            self.fade_out_text = fade_out
+        # ----------------------------------------------------------------------------------------------------------
+        # Textbox Fade In
+        if self.fade_in_text and not self.typ_finished:  # Fade in textbox if specified
+            if self.fade_screen_in("text", self.text_canvas, self.transition_speed, dt):
+                self.fade_in_text = False
+        # ----------------------------------------------------------------------------------------------------------
+        # Draw Text
+        if not self.fade_in_text:  # Run when textbox is not fading in
+            match messages.peek()["line"]:
+                case 1:  # Line 1
+                    self.typ_l1.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
+                    self.typ_finished = \
+                        self.typ_l1.render(self.text_canvas,
+                                           messages.peek()["delay"],
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                           messages.peek()["shake"],
+                                           messages.peek()["pause"], 0)
+                case 2:  # Line 2
+                    self.typ_l2.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
+                    # Render first line
+                    if messages.size() > 1:  # Need to check this as messages gets popped when its finished blitting below
+                        self.typ_l1.render(self.text_canvas,
+                                           0,
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
+                                           self.typ_last_shake,
+                                           0, 0)
+                    # # Render second line
+                    self.typ_finished = \
+                        self.typ_l2.render(self.text_canvas,
+                                           messages.peek()["delay"],
+                                           self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
+                                           messages.peek()["shake"],
+                                           messages.peek()["pause"], 0)
+        # ----------------------------------------------------------------------------------------------------------
+        if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
+            self.typ_last_shake = messages.peek()["shake"]  # Store last shake variable for the first line when blitting the second line
+            if self.fade_out_text:  # Fades out textbox if required
+                if self.fade_screen_out("text", self.text_canvas, self.transition_speed, dt):
+                    if clear:  # Clears textbox if true & after the textbox finishes fading out
+                        self.typ_l1.clear()
+                        self.typ_l2.clear()
+                        self.next_msg(wait)
+            else:
+                if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
+                    self.typ_l1.clear()
+                    self.typ_l2.clear()
+                self.next_msg(wait)
+
+    def next_msg(self, wait):
+        if self.timer_dict["update_delay"].seconds < wait:  # Seconds is initially at 0
+            self.timer_dict["update_delay"].time_start()  # Start counting seconds if smaller than wait
+        else:  # Reset values after delay
+            self.timer_dict["update_delay"].time_reset()  # Reset delay timer
+            self.typ_update = True  # Update message dictionary next loop
+            self.typ_finished = False
+            self.typ_l1.unlock()
+            self.typ_l2.unlock()
+            self.typ_queue.dequeue()  # Pop last element (dictionary) in lst
+
     def run(self):
+        # ----------------------------------------------------------------------------------------------------------
         self.reload()
+        self.timer_dict["dialogue"].time_start()
+        self.typ_l1.time_start()
+        self.typ_l2.time_start()
+        # ----------------------------------------------------------------------------------------------------------
+        # Custom Events
         milliseconds = pg.USEREVENT
+        pg.time.set_timer(milliseconds, 10)
+        # ----------------------------------------------------------------------------------------------------------
         time_elapsed = Timer()
         time_elapsed.time_start()
-        pg.time.set_timer(milliseconds, 10)
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -142,6 +326,8 @@ class EnemyLevel(Level):
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
                 if event.type == milliseconds:
+                    self.typ_l1.stopwatch()
+                    self.typ_l2.stopwatch()
                     for timer in self.timer_dict:
                         self.timer_dict[timer].stopwatch()
                     time_elapsed.stopwatch()
@@ -152,59 +338,7 @@ class EnemyLevel(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.background = self.config.img_levels[self.level]
-            self.game_canvas.blit(self.background, (0, 0))
-            # ------------------------------------------------------------------------------------------------------------------
-            if self.back_button.run(mx, my, cw_light_blue, self.click):
-                self.fade_out = True
-                self.next_level = 2
-            # --------------------------------------------------------------------------------------------------------------
-            if self.transition_out("game", self.game_canvas, dt):
-                self.restore()
-                return self.next_level
-            # ------------------------------------------------------------------------------------------------------------------
-            if self.click and self.enemy.health and self.player.health:
-                if not self.card_game and self.completed and not self.game_transition_in and not self.game_transition_out:
-                    # Daniel made it so that clicking won't interrupt the transitioning process
-                    self.game_transition_in = True
-                    self.game_transition_out = False
-                elif self.card_game and self.player.energy == 0 and not self.game_transition_in and not self.game_transition_out:
-                    # There should probably be a unified transitioning variable to shorten these if statements and the one above in run_card_game
-                    self.game_transition_in = False
-                    self.game_transition_out = True
-            # Added energy and damage counter reset and only pulls down the card screen when energy is equal to 0
-            # ------------------------------------------------------------------------------------------------------------------
-            # Card Game Display Driver
-            # Transition In
-            if self.game_transition_in:
-                if not self.timer_dict["transition"].activate_timer:
-                    self.timer_dict["transition"].time_start()
-                if self.card_canvas_y > 1:
-                    self.card_canvas_y = card_pair.move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
-                    # Here, Daniel rejected velocity and returned to fixed values
-                elif self.card_canvas_y <= 1:
-                    self.card_canvas_y = 0
-                    self.game_transition_in = False
-                    self.card_game = True
-                    self.timer_dict["transition"].time_reset()
-            # Transition Out
-            if self.game_transition_out:
-                if not self.timer_dict["transition"].activate_timer:
-                    self.timer_dict["transition"].time_start()
-                if self.card_canvas_y < self.height - 1:
-                    self.card_canvas_y = card_pair.move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
-                    # Here, Daniel rejected velocity and returned to fixed values
-                    self.card_game = False
-                elif self.card_canvas_y >= self.height - 1:
-                    self.card_canvas_y = self.height
-                    self.game_transition_out = False
-                    self.acted = False
-                    self.completed = False
-                    self.updated = False
-                    self.timer_dict["transition"].time_reset()
-            # The stopwatch was used to do the transitions
-            # I chose to just use fixed values because the impact of the framerate is practically negligible and it is so much easier to code with just the fixed values
-            # Taking the derivative of the function is already a nightmare, let alone trying to implement it into the game.
+            self.game_canvas.blit(self.config.img_levels[self.level], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.timer_dict["update_delay"].activate_timer and not self.updated and not self.completed:
@@ -213,14 +347,16 @@ class EnemyLevel(Level):
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
                     self.enemy.update(self.player.attack["damage"], self.player.attack["status"])
-                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.updated = True
                     self.timer_dict["update_delay"].time_reset()
-                if self.timer_dict["action"].seconds > 2.5 and not self.acted:
-                    action = self.enemy.act(self.turn_counter)
+                if self.timer_dict["action"].seconds > 2.5 and not self.acted and "death" not in self.event:
+                    self.enemy.act(self.turn_counter)
+                    self.event = "basic"
                     self.acted = True
-                    self.player.update(action[2], action[3])
-                elif self.timer_dict["action"].seconds > 4:
+                elif self.timer_dict["action"].seconds > 4 and "death" not in self.event:
+                    self.player.update(self.enemy.attack["damage"], self.enemy.attack["status"])
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                    self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True
@@ -229,16 +365,24 @@ class EnemyLevel(Level):
                 # Textbox
                 pg.draw.rect(self.game_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.game_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
-            if self.player.health <= 0:
-                self.timer_dict["death"].time_start()
-                if self.timer_dict["death"].seconds > 1:
-                    self.config.img_end_screens[0].set_alpha((self.timer_dict["death"].seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.img_end_screens[0], (0, 0))
-            elif self.enemy.health <= 0:
-                self.timer_dict["death"].time_start()
-                if self.timer_dict["death"].seconds > 1:
-                    self.config.img_end_screens[1].set_alpha((self.timer_dict["death"].seconds - 1) * 250)
-                    self.game_canvas.blit(self.config.img_end_screens[1], (0, 0))
+                # ------------------------------------------------------------------------------------------------------------------
+                if self.back_button.run(mx, my, cw_light_blue, self.click):
+                    self.fade_out = True
+                    self.next_level = 2
+                if self.transition_out("game", self.game_canvas, dt):
+                    self.restore()
+                    return self.next_level
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.typ_queue.is_empty():
+                if "death" in self.event:
+                    return 13 if self.player.health <= 0 else 14
+                if self.player.health <= 0:
+                    self.event = "player_death"
+                elif self.enemy.health <= 0:
+                    self.event = "boss_death"
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
+                self.event_handler(dt)
             # ------------------------------------------------------------------------------------------------------------------
             if self.enemy.health and self.player.health:
                 self.run_card_game(self.click)
