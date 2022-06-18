@@ -11,6 +11,7 @@ from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
 from bin.classes.entities.bosses import DevilChan
+from bin.classes.entities.enemy import Enemy
 from bin.colours import *
 from bin.levels.minigames.card_game.player import move_pos
 import bin.levels.minigames.card_game.player as card_pair
@@ -36,17 +37,27 @@ class BossDevilChan(Level):
         self.card_complete = [0]
         self.size = None
         # ------------------------------------------------------------------------------------------------------------------
+        # Enemy Attributes
+        self.hp_enemy_rect = pg.Rect(1170, 545, 330, 35)
+        self.hp_bar_enemy = None
+        self.enemy_name = None
+        self.enemy = Enemy(None)
+        self.enemy_face = None
+        # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes
         self.hp_boss_rect = pg.Rect(1170, 545, 330, 35)
         self.hp_bar_boss = None
-        self.acted = True
-        self.name = "devil_chan"
+        self.boss_name = "devil_chan"
+        self.boss = DevilChan(None)
+        self.boss_face = None
+        # ------------------------------------------------------------------------------------------------------------------
+        # Battle Attributes
         self.level = None
         self.turn_counter = None
         self.completed = True
+        self.battle = "enemy"
         self.updated = True
-        self.boss = DevilChan(None)
-        self.face = None
+        self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
         # Text Bar Attributes
         self.typ_transition_in = False
@@ -63,7 +74,7 @@ class BossDevilChan(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "intro"
+        self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer()}
@@ -71,16 +82,6 @@ class BossDevilChan(Level):
     def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
         self.level = 1
         self.turn_counter = 0
-        self.boss.metadata = self.config.get_config("boss")[self.name]
-        self.player.metadata = self.config.get_config("level")[self.level]["player"]
-        self.boss.initialize()
-        self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.img_chans
-        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
-                                       cw_yellow)
-        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.face = self.config.img_bosses[self.level]
-        self.size = self.config.chan_card_size
         # ------------------------------------------------------------------------------------------------------------------
         # Text Box & Typewriter Attributes
         self.typ_transition_in = False
@@ -94,7 +95,32 @@ class BossDevilChan(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
+        # ------------------------------------------------------------------------------------------------------------------
+        # Game Attributes Initialization
+        self.fade_in = True
+        for timer in self.timer_dict:
+            self.timer_dict[timer].time_reset()
 
+    def initialize_player(self):
+        self.player.metadata = self.config.get_config("level")[self.level]["player"]
+        self.player.initialize(self.config.img_chans)
+        self.player.image_list = self.config.img_chans
+        self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
+                                       cw_yellow)
+        self.size = self.config.chan_card_size
+
+    def initialize_boss(self):
+        self.boss.metadata = self.config.get_config("boss")[self.boss_name]
+        self.boss.initialize()
+        self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.boss_face = self.config.img_bosses[self.level]
+
+    def initialize_enemy(self):
+        self.enemy_name = random.choice(list(self.config.get_config("level")[self.level]["enemies"].keys())[:-1])
+        self.enemy.metadata = self.config.get_config("level")[self.level]["enemies"][self.enemy_name]
+        self.enemy.initialize(self.enemy_name, self.config.get_config("level")[self.level]["enemies"]["phrases"])
+        self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
+        self.enemy_face = self.config.img_bosses[self.level]
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
@@ -114,7 +140,7 @@ class BossDevilChan(Level):
 
     def draw_boss(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
-        center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.boss_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -153,48 +179,63 @@ class BossDevilChan(Level):
 
     def event_handler(self, dt):
         match self.event:
-            case "intro":
-                self.typewriter_queue("intro")
+            case "boss_intro":
+                self.typewriter_queue("boss_intro", "multiple")
                 self.dialogue(1.0, dt)
             case "attack":
                 self.attack()
             case "boss_special":
-                self.typewriter_queue("special")
+                self.typewriter_queue("boss_special", "random")
                 self.dialogue(1.0, dt)
             case "boss_basic":
-                self.typewriter_queue("basic")
+                self.typewriter_queue("boss_basic", "random")
                 self.dialogue(1.0, dt)
             case "boss_death":
-                self.typewriter_queue("boss_death")
+                self.typewriter_queue("boss_death", "multiple")
                 self.dialogue(1.0, dt)
-            case "player_death":
-                self.typewriter_queue("player_death")
+            case "boss_player_death":
+                self.typewriter_queue("boss_player_death", "multiple")
+                self.dialogue(1.0, dt)
+            case "enemy_intro":
+                self.typewriter_queue("enemy_intro")
+                self.dialogue(1.0, dt)
+            case "enemy_basic":
+                self.typewriter_queue("enemy_basic")
+                self.dialogue(1.0, dt)
+            case "enemy_death":
+                self.typewriter_queue("enemy_death")
+                self.dialogue(1.0, dt)
+            case "enemy_player_death":
+                self.typewriter_queue("enemy_player_death")
                 self.dialogue(1.0, dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
-    def typewriter_queue(self, e):
+    def typewriter_queue(self, e, quote_type=None):
         if self.typ_queue_update:  # Only runs once
             self.typ_queue_update = False
             self.timer_dict["dialogue"].time_start()
-            match e:
-                case "intro":
+            if "boss" in e:
+                if quote_type == "multiple":
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])  # Queue all messages in order
-                case "basic":
-                    self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])  # Choose random message
-                case "special":
-                    self.typ_queue.enqueue(self.boss.phrases["basic"][random.randint(0, len(self.boss.phrases["basic"]) - 1)])  # Choose random message
-                # Currently pulls from the basic messages. Should eventually pull from teh special move messages.
-                case "boss_death":
-                    for key in self.boss.phrases[e]:
-                        self.typ_queue.enqueue(self.boss.phrases[e][key])
-                case "player_death":
-                    for key in self.boss.phrases[e]:
-                        self.typ_queue.enqueue(self.boss.phrases[e][key])
+                elif quote_type == "random":
+                    self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
+                else:
+                    self.typ_queue.enqueue(self.boss.phrases[e])
+            if "enemy" in e:
+                if quote_type == "multiple":
+                    for key in self.enemy.phrases[e]:
+                        self.typ_queue.enqueue(self.enemy.phrases[e][key])  # Queue all messages in order
+                elif quote_type == "random":
+                    self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
+                else:
+                    self.typ_queue.enqueue(self.enemy.phrases[e])
+            print(e, quote_type, self.event, self.boss.phrases[e], self.typ_queue.items)
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
+        print(self.typ_queue.peek())
         if seconds > delay:
             if not self.typ_queue.is_empty():
                 clear = self.typ_queue.peek()["clear"]
@@ -309,6 +350,9 @@ class BossDevilChan(Level):
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
         self.reload()
+        self.initialize_player()
+        self.initialize_enemy()
+        self.initialize_boss()
         self.timer_dict["dialogue"].time_start()
         self.typ_l1.time_start()
         self.typ_l2.time_start()
@@ -390,14 +434,14 @@ class BossDevilChan(Level):
                 if "death" in self.event:
                     return 13 if self.player.health <= 0 else 14
                 if self.player.health <= 0:
-                    self.event = "player_death"
+                    self.event = "boss_player_death"
                 elif self.boss.health <= 0:
                     self.event = "boss_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)
             # ------------------------------------------------------------------------------------------------------------------
-            if self.boss.health and self.player.health:
+            if ((self.boss.health and self.battle == "boss") or (self.enemy.health and self.battle == "enemy")) and self.player.health:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens(self.card_canvas, 0, self.card_canvas_y)

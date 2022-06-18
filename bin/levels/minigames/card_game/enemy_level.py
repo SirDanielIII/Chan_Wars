@@ -379,7 +379,7 @@ class EnemyLevel(Level):
                 if self.player.health <= 0:
                     self.event = "player_death"
                 elif self.enemy.health <= 0:
-                    self.event = "boss_death"
+                    self.event = "enemy_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)

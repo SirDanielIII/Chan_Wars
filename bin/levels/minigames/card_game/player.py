@@ -76,6 +76,7 @@ class Player:
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
         cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
+        random.shuffle(pos_list)
         self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 

@@ -136,7 +136,7 @@ enemies:
     hp: 30
     name: Goblin Chan
   phrases:
-    intro:
+    enemy_intro:
       clear: true
       delay: 0.1
       fade_in: true
@@ -148,7 +148,7 @@ enemies:
         - 2
       text: You have encounterd a wild ---!!!
       wait: 1.0
-    player_death:
+    enemy_player_death:
       0:
         clear: true
         delay: 0.1
