@@ -25,3 +25,22 @@ pip install pyyaml
 
 **The Original**
 ![Daniel Cubed Meets Chan Jamboard](https://user-images.githubusercontent.com/75279704/157279674-38a1baae-15b8-4490-b09e-6a3acba1c61e.gif)
+
+######About the Game - By Daniel Lu
+Stacks are reduced at the end of the turn.
+
+Status Effects
+* Fear: One pair of cards cannot be matched. Player specific. Falls by one stack every turn.
+* Weakness: Deals 25% less damage. Falls by one stack every turn.
+* Vulnerable: Takes 25% more damage. Falls by one stack every turn.
+* Disappointment: Emotional damage. Falls by one stack every turn.
+* Marked: Takes one extra damage per stack after being attacked. Stacks do not disappear.
+* Poison: Takes one damage at the end of the turn per stack. Falls by one stack every turn.
+
+Buffs
+* Power: Deals 25% more damage. Falls by one stack every turn.
+* Lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
+* Regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
+* Energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
+* Armor: Gain 1 block per stack. Falls by one stack every turn.
+* Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
