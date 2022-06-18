@@ -23,7 +23,7 @@ from bin.menus.death_screen import Death
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
-pg.mixer.set_num_channels(16)
+pg.mixer.set_num_channels(20)
 
 
 class Main(object):
@@ -38,10 +38,10 @@ class Main(object):
         # Pygame Window Caption
         pg.display.set_caption("Chan Wars")  # Sets Caption Text
         pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/icon.png").convert_alpha())  # Caption Icon
-        # Audio System
-        self.audio = Audio()
         # Config File
         self.config = Config()
+        # Audio System
+        self.audio = Audio()
         # Levels
         self.lvl = 0
         self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
