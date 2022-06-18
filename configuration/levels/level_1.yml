@@ -358,3 +358,10 @@ player:
   energy: 3
   hp: 50
   rows: 4
+  base_deck:
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - angel_chan
+    - air_chan
+    - jesus_chan

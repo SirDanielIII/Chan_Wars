@@ -47,7 +47,8 @@ class DevilChan(Boss):
             move_type = "special"
             self.special = 1
             move = self.moves[move_type]
-        mod = 0
+        print(move)
+        mod = 1
         if self.status_bar["Weakness"]:
             mod *= 0.75
         if self.buff_bar["Power"]:

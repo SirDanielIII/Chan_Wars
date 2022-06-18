@@ -1,5 +1,6 @@
 import random
 import pygame as pg
+from math import floor
 
 pg.font.init()
 
@@ -55,7 +56,7 @@ class Player:
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
         self.choices = {}
-        self.deck = ['oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'oni_chan', 'air_chan', 'air_chan', 'jackie_chan', 'jesus_chan', 'oni_chan', 'shrek_chan']
+        self.deck = None
         self.played_cards = None
 
     def initialize(self, image_dict):
@@ -64,6 +65,7 @@ class Player:
         self.columns = self.metadata["columns"]
         self.image_dict = image_dict
         self.health = self.metadata["hp"]
+        self.deck = self.metadata["base_deck"]
         self.energy = self.metadata["energy"]
 
     def generate_pairs(self, size, margins, X, Y, deck=None):
@@ -72,9 +74,9 @@ class Player:
             self.deck = deck
         images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
         o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
-        cards = random.sample(self.deck + self.deck, len(self.deck) * 2)
+        cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
-        self.played_cards = [Card(images[cards[a].split()[-1]], card, size, margins, self.columns, o_set, cards[a]) for a, card in enumerate(pos_list)]
+        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
     def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):

@@ -1,4 +1,4 @@
-hp: 60
+hp: 100
 moves:
   basic:
     0:
@@ -14,7 +14,7 @@ moves:
       damage: 10
       heal: 0
       status:
-        weakness: 2
+        Weakness: 2
     2:
       block: 15
       buff:
@@ -105,7 +105,7 @@ phrases:
       - 2
       text: .2 ELECTRON VOLTS!!!
       wait: 1.0
-  death:
+  boss_death:
     0:
       clear: false
       delay: 0.12
@@ -129,6 +129,31 @@ phrases:
       - 15
       - 15
       text: THIS IS BLASPHEMYYYYYY!!! *dies*
+      wait: 1.0
+  player_death:
+    0:
+      clear: false
+      delay: 0.12
+      fade_in: true
+      fade_out: false
+      line: 1
+      pause: 0.5
+      shake:
+        - 3
+        - 3
+      text: YEEESSSSS!!!
+      wait: 0
+    1:
+      clear: true
+      delay: 0.08
+      fade_in: false
+      fade_out: true
+      line: 2
+      pause: 1.4
+      shake:
+        - 15
+        - 15
+      text: THIS ISN'T BLASPHEMYYYYYY!!! *does not die*
       wait: 1.0
   intro:
     0:
