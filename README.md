@@ -7,7 +7,7 @@ Fight your way through the bosses with this unique memory game, loosely based on
 3. Mr. Phone
 
 
-###### About the Game - By Daniel Lu
+# About the Game - By Daniel Lu
 Stacks are reduced at the end of the turn.
 
 **Status Effects**
@@ -27,8 +27,7 @@ Stacks are reduced at the end of the turn.
 * Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
 
 
-###### Requirements
-**Dependencies**
+# Requirements / Dependencies
 * Python 3.10.X and up
 * PyGame
 * PyYAML
@@ -40,7 +39,7 @@ pip install pyyaml
 ```
 - or run "install_dependencies.bat"
 
-###### Images
+# Images
 ![image](https://user-images.githubusercontent.com/75279704/160659515-7b0cea4c-f7d3-401a-a4b1-2419392fdc5a.png)
 
 **The Original**
