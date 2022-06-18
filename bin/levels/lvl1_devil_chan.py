@@ -1,20 +1,20 @@
+import math
 import random
 import sys
 import time
-import math
 
+import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.entities.bosses import DevilChan
+from bin.classes.entities.enemy import Enemy
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
-from bin.classes.entities.bosses import DevilChan
-from bin.classes.entities.enemy import Enemy
 from bin.colours import *
 from bin.levels.minigames.card_game.player import move_pos
-import bin.levels.minigames.card_game.player as card_pair
 
 
 class BossDevilChan(Level):
@@ -103,8 +103,8 @@ class BossDevilChan(Level):
 
     def initialize_player(self):
         self.player.metadata = self.config.get_config("level")[self.level]["player"]
-        self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.img_chans
+        self.player.initialize(self.config.img_cards)
+        self.player.image_list = self.config.img_cards
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
                                        cw_yellow)
         self.size = self.config.chan_card_size

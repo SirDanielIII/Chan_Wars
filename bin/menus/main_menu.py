@@ -1,9 +1,9 @@
 import sys
 import time
 
+from bin.classes.buttons import ButtonRect
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.buttons import ButtonRect
 
 
 class MainMenu(Level):

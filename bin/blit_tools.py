@@ -2,10 +2,11 @@
 # Module - Blit Tools
 # Just useful tools I use while doing stuff in Pygame
 
-import pygame as pg
-from pygame import gfxdraw
 import random
 import string
+
+import pygame as pg
+from pygame import gfxdraw
 
 
 def draw_text_center(text, colour, font_type, screen, x, y):  # Draws Centered Text

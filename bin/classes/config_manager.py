@@ -1,20 +1,21 @@
-import yaml  # https://zetcode.com/python/yaml/
 import os
+
 import pygame as pg
+import yaml  # https://zetcode.com/python/yaml/
 
-
-# Note: [DEVIL CHAN ONLY] The values in Special Attack goes like [Attack Type, Damage, Heal]
 
 class Config(object):
-    def __init__(self):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
         # ----------------------------------------------------------------------------------------------------------------------------
         # Images
         self.img_menus = {}
         self.img_levels = {}
-        self.img_chans = {}
+        self.img_cards = {}
         self.img_enemies = {}
         self.img_bosses = {}
-        self.img_boss_cards = {}
+        self.img_boss_select = {}
         self.img_end_screens = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
@@ -101,44 +102,41 @@ class Config(object):
             with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "r") as f:
                 self.boss_confs[i] = yaml.safe_load(f)
 
-    def load_media(self):
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Menu Backgrounds
-        self.img_menus = self.load_images_dict(os.getcwd() + "/resources/menus", (1600, 900))
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Level Select Images
-        self.img_boss_cards = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (1600, 900))
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Cards & Card Back for Card Game
-        self.img_chans = self.load_images_dict(os.getcwd() + "/resources/chan_cards/", self.chan_card_size)
-        self.img_chans["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Level backgrounds
+    def load_img_menus(self):
+        self.img_menus = self.load_images_dict(os.getcwd() + "/resources/menus", (self.width, self.height))
+
+    def load_img_boss_select(self):  # Level select images
+        self.img_boss_select = self.load_images_resize(os.getcwd() + "/resources/menus/boss_cards", (self.width, self.height))
+
+    def load_chan_cards(self):
+        self.img_cards = self.load_images_dict(os.getcwd() + "/resources/chan_cards/", self.chan_card_size)
+        self.img_cards["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
+
+    def load_backgrounds(self):
         self.img_levels = {
-            1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (1600, 900)),
-            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (1600, 900)),
-            3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (1600, 900)),
-            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900)),
-            "Card_Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (1600, 900))
+            1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (self.width, self.height)),
+            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (self.width, self.height)),
+            3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (self.width, self.height)),
+            "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (self.width, self.height)),
+            "Card_Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (self.width, self.height))
         }
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Boss Faces
+
+    def load_img_bosses(self):
         self.img_bosses = {
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/boss/devil_chan.png").convert_alpha(), self.boss_face_size),
             2: self.load_images_dict(os.getcwd() + "/resources/level_2/boss/", self.boss_face_size, True, "ms_g_"),
             3: self.load_images_dict(os.getcwd() + "/resources/level_3/boss/", self.boss_face_size, True, "phone_")
         }
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Enemies
-        # print(self.level_confs)
+
+    def load_img_enemies(self):
         self.img_enemies = {level: {} for level in range(1, 3)}
         self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True, "_chan")
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # End Screens
-        self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (1600, 900)),
-                                pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (1600, 900)))
-        # ----------------------------------------------------------------------------------------------------------------------------
-        # Fonts
+
+    def load_end_screens(self):
+        self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (self.width, self.height)),
+                                pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (self.width, self.height)))
+
+    def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
@@ -148,17 +146,6 @@ class Config(object):
         self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 100)
 
         self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 75)
-
-    def get_config(self, name):
-        # print(self.player_hp, self.enable_music, self.enable_sfx, self.music_vol, self.sfx_vol,
-        #       self.fps_show, self.fps_30, self.fps_60, self.fps_75, self.fps_165)
-        match name:
-            case "global":
-                return self.global_conf
-            case "level":
-                return self.level_confs
-            case "boss":
-                return self.boss_confs
 
     @staticmethod
     def load_audio_set(path_to_directory, extension):
@@ -265,17 +252,3 @@ class Config(object):
                 path = os.path.join(path_to_directory, filename)
                 image_list.append(pg.transform.smoothscale(pg.image.load(path), size).convert())
         return image_list
-
-    @staticmethod
-    def resize_images(images, size):
-        """
-        Args:
-            images:list:
-                List of images to be resized
-            size:tuple:
-                Resolution to resize image list to
-        """
-        lst = []
-        for idx, i in enumerate(images):
-            lst.append(pg.transform.smoothscale(i, size).convert_alpha())
-        return lst

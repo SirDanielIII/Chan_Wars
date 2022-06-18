@@ -1,13 +1,12 @@
-import pygame as pg
+import sys
 import sys
 import time
-import os
 
-from bin.blit_tools import draw_text_center, draw_text_left
+from bin.blit_tools import draw_text_left
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.health_bar import HealthBar as SoundBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.health_bar import HealthBar as SoundBar
 
 
 class Options(Level):

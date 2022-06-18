@@ -1,15 +1,15 @@
+import math
 import sys
 import time
-import math
 
-from bin.classes.stopwatch import Timer
+import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.entities.bosses import MsG
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
+from bin.classes.stopwatch import Timer
 from bin.colours import *
-import bin.levels.minigames.card_game.player as card_pair
-from bin.classes.entities.bosses import MsG
 
 
 class BossMsG(Level):

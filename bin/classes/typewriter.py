@@ -1,7 +1,8 @@
+from random import uniform
+
 import pygame as pg
 
 from .stopwatch import Timer
-from random import uniform
 
 pg.init()
 

@@ -1,9 +1,10 @@
 # Daniel Zhuo
 # Module - Button
 
+from pygame import gfxdraw
+
 from bin.blit_tools import draw_text_center
 from bin.colours import *
-from pygame import gfxdraw
 
 
 class ButtonRect(object):

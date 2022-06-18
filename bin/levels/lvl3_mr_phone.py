@@ -1,16 +1,16 @@
+import math
 import sys
 import time
-import math
 
-from bin.classes.stopwatch import Timer
+import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
-from bin.classes.health_bar import HealthBar
-from bin.classes.level import Level
-from bin.colours import *
-import bin.levels.minigames.card_game.player as card_pair
 from bin.classes.entities.bosses import MrPhone
 from bin.classes.entities.shopkeeper import ShopKeep
+from bin.classes.health_bar import HealthBar
+from bin.classes.level import Level
+from bin.classes.stopwatch import Timer
+from bin.colours import *
 
 
 class BossMrPhone(Level):
@@ -65,12 +65,12 @@ class BossMrPhone(Level):
         self.size = self.config.chan_card_size
         self.turn_counter = 0
         self.boss.initialize()
-        self.player.initialize(self.config.img_chans)
+        self.player.initialize(self.config.img_cards)
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.face = self.config.img_bosses[3]["normal"]
         self.cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
-        self.shopkeeper.initialize(self.config.get_config("level")[self.level]["player"]["cards"], self.player.deck, self.config.img_chans)
+        self.shopkeeper.initialize(self.config.get_config("level")[self.level]["player"]["cards"], self.player.deck, self.config.img_cards)
         self.shopkeeper.create_stock()
 
     def draw_bars(self, dt):  # Draw Health bars
