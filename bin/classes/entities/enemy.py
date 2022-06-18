@@ -19,8 +19,8 @@ class Enemy:
         self.attacks = {a: self.metadata["attacks"][b] for a, b in enumerate(self.metadata["attacks"])}
         self.health = self.metadata["hp"]
         self.phrases = phrases_data
-        self.phrases["intro"]["text"] = self.phrases["intro"]["text"].replace("---", self.metadata["name"])
-        self.phrases["enemy_player_death"][0]["text"] = self.phrases["player_death"][0]["text"].replace("---", self.metadata["name"])
+        self.phrases["enemy_intro"]["text"] = self.phrases["enemy_intro"]["text"].replace("---", self.metadata["name"])
+        self.phrases["enemy_player_death"][0]["text"] = self.phrases["enemy_player_death"][0]["text"].replace("---", self.metadata["name"])
         self.phrases["enemy_death"]["text"] = self.phrases["enemy_death"]["text"].replace("---", self.metadata["name"])
 
     def act(self, turn_counter):

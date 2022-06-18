@@ -110,7 +110,7 @@ class EnemyLevel(Level):
                         self.hp_bar_enemy.x + self.hp_bar_enemy.w + 5, self.hp_bar_enemy.y + self.hp_bar_enemy.h * 2 + 5)
         self.hp_bar_enemy.render(self.enemy.health, 0.3, dt, True)
 
-    def draw_enemy(self, time_elapsed):
+    def draw_enemy(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)  # VELOCITY FUNCTION HERE (SLOPE)
         center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
