@@ -79,7 +79,7 @@ class BossDevilChan(Level):
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
                                        cw_yellow)
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.face = self.config.img_bosses[3]
+        self.face = self.config.img_bosses[self.level]
         self.size = self.config.chan_card_size
         # ------------------------------------------------------------------------------------------------------------------
         # Text Box & Typewriter Attributes
@@ -94,11 +94,7 @@ class BossDevilChan(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
-        # ------------------------------------------------------------------------------------------------------------------
-        # Game Attributes Initialization
-        self.fade_in = True
-        for timer in self.timer_dict:
-            self.timer_dict[timer].time_reset()
+
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
@@ -118,7 +114,7 @@ class BossDevilChan(Level):
 
     def draw_boss(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
-        center_blit_image(self.game_canvas, self.config.img_bosses[1], self.width / 2, self.height / 2 - 100 + offset)
+        center_blit_image(self.game_canvas, self.face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -352,7 +348,7 @@ class BossDevilChan(Level):
                 self.freeze = False
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens()
-            self.game_canvas.blit(self.config.img_levels[1], (0, 0))
+            self.game_canvas.blit(self.config.img_levels[self.level], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
                 if not self.timer_dict["update_delay"].activate_timer and not self.updated and not self.completed:

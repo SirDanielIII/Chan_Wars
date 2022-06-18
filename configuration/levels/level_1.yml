@@ -6,7 +6,7 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Resonate
+        attack: Resonate
         status:
           Weakness: 1
       sonic_attack:
@@ -14,7 +14,7 @@ enemies:
         buff: None
         damage: 10
         heal: 0
-        phrase: Sonic Attack
+        attack: Sonic Attack
         status: None
     hp: 40
     name: Bat Chan
@@ -25,7 +25,7 @@ enemies:
         buff: None
         damage: 15
         heal: 0
-        phrase: Biggus Smackus
+        attack: Biggus Smackus
         status: None
     hp: 75
     name: Big Chan
@@ -36,7 +36,7 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Dark Curse
+        attack: Dark Curse
         status:
           Vulnerable: 1
       dark_orb:
@@ -44,67 +44,67 @@ enemies:
         buff: None
         damage: 10
         heal: 0
-        phrase: Dark Orb
+        attack: Dark Orb
         status: None
       darkness:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Darkness
+        attack: Darkness
         status:
           Weakness: 2
     hp: 40
     name: Dark Chan
-  drowned:
+  zombie:
     attacks:
       bloated_breath:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Bloated Breath
+        attack: Bloated Breath
         status:
           Vulnerable: 1
-      corpse_explosion:
-        block: 0
-        buff: None
-        damage: 25
-        heal: -30
-        phrase: Corpse Explosion
-        status: None
       drowned_glare:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Drowned Glare
+        attack: Drowned Glare
         status:
           Fear: 1
+      corpse_explosion:
+        block: 0
+        buff: None
+        damage: 25
+        heal: -30
+        attack: Corpse Explosion
+        status: None
     hp: 30
     name: Drowned Chan
-  flying:
+  scrambled:
     attacks:
       claw_strike:
         block: 0
         buff: None
         damage: 10
         heal: 0
-        phrase: Claw Strike
+        attack: Claw Strike
         status: None
       fly_up:
         block: 10
         buff: None
         damage: 0
         heal: 0
-        phrase: Fly Up
+        attack: Fly Up
         status: None
       swoop_in:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Swoop In
+        attack: Swoop In
         status:
           Fear: 1
     hp: 50
@@ -116,14 +116,14 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Evasive Maneuvers
+        attack: Evasive Maneuvers
         status: None
       hamstring:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Hamstring
+        attack: Hamstring
         status:
           Weakness: 2
       tiny_stab:
@@ -131,10 +131,60 @@ enemies:
         buff: None
         damage: 10
         heal: 0
-        phrase: Tiny Stab
+        attack: Tiny Stab
         status: None
     hp: 30
     name: Goblin Chan
+  phrases:
+    intro:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: false
+      line: 1
+      pause: 1.4
+      shake:
+        - 2
+        - 2
+      text: You have encounterd a wild ---!!!
+      wait: 1.0
+    player_death:
+      0:
+        clear: true
+        delay: 0.1
+        fade_in: true
+        fade_out: false
+        line: 1
+        pause: 1.4
+        shake:
+          - 2
+          - 2
+        text: --- has struck you down!!!
+        wait: 1.0
+      1:
+        clear: true
+        delay: 0.1
+        fade_in: false
+        fade_out: true
+        line: 2
+        pause: 1.4
+        shake:
+          - 2
+          - 2
+        text: You're gonna have to try harder than that...
+        wait: 1.0
+    enemy_death:
+      clear: true
+      delay: 0.1
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.4
+      shake:
+        - 2
+        - 2
+      text: You strike down --- with a mighty swing!!!
+      wait: 1.0
 player:
   cards:
     air_chan:
