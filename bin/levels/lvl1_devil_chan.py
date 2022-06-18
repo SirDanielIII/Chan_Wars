@@ -55,7 +55,7 @@ class BossDevilChan(Level):
         self.level = None
         self.turn_counter = None
         self.completed = True
-        self.battle = "enemy"
+        self.battle = "boss"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -74,12 +74,14 @@ class BossDevilChan(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "boss_intro"
+        self.event = "enemy_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer()}
 
-    def reload(self):  # Set values here b/c `self.config = None` when the class is first initialized
+    def reload(self):  # Sets generic values here. Run every time
+        # ------------------------------------------------------------------------------------------------------------------
+        # Level Attributes
         self.level = 1
         self.turn_counter = 0
         # ------------------------------------------------------------------------------------------------------------------
@@ -120,7 +122,7 @@ class BossDevilChan(Level):
         self.enemy.metadata = self.config.get_config("level")[self.level]["enemies"][self.enemy_name]
         self.enemy.initialize(self.enemy_name, self.config.get_config("level")[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
-        self.enemy_face = self.config.img_bosses[self.level]
+        self.enemy_face = self.config.img_enemies[self.enemy_name]
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
@@ -132,15 +134,26 @@ class BossDevilChan(Level):
         self.hp_bar_player.render(self.player.health, 0.3, dt)
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Text & Health Bar
-        draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
-        draw_text_right(self.boss.metadata["name"], white, self.config.f_hp_bar_name, self.game_canvas,
-                        self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
-        self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
+        if self.battle == "boss":
+            draw_text_right(str(math.ceil(self.boss.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
+                            self.hp_bar_boss.x + self.hp_bar_boss.w + 10, self.hp_bar_boss.y)
+            draw_text_right(self.boss.metadata["name"], white, self.config.f_hp_bar_name, self.game_canvas,
+                            self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
+            self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
+        if self.battle == "enemy":
+            draw_text_right(str(math.ceil(self.enemy.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
+                            self.hp_bar_enemy.x + self.hp_bar_enemy.w + 10, self.hp_bar_enemy.y)
+            draw_text_right(self.enemy.metadata["name"], white, self.config.f_hp_bar_name, self.game_canvas,
+                            self.hp_bar_enemy.x + self.hp_bar_enemy.w + 5, self.hp_bar_enemy.y + self.hp_bar_enemy.h * 2 + 10)
+            self.hp_bar_enemy.render(self.enemy.health, 0.3, dt, True)
 
     def draw_boss(self):
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
         center_blit_image(self.game_canvas, self.boss_face, self.width / 2, self.height / 2 - 100 + offset)
+
+    def draw_enemy(self):
+        offset = 10 * math.sin(pg.time.get_ticks() / 500)
+        center_blit_image(self.game_canvas, self.enemy_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
@@ -227,10 +240,9 @@ class BossDevilChan(Level):
                     for key in self.enemy.phrases[e]:
                         self.typ_queue.enqueue(self.enemy.phrases[e][key])  # Queue all messages in order
                 elif quote_type == "random":
-                    self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
+                    self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.enemy.phrases[e]) - 1)])
                 else:
                     self.typ_queue.enqueue(self.enemy.phrases[e])
-            print(e, quote_type, self.event, self.boss.phrases[e], self.typ_queue.items)
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
@@ -400,25 +412,38 @@ class BossDevilChan(Level):
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
                 if self.timer_dict["update_delay"].seconds > 1.5:
-                    self.boss.update(self.player.attack["damage"], self.player.attack["status"])
+                    if self.battle == "boss":
+                        self.boss.update(self.player.attack["damage"], self.player.attack["status"])
+                    elif self.battle == "enemy":
+                        self.enemy.update(self.player.attack["damage"], self.player.attack["status"])
                     self.updated = True
                     self.timer_dict["update_delay"].time_reset()
                 if self.timer_dict["action"].seconds > 2.5 and not self.acted and "death" not in self.event:
-                    phrase = self.boss.act(self.turn_counter)
-                    if "basic" in phrase:
-                        self.event = "boss_basic"
-                    elif "special" in phrase:
-                        self.event = "boss_special"
+                    if self.battle == "boss":
+                        phrase = self.boss.act(self.turn_counter)
+                        if "basic" in phrase:
+                            self.event = "boss_basic"
+                        elif "special" in phrase:
+                            self.event = "boss_special"
+                    elif self.battle == "enemy":
+                        self.enemy.act(self.turn_counter)
+                        self.event = "enemy_basic"
                     self.acted = True
                 elif self.timer_dict["action"].seconds > 4 and "death" not in self.event:
                     self.player.update(self.boss.move["damage"], self.boss.move["status"])
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
-                    self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                    if self.battle == "boss":
+                        self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                    elif self.battle == "enemy":
+                        self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
-                self.draw_boss()  # Draw Boss' Image (See Method Above)
+                if self.battle == "boss":
+                    self.draw_boss()  # Draw Boss' Image (See Method Above)
+                if self.battle == "enemy":
+                    self.draw_enemy()  # Draw Boss' Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
@@ -433,10 +458,14 @@ class BossDevilChan(Level):
             if self.typ_queue.is_empty():
                 if "death" in self.event:
                     return 13 if self.player.health <= 0 else 14
-                if self.player.health <= 0:
+                if self.player.health <= 0 and self.battle == "boss":
                     self.event = "boss_player_death"
                 elif self.boss.health <= 0:
                     self.event = "boss_death"
+                if self.player.health <= 0 and self.battle == "enemy":
+                    self.event = "enemy_player_death"
+                elif self.enemy.health <= 0:
+                    self.event = "enemy_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)
