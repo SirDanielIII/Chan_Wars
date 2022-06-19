@@ -78,7 +78,7 @@ class Player:
             self.deck = deck
         self.size = size
         images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
-        o_set = ((X - margins[0] * (self.columns - 1) - self.size[0] * self.columns) / 2 + 200, (Y - margins[1] * (self.rows - 1) - self.size[1] * self.rows) / 2)
+        o_set = ((X - margins[0] * (self.columns - 1) - self.size[0] * self.columns) / 2 + 2 * self.size[0], (Y - margins[1] * (self.rows - 1) - self.size[1] * self.rows) / 2)
         self.ui_rect = pg.Rect(o_set[0] - 4 * self.size[0], o_set[1], self.size[0] * 3.5, margins[1] * (self.rows - 1) + self.size[1] * self.rows)
         cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
@@ -96,7 +96,7 @@ class Player:
         self.draw_ui(ui_images, pos_mod)
 
     def draw_ui(self, ui_images, pos_mod):
-        pg.draw.rect(self.screen, (224, 255, 255), self.ui_rect, 0, 25)
+        pg.draw.rect(self.screen, (224, 255, 255, 0), self.ui_rect, 0, 25)
         pg.draw.rect(self.screen, cyan, self.ui_rect, 5, 25)
         for a in range(self.metadata["energy"]):
             if a < self.energy:
