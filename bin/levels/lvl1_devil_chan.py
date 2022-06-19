@@ -99,10 +99,11 @@ class BossDevilChan(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
+        self.next_level = 2
         for timer in self.timer_dict:
             self.timer_dict[timer].time_reset()
 
-    def initialize_player(self):    # Run once at the start of the level. Player attributes are not reset between every battle.
+    def initialize_player(self):  # Run once at the start of the level. Player attributes are not reset between every battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
         self.player.metadata = self.config.level_confs[self.level]["player"]
@@ -112,7 +113,7 @@ class BossDevilChan(Level):
                                        cw_yellow)
         self.size = self.config.chan_card_size
 
-    def initialize_boss(self):    # Run once at the start of the level.
+    def initialize_boss(self):  # Run once at the start of the level.
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes Initialization
         self.boss.metadata = self.config.boss_confs[self.boss_name]
@@ -120,7 +121,7 @@ class BossDevilChan(Level):
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.boss_face = self.config.img_bosses[self.level]
 
-    def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
+    def initialize_enemy(self):  # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
         self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
@@ -178,13 +179,13 @@ class BossDevilChan(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        if self.card_canvas_y != self.height:   # Makes sure that the card game is only run while teh screen is up.
-            if not self.player.played_cards:    # Generates a new set of cards if no cards already exist.
+        if self.card_canvas_y != self.height:  # Makes sure that the card game is only run while teh screen is up.
+            if not self.player.played_cards:  # Generates a new set of cards if no cards already exist.
                 self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
-                if self.card_match[0] != 2:     # If a match hasn't been made, allow teh player to continue trying to match.
+                if self.card_match[0] != 2:  # If a match hasn't been made, allow teh player to continue trying to match.
                     self.card_match = self.player.complete()
                 # ------------------------------------------------------------------------------------------------------------------
                 # Completes the card matching process
@@ -203,7 +204,7 @@ class BossDevilChan(Level):
             # Draws the cards and creates matches between clicked cards.
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
-    def trigger_in(self):   # Called to bring the card game back in.
+    def trigger_in(self):  # Called to bring the card game back in.
         if not self.card_game:
             self.game_transition_in = True
             self.game_transition_out = False
@@ -224,7 +225,7 @@ class BossDevilChan(Level):
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("boss_intro", "multiple")
                 self.dialogue(1.0, dt)
-            case "boss_special":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
+            case "boss_special":  # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_special", "random")
                 self.dialogue(1.0, dt)
             case "boss_basic":  # Event happens when the boss uses its basic move. Basic attack dialogue is initiated.
@@ -233,18 +234,18 @@ class BossDevilChan(Level):
             case "boss_death":  # Event happens when the boss is defeated. Boss death dialogue is initiated.
                 self.typewriter_queue("boss_death", "multiple")
                 self.dialogue(1.0, dt)
-            case "boss_player_death":   # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
+            case "boss_player_death":  # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
                 self.typewriter_queue("boss_player_death", "multiple")
                 self.dialogue(1.0, dt)
             # ------------------------------------------------------------------------------------------------------------------
             # Enemy events
-            case "enemy_intro":     # Event happens when the enemy fight is initiated. Introduction dialogue is initiated.
+            case "enemy_intro":  # Event happens when the enemy fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("enemy_intro")
                 self.dialogue(1.0, dt)
-            case "enemy_basic":     # Event happens when the enemy uses its basic move. Basic attack dialogue is initiated.
+            case "enemy_basic":  # Event happens when the enemy uses its basic move. Basic attack dialogue is initiated.
                 self.typewriter_queue("enemy_basic")
                 self.dialogue(1.0, dt)
-            case "enemy_death":     # Event happens when the enemy is defeated. Enemy death dialogue is initiated.
+            case "enemy_death":  # Event happens when the enemy is defeated. Enemy death dialogue is initiated.
                 self.typewriter_queue("enemy_death")
                 self.dialogue(1.0, dt)
             case "enemy_player_death":  # Event happens when the player dies while fighting an enemy. Enemy winning dialogue is initiated.
@@ -259,29 +260,29 @@ class BossDevilChan(Level):
             # ------------------------------------------------------------------------------------------------------------------
             # Dialogue for boss events
             if "boss" in e:
-                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
+                if quote_type == "multiple":  # If there are multiple lines, queues all of them in order.
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])
-                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
+                elif quote_type == "random":  # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
-                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
+                else:  # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.boss.phrases[e])
             # ------------------------------------------------------------------------------------------------------------------
             # Dialogue for enemy events
             if "enemy" in e:
                 print(self.enemy.phrases[e])
-                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
+                if quote_type == "multiple":  # If there are multiple lines, queues all of them in order.
                     for key in self.enemy.phrases[e]:
                         self.typ_queue.enqueue(self.enemy.phrases[e][key])  # Queue all messages in order
-                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
+                elif quote_type == "random":  # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.enemy.phrases[e]) - 1)])
-                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
+                else:  # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.enemy.phrases[e])
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
-        if seconds > delay:     # Implements delay before the message is blit onto the screen.
+        if seconds > delay:  # Implements delay before the message is blit onto the screen.
             if not self.typ_queue.is_empty():
                 clear = self.typ_queue.peek()["clear"]
                 wait = self.typ_queue.peek()["wait"]
@@ -493,15 +494,18 @@ class BossDevilChan(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
-                    self.next_level = 2
                 if self.transition_out("game", self.game_canvas, dt):
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
                 if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
-                    return 8 if self.player.health <= 0 else 9
-                elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
+                    if self.player.health <= 0:
+                        self.next_level = 8
+                    else:
+                        self.next_level = 9
+                    self.fade_out = True
+                elif "death" in self.event and "enemy" in self.event:  # Resets the battle state and brings up a new enemy if an enemy dies
                     enemy_count += 1
                     if enemy_count != 3:
                         self.battle_reset()
