@@ -17,6 +17,7 @@ class Level(ABC):
         self.FPS = fps
         self.last_time = last_time
         self.config = config
+        self.audio = audio
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         # ------------------------------------------------------------------------------------------------------------------
         # Level Switching
