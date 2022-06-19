@@ -6,6 +6,8 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar as SoundBar
 from bin.classes.level import Level
 from bin.colours import *
+from bin.classes.audio import Audio
+from bin.classes.buttons import OptionsButton
 
 
 class Options(Level):
@@ -28,20 +30,15 @@ class Options(Level):
         self.text_offset = 5
         self.on_buttons = ["FPS_30", "music_volume", "sfx_volume"]
         self.mutually_exclusives = {"FPS": []}
-        self.rect_dict = {"fullscreen": pg.Rect(self.align_01_x, self.align_01_y, self.button_size, self.button_size),
-                          "FPS_30": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size),
-                          "FPS_60": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 4, self.button_size, self.button_size),
-                          "FPS_75": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 6, self.button_size, self.button_size),
-                          "FPS_165": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 8, self.button_size, self.button_size),
-                          "show_FPS": pg.Rect(self.align_01_x, self.align_01_y + self.button_size * 10, self.button_size, self.button_size),
-                          "null11": pg.Rect(self.align_02_x, self.align_02_y, self.button_size, self.button_size),
-                          "null12": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 2, self.button_size, self.button_size),
-                          "null13": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 4, self.button_size, self.button_size),
-                          "null14": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 6, self.button_size, self.button_size),
-                          "null15": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 8, self.button_size, self.button_size),
-                          "null16": pg.Rect(self.align_02_x, self.align_02_y + self.button_size * 10, self.button_size, self.button_size),
-                          "music_volume": pg.Rect(self.align_03_x, self.align_03_y, self.button_size, self.button_size),
-                          "sfx_volume": pg.Rect(self.align_03_x, self.align_03_y + self.button_size * 4, self.button_size, self.button_size)}
+        self.rect_dict = {"FPS_30": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y, self.button_size, self.button_size, light_grey, red, orange, "FPS_30", None, cw_yellow, 10),
+                          "FPS_60": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size, light_grey, red, orange, "FPS_60", None, cw_yellow, 10),
+                          "FPS_75": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y + self.button_size * 4, self.button_size, self.button_size, light_grey, red, orange, "FPS 75", None, cw_yellow, 10),
+                          "FPS_165": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y + self.button_size * 6, self.button_size, self.button_size, light_grey, red, orange, "FPS 165", None, cw_yellow, 10),
+                          "show_FPS": OptionsButton(self.game_canvas, self.align_02_x, self.align_02_y, self.button_size, self.button_size, light_grey, red, orange, "Show FPS", None, cw_yellow, 10),
+                          "fullscreen": OptionsButton(self.game_canvas, self.align_02_x, self.align_02_y + self.button_size * 2, self.button_size, self.button_size, light_grey, red, orange, "Fullscreen", None, cw_yellow, 10),
+                          "skip_intro": OptionsButton(self.game_canvas, self.align_02_x, self.align_02_y + self.button_size * 4, self.button_size, self.button_size, light_grey, red, orange, "Skip Intro", None, cw_yellow, 10),
+                          "music_volume": OptionsButton(self.game_canvas, self.align_03_x, self.align_03_y, self.button_size, self.button_size, light_grey, red, orange, "Music Volume", None, cw_yellow, 10),
+                          "sfx_volume": OptionsButton(self.game_canvas, self.align_03_x, self.align_03_y + self.button_size * 4, self.button_size, self.button_size, light_grey, red, orange, "SFX Volume", None, cw_yellow, 10),}
         self.sound_sliders = {
             "music_slider_outer": pg.Rect(self.align_03_x + self.button_size * 8, self.align_03_y + self.button_size * 2, self.button_size,
                                           self.button_size),
@@ -56,7 +53,7 @@ class Options(Level):
         self.music_bar = SoundBar(self.game_canvas, self.sound_sliders["music_slider"], 100, light_grey, white, 5)
         self.sfx_bar = SoundBar(self.game_canvas, self.sound_sliders["sfx_slider"], 100, light_grey, white, 5)
 
-    def draw_settings(self, dt):
+    def draw_settings(self, dt, mx, my):
         video_header = self.f_options_title.render("Video", True, cw_yellow)
         # Video Settings Text Blitting
         draw_text_left("Video", cw_yellow, self.f_options_title, self.text_canvas, self.align_01_x,
@@ -83,11 +80,10 @@ class Options(Level):
                       self.sound_sliders["sfx_slider_outer"].y + 5,
                       self.button_size - 10, self.button_size - 10])
         for button in self.rect_dict:
-            pg.draw.rect(self.game_canvas, light_grey, self.rect_dict[button])
-            draw_text_left(button, cw_yellow, self.f_regular_small, self.text_canvas, self.rect_dict[button].x + self.button_size * 2,
-                           self.rect_dict[button].y + self.text_offset)
+            self.rect_dict[button].draw_button(mx, my, button in self.on_buttons)
 
     def change_options(self, button, option_action):
+        print(button, option_action, self.on_buttons)
         match button, option_action:
             case "FPS_30", "on":
                 self.FPS = 30
@@ -98,6 +94,7 @@ class Options(Level):
             case "FPS_165", "on":
                 self.FPS = 165
             case "fullscreen", "on":
+                print(button, option_action)
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
             case "fullscreen", "off":
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
@@ -115,21 +112,16 @@ class Options(Level):
                 self.audio.enable_sfx = False
 
     def collision(self, mx, my):
-        option_action = None
         for button in self.rect_dict:
-            if button in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
+            option_action = None
+            if button in self.on_buttons and self.rect_dict[button].check_click(mx, my, self.click):
                 self.on_buttons.remove(button)
-                option_action = "on"
-            elif button not in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
-                self.on_buttons.append(button)
                 option_action = "off"
+            elif button not in self.on_buttons and self.rect_dict[button].check_click(mx, my, self.click):
+                self.on_buttons.append(button)
+                option_action = "on"
+            print(button, self.rect_dict[button].check_click(mx, my, self.click), self.click, mx, my, self.rect_dict[button].x, self.rect_dict[button].y)
             self.change_options(button, option_action)
-
-    def draw_inner_rect(self):
-        for button in self.on_buttons:
-            on_rect = pg.Rect(self.rect_dict[button].x + 5, self.rect_dict[button].y + 5, self.rect_dict[button].width - 10,
-                              self.rect_dict[button].height - 10)
-            pg.draw.rect(self.game_canvas, red, on_rect)
 
     def remove_mutually_exclusive(self):
         for option in self.mutually_exclusives:
@@ -143,9 +135,12 @@ class Options(Level):
         self.background = self.config.img_menus["settings"]
         self.f_options_title = self.config.f_options_title
         self.f_regular_small = self.config.f_regular_small
+        for button in self.rect_dict:
+            self.rect_dict[button].text_font = self.f_regular_small
 
     def run(self):
         self.reload()
+        print(self.f_options_title)
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -176,18 +171,16 @@ class Options(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            self.draw_settings(dt)
+            self.draw_settings(dt, mx, my)
             # ------------------------------------------------------------------------------------------------------------------
             if self.click:
                 self.collision(mx, my)
             if pg.mouse.get_pressed()[0]:
-                if self.sound_sliders["music_slider"].x < mx < self.sound_sliders["music_slider"].x + self.sound_sliders[
-                    "music_slider"].width and "music_volume" in self.on_buttons:
+                if self.sound_sliders["music_slider"].x < mx < self.sound_sliders["music_slider"].x + self.sound_sliders["music_slider"].width and "music_volume" in self.on_buttons:
                     if self.sound_sliders["music_slider_outer"].x < mx < self.sound_sliders["music_slider_outer"].x + self.button_size:
                         if self.sound_sliders["music_slider_outer"].y < my < self.sound_sliders["music_slider_outer"].y + self.button_size:
                             self.music_slider_pressed = True
                 if self.sound_sliders["sfx_slider"].x < mx < self.sound_sliders["sfx_slider"].x + self.sound_sliders["sfx_slider"].width and "sfx_volume" in self.on_buttons:
-                    print("nvoef")
                     if self.sound_sliders["sfx_slider_outer"].x < mx < self.sound_sliders["sfx_slider_outer"].x + self.button_size:
                         if self.sound_sliders["sfx_slider_outer"].y < my < self.sound_sliders["sfx_slider_outer"].y + self.button_size:
                             self.sfx_slider_pressed = True
@@ -201,6 +194,7 @@ class Options(Level):
                     self.sound_sliders["music_slider_outer"].x = self.sound_sliders["music_slider"].x - self.button_size / 2
                 elif self.sound_sliders["music_slider"].x + self.sound_sliders["music_slider"].width < mx:
                     self.sound_sliders["music_slider_outer"].x = self.sound_sliders["music_slider"].x + self.sound_sliders["music_slider"].width - self.button_size / 2
+                self.audio.calculate_volume("music", self.sound_sliders["music_slider_outer"].x, self.sound_sliders["music_slider"].x, self.sound_sliders["music_slider"].width)
             if self.sfx_slider_pressed:
                 if self.sound_sliders["sfx_slider"].x < mx < self.sound_sliders["sfx_slider"].x + self.sound_sliders["music_slider"].width:
                     self.sound_sliders["sfx_slider_outer"].x = mx - self.button_size // 2
@@ -208,7 +202,8 @@ class Options(Level):
                     self.sound_sliders["sfx_slider_outer"].x = self.sound_sliders["sfx_slider"].x - self.button_size / 2
                 elif self.sound_sliders["sfx_slider"].x + self.sound_sliders["sfx_slider"].width < mx:
                     self.sound_sliders["sfx_slider_outer"].x = self.sound_sliders["sfx_slider"].x + self.sound_sliders["sfx_slider"].width - self.button_size / 2
-            self.draw_inner_rect()
+                self.audio.calculate_volume("sfx", self.sound_sliders["sfx_slider_outer"].x, self.sound_sliders["sfx_slider"].x, self.sound_sliders["sfx_slider"].width)
+            # ------------------------------------------------------------------------------------------------------------------
             self.remove_mutually_exclusive()
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
