@@ -96,7 +96,7 @@ class Player:
         self.draw_ui(ui_images, pos_mod)
 
     def draw_ui(self, ui_images, pos_mod):
-        pg.draw.rect(self.screen, (224, 255, 255, 0), self.ui_rect, 0, 25)
+        pg.draw.rect(self.screen, (224, 255, 255), self.ui_rect, 0, 25)
         pg.draw.rect(self.screen, cyan, self.ui_rect, 5, 25)
         for a in range(self.metadata["energy"]):
             if a < self.energy:

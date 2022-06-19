@@ -20,9 +20,9 @@ class Options(Level):
         # Options
         self.align_01_x = 100  # Alignment for video settings
         self.align_01_y = 275
-        self.align_02_x = self.align_01_x + 325  # Alignment for game settings
+        self.align_02_x = self.align_01_x + 350  # Alignment for game settings
         self.align_02_y = 275
-        self.align_03_x = self.align_02_x + 575  # Alignment for sound settings
+        self.align_03_x = self.align_02_x + 600  # Alignment for sound settings
         self.align_03_y = 275
         self.button_size = 50
         self.title_offset = 100
