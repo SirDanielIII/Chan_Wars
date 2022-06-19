@@ -115,8 +115,8 @@ class BossMrPhone(Level):
                         print(self.player_attack, self.player_statuses, "hey")
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
-                                   self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+            self.player.draw_card_screen(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
+                                         self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
             '''
             RUN THE CARD GAME CODE HERE

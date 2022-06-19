@@ -403,7 +403,7 @@ class Config(object):
                                 pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (self.width, self.height)))
 
     def load_img_ui(self):
-        self.img_ui = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", None, True)
+        self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
