@@ -94,4 +94,5 @@ class MainMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            self.audio.audio_mixer()
             pg.display.update()

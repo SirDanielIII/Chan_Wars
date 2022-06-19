@@ -9,7 +9,6 @@ from bin.colours import *
 class GameMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
-        self.audio = audio
         self.play_button = None
         self.back_button = None
         self.left_button = None
@@ -69,4 +68,5 @@ class GameMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            self.audio.audio_mixer()
             pg.display.update()

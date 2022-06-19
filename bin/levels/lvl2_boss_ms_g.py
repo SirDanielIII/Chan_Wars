@@ -15,7 +15,6 @@ from bin.colours import *
 class BossMsG(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
-        self.audio = audio
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
@@ -267,5 +266,6 @@ class BossMsG(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            self.audio.audio_mixer()
             pg.display.update()
             # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)

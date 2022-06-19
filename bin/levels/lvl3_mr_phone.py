@@ -256,5 +256,6 @@ class BossMrPhone(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            self.audio.audio_mixer()
             pg.display.update()
             # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)

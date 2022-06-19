@@ -6,7 +6,6 @@ from bin.classes.buttons import ButtonTriangle
 from bin.classes.health_bar import HealthBar as SoundBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.audio import Audio
 from bin.classes.buttons import OptionsButton
 
 
@@ -210,6 +209,7 @@ class Options(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
+            self.audio.audio_mixer()
             pg.display.update()
             # # ------------------------------------------------------------------------------------------------------------------
             # # Game Settings - Rectangles
