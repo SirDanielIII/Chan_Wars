@@ -46,11 +46,11 @@ class Options(Level):
             "music_slider_outer": pg.Rect(self.align_03_x + self.button_size * 8, self.align_03_y + self.button_size * 2, self.button_size,
                                           self.button_size),
             "sfx_slider_outer": pg.Rect(self.align_03_x + self.button_size * 8, self.align_03_y + self.button_size * 6, self.button_size,
-                                            self.button_size),
+                                        self.button_size),
             "music_slider": pg.Rect(self.align_03_x + self.button_size * 2, self.align_03_y + int(self.button_size * 2.25), self.button_size * 7,
                                     self.button_size // 2),
             "sfx_slider": pg.Rect(self.align_03_x + self.button_size * 2, self.align_03_y + int(self.button_size * 6.25), self.button_size * 7,
-                                      self.button_size // 2)}
+                                  self.button_size // 2)}
         self.music_slider_pressed = False
         self.sfx_slider_pressed = False
         self.music_bar = SoundBar(self.game_canvas, self.sound_sliders["music_slider"], 100, light_grey, white, 5)
@@ -72,10 +72,16 @@ class Options(Level):
         self.sfx_bar.render(100, 0.3, dt)
         pg.draw.rect(self.game_canvas, white, self.sound_sliders["music_slider_outer"])
         music_color = blue if "music_volume" in self.on_buttons else dark_grey
-        pg.draw.rect(self.game_canvas, music_color, [self.sound_sliders["music_slider_outer"].x + 5, self.sound_sliders["music_slider_outer"].y + 5, self.button_size - 10, self.button_size - 10])
+        pg.draw.rect(self.game_canvas, music_color,
+                     [self.sound_sliders["music_slider_outer"].x + 5,
+                      self.sound_sliders["music_slider_outer"].y + 5,
+                      self.button_size - 10, self.button_size - 10])
         pg.draw.rect(self.game_canvas, white, self.sound_sliders["sfx_slider_outer"])
         sound_color = red if "sfx_volume" in self.on_buttons else dark_grey
-        pg.draw.rect(self.game_canvas, sound_color, [self.sound_sliders["sfx_slider_outer"].x + 5, self.sound_sliders["sfx_slider_outer"].y + 5, self.button_size - 10, self.button_size - 10])
+        pg.draw.rect(self.game_canvas, sound_color,
+                     [self.sound_sliders["sfx_slider_outer"].x + 5,
+                      self.sound_sliders["sfx_slider_outer"].y + 5,
+                      self.button_size - 10, self.button_size - 10])
         for button in self.rect_dict:
             pg.draw.rect(self.game_canvas, light_grey, self.rect_dict[button])
             draw_text_left(button, cw_yellow, self.f_regular_small, self.text_canvas, self.rect_dict[button].x + self.button_size * 2,
@@ -83,29 +89,29 @@ class Options(Level):
 
     def change_options(self, button, option_action):
         match button, option_action:
-            case "FPS_30", "Start":
+            case "FPS_30", "on":
                 self.FPS = 30
-            case "FPS_60", "Start":
+            case "FPS_60", "on":
                 self.FPS = 60
-            case "FPS_75", "Start":
+            case "FPS_75", "on":
                 self.FPS = 75
-            case "FPS_165", "Start":
+            case "FPS_165", "on":
                 self.FPS = 165
-            case "fullscreen", "Start":
+            case "fullscreen", "on":
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
-            case "fullscreen", "Stop":
+            case "fullscreen", "off":
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
-            case "show_fps", "Start":
+            case "show_fps", "start":
                 pass
-            case "show_fps", "Stop":
+            case "show_fps", "stop":
                 pass
-            case "music_volume", "Start":
+            case "music_volume", "start":
                 self.audio.enable_music = True
-            case "music_volume", "Stop":
+            case "music_volume", "stop":
                 self.audio.enable_music = False
-            case "sfx_volume", "Start":
+            case "sfx_volume", "start":
                 self.audio.enable_sfx = True
-            case "sfx_volume", "Stop":
+            case "sfx_volume", "stop":
                 self.audio.enable_sfx = False
 
     def collision(self, mx, my):
@@ -113,10 +119,10 @@ class Options(Level):
         for button in self.rect_dict:
             if button in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
                 self.on_buttons.remove(button)
-                option_action = "Stop"
+                option_action = "on"
             elif button not in self.on_buttons and self.rect_dict[button].collidepoint((mx, my)):
                 self.on_buttons.append(button)
-                option_action = "Start"
+                option_action = "off"
             self.change_options(button, option_action)
 
     def draw_inner_rect(self):
@@ -175,7 +181,8 @@ class Options(Level):
             if self.click:
                 self.collision(mx, my)
             if pg.mouse.get_pressed()[0]:
-                if self.sound_sliders["music_slider"].x < mx < self.sound_sliders["music_slider"].x + self.sound_sliders["music_slider"].width and "music_volume" in self.on_buttons:
+                if self.sound_sliders["music_slider"].x < mx < self.sound_sliders["music_slider"].x + self.sound_sliders[
+                    "music_slider"].width and "music_volume" in self.on_buttons:
                     if self.sound_sliders["music_slider_outer"].x < mx < self.sound_sliders["music_slider_outer"].x + self.button_size:
                         if self.sound_sliders["music_slider_outer"].y < my < self.sound_sliders["music_slider_outer"].y + self.button_size:
                             self.music_slider_pressed = True

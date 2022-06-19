@@ -8,6 +8,7 @@ settings:
     show: false
     value: 165
   fullscreen: false
+  skip_intro: False
 other:
   chan_card_size:
     - 120
