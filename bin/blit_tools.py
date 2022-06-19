@@ -9,7 +9,7 @@ import pygame as pg
 from pygame import gfxdraw
 
 
-def draw_text_center(text, colour, font_type, screen, x, y):  # Draws Centered Text
+def draw_text_center(text, colour, font_type, screen, x, y):
     """Function that centers text in Pygame
     Args:
         text::str
@@ -31,8 +31,8 @@ def draw_text_center(text, colour, font_type, screen, x, y):  # Draws Centered T
     screen.blit(text_obj, text_rect)
 
 
-def draw_text_left(text, colour, font_type, screen, x, y):  # Draws Centered Text
-    """Function that centers text in Pygame
+def draw_text_left(text, colour, font_type, screen, x, y):
+    """Function that aligns text to the left in Pygame
     Args:
         text::str
             String text to be centered
@@ -54,8 +54,8 @@ def draw_text_left(text, colour, font_type, screen, x, y):  # Draws Centered Tex
     screen.blit(text_obj, text_rect)
 
 
-def draw_text_right(text, colour, font_type, screen, x, y):  # Draws Centered Text
-    """Function that centers text in Pygame
+def draw_text_right(text, colour, font_type, screen, x, y):
+    """Function that aligns text to the right in Pygame
     Args:
         text::str
             String text to be centered

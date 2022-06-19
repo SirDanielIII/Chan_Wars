@@ -141,11 +141,11 @@ class Config(object):
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
 
-        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
-        self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 40)
-        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 100)
+        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
+        self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
+        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)
 
-        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 75)
+        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 75)
 
     @staticmethod
     def load_audio_set(path_to_directory, extension):

@@ -10,7 +10,6 @@ from bin.colours import *
 class GameMenu(Level):
     def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
         super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
-        self.f_regular = None
         self.play_button = None
         self.back_button = None
         self.left_button = None
@@ -18,9 +17,8 @@ class GameMenu(Level):
         self.choose_lvl = 0
 
     def reload(self):
-        self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum-Regular.ttf", 50)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
-        self.play_button = ButtonRect(self.game_canvas, 225, 670, 350, 100, cw_blue, "FIGHT!", self.f_regular, white)
+        self.play_button = ButtonRect(self.game_canvas, 225, 670, 350, 100, cw_blue, "FIGHT!", self.config.f_regular, white)
         self.left_button = ButtonTriangle(self.game_canvas, cw_gold, 100, 720)
         self.right_button = ButtonTriangle(self.game_canvas, cw_gold, 690, 720, "right")
 

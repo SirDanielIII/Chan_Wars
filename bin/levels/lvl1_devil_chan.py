@@ -106,8 +106,8 @@ class BossDevilChan(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
         self.player.metadata = self.config.level_confs[self.level]["player"]
-        self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.img_chans
+        self.player.initialize(self.config.img_cards)
+        self.player.image_list = self.config.img_cards
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
                                        cw_yellow)
         self.size = self.config.chan_card_size

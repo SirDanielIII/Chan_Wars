@@ -44,9 +44,9 @@ class Level(ABC):
         self.freeze = True
 
     # ------------------------------------------------------------------------------------------------------------------
-    def fill_screens(self):
+    def fill_screens(self, clr=black):
         """Fill the surfaces to avoid smudging"""
-        self.surface.fill(black)
+        self.surface.fill(clr)
         # Fill with transparent colour for Alpha
         self.game_canvas.fill((0, 0, 0, 0))
         if self.alpha_text != 0:
