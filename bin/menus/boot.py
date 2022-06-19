@@ -76,7 +76,7 @@ class Boot(Level):
         self.reload()
         # ----------------------------------------------------------------------------------------------------------------------
         self.audio.dj(None, None, ["", 0], 100, False, 0, boot_hdd)
-        while True:
+        while 1:
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -104,7 +104,7 @@ class Boot(Level):
                     self.rect_width_add = 0
                     self.rect_width = self.bar_end
                 else:
-                    self.rect_width_add = 15 / self.task_num
+                    self.rect_width_add = 14 / self.task_num
                 # ------------------------------------------------------------------------------------------------------------------
                 match self.task_num:
                     case 1:

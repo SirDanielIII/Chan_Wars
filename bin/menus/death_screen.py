@@ -25,7 +25,7 @@ class Death(Level):
         self.reload()
         milliseconds = pg.USEREVENT
         pg.time.set_timer(milliseconds, 10)
-        while True:
+        while 1:
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -58,6 +58,7 @@ class Death(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
                 self.next_level = 2
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):

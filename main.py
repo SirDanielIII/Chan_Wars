@@ -61,9 +61,7 @@ class Main(object):
         pass
 
     def handler(self):
-        running = True
-        # --------------------------------------------------------------------------------------------------------------
-        while running:
+        while 1:
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics

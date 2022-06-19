@@ -54,7 +54,13 @@ class Audio(object):
             self.update_song = update  # Whether the current song updates or not
 
         if sfx is not None:
-            self.sfx_channels[sfx_c].play(sfx)  # Play sound effect if given
+            if not self.sfx_channels[sfx_c].get_busy():
+                self.sfx_channels[sfx_c].play(sfx)  # Play sound effect if given
+            else:
+                for i in self.sfx_channels[sfx_c:]:
+                    if not i.get_busy():  # Play sound effect in an unused channel if given one is busy
+                        i.play(sfx)
+                        break
 
         try:
             if fade_channel[0] == "music":

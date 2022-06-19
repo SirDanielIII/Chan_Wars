@@ -34,13 +34,14 @@ class MainMenu(Level):
         self.b_quit = ButtonRect(self.game_canvas, 450, 750, 300, 100, cw_blue, "Quit", self.config.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
         self.transition_speed = 10
-        # ------------------------------------------------------------------------------------------------------------------
-        if not self.audio.music_channels[0].get_busy():
-            self.audio.dj(self.config.audio_menus["main_theme"], 0, None, None, True, None, None)
 
     def run(self):
         self.reload()
-        while True:
+        while 1:
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[0].get_busy():
+                self.audio.dj(self.config.audio_menus["main_theme"], 0, ["music", 1], 750, True, None, None)
+            # ------------------------------------------------------------------------------------------------------------------
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -74,22 +75,27 @@ class MainMenu(Level):
             if self.b_play_game.check_click(mx, my, self.click):
                 self.next_level = 3
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             # --------------------------------------------------------------------------------------------------------------
             if self.b_options.check_click(mx, my, self.click):
                 self.next_level = 4
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             # --------------------------------------------------------------------------------------------------------------
             if self.b_help.check_click(mx, my, self.click):
                 self.next_level = 5
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             # --------------------------------------------------------------------------------------------------------------
             if self.b_credits.check_click(mx, my, self.click):
                 self.next_level = 6
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             # --------------------------------------------------------------------------------------------------------------
             if self.b_quit.check_click(mx, my, self.click):
                 self.next_level = 7
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()

@@ -411,7 +411,7 @@ class BossDevilChan(Level):
         # ----------------------------------------------------------------------------------------------------------
         time_elapsed = Timer()
         time_elapsed.time_start()
-        while True:
+        while 1:
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics

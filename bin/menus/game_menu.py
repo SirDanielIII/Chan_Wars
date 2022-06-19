@@ -23,7 +23,11 @@ class GameMenu(Level):
 
     def run(self):
         self.reload()
-        while True:
+        while 1:
+            # ----------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[1].get_busy():
+                self.audio.dj(self.config.audio_menus["game_menu"], 1, ["music", 0], 750, True, None, None)
+            # ----------------------------------------------------------------------------------------------------------
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -50,11 +54,14 @@ class GameMenu(Level):
             if self.choose_lvl > 0:
                 if self.left_button.run(mx, my, white, self.click):
                     self.choose_lvl -= 1
+                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             if self.choose_lvl < 2:
                 if self.right_button.run(mx, my, white, self.click):
                     self.choose_lvl += 1
+                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
             if self.play_button.check_click(mx, my, self.click):
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
                 self.next_level = self.choose_lvl + 11
             self.play_button.draw_button(mx, my)
             # --------------------------------------------------------------------------------------------------------------
@@ -64,6 +71,7 @@ class GameMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
                 self.next_level = 2
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

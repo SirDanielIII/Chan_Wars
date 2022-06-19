@@ -17,7 +17,11 @@ class Credits(Level):
 
     def run(self):
         self.reload()
-        while True:
+        while 1:
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[1].get_busy():
+                self.audio.dj(self.config.audio_menus["credits"], 1, ["music", 0], 750, True, None, None)
+            # ------------------------------------------------------------------------------------------------------------------
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -44,6 +48,7 @@ class Credits(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
                 self.next_level = 2
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
