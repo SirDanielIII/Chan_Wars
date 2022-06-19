@@ -157,6 +157,7 @@ class Player:
                     self.health = self.metadata["hp"]
                 self.block = self.attack["block"]
                 self.acted = True
+                print(self.attack, self.buff_bar, self.status_bar, 1)
                 return 2, self.attack["damage"], self.attack["status"]
             else:
                 count += number
@@ -197,9 +198,11 @@ class Player:
         for b in self.buff_bar:
             if self.buff_bar[b]:
                 self.buff_bar[b] -= 1
+        print(self.buff_bar, 2)
         if status_effects != "None":
             for effect in status_effects:
                 self.status_bar[effect] += status_effects[effect]
         if self.attack["buff"] != "None":
             for buff in self.attack["buff"]:
                 self.buff_bar[buff] += self.attack["buff"][buff]
+        print(self.buff_bar, 3)

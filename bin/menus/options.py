@@ -39,9 +39,9 @@ class Options(Level):
                           "music_volume": OptionsButton(self.game_canvas, self.align_03_x, self.align_03_y, self.button_size, self.button_size, light_grey, red, orange, "Music", None, cw_yellow, 10),
                           "sfx_volume": OptionsButton(self.game_canvas, self.align_03_x, self.align_03_y + self.button_size * 4, self.button_size, self.button_size, light_grey, red, orange, "Sound Effects", None, cw_yellow, 10),}
         self.sound_sliders = {
-            "music_slider_outer": pg.Rect(self.align_03_x + self.button_size * 8, self.align_03_y + self.button_size * 2, self.button_size,
+            "music_slider_outer": pg.Rect(self.align_03_x + self.button_size * 17 / 2, self.align_03_y + self.button_size * 2, self.button_size,
                                           self.button_size),
-            "sfx_slider_outer": pg.Rect(self.align_03_x + self.button_size * 8, self.align_03_y + self.button_size * 6, self.button_size,
+            "sfx_slider_outer": pg.Rect(self.align_03_x + self.button_size * 17 / 2, self.align_03_y + self.button_size * 6, self.button_size,
                                         self.button_size),
             "music_slider": pg.Rect(self.align_03_x + self.button_size * 2, self.align_03_y + int(self.button_size * 2.25), self.button_size * 7,
                                     self.button_size // 2),
@@ -166,7 +166,6 @@ class Options(Level):
                 self.restore()
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
-            print(self.audio.enable_music, self.audio.enable_sfx)
             self.rect_dict["music_volume"].text = "Music (" + str(int(self.audio.vol_music * 100)) + "%)" if self.audio.enable_music else "Music (Disabled)"
             self.rect_dict["sfx_volume"].text = "Sound Effects (" + str(int(self.audio.vol_sfx * 100)) + "%)" if self.audio.enable_sfx else "Sound Effects (Disabled)"
             self.draw_settings(dt, mx, my)
