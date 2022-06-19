@@ -1,9 +1,9 @@
 import sys
 import time
 
-from bin.classes.stopwatch import Timer
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
+from bin.classes.stopwatch import Timer
 from bin.colours import *
 
 

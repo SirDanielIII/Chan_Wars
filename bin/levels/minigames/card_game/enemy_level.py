@@ -1,18 +1,18 @@
+import math
+import random
 import sys
 import time
-import random
-import math
 
-from bin.classes.stopwatch import Timer
+import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.entities.enemy import Enemy
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
-from bin.colours import *
-from bin.classes.typewriter import Typewriter
-from bin.classes.entities.enemy import Enemy
-import bin.levels.minigames.card_game.player as card_pair
 from bin.classes.queue import Queue
+from bin.classes.stopwatch import Timer
+from bin.classes.typewriter import Typewriter
+from bin.colours import *
 
 
 class EnemyLevel(Level):
@@ -72,8 +72,8 @@ class EnemyLevel(Level):
         self.player.metadata = config[self.level]["player"]
         self.enemy.metadata = config[self.level]["enemies"][self.name]
         self.enemy.initialize(self.name, config[self.level]["enemies"]["phrases"])
-        self.player.initialize(self.config.img_chans)
-        self.player.image_list = self.config.img_chans
+        self.player.initialize(self.config.img_cards)
+        self.player.image_list = self.config.img_cards
         self.size = self.config.chan_card_size
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)

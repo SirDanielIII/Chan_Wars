@@ -1,25 +1,24 @@
 # Chan Wars
 # By Daniel Z, Daniel F, Daniel L, and Kris
 
+import os
 import sys
 import time
 
 import pygame as pg
-import os
 
 from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
-
-from bin.menus.boot import Boot
 from bin.levels.lvl1_devil_chan import BossDevilChan
+from bin.levels.lvl3_mr_phone import BossMrPhone
 from bin.levels.minigames.card_game.enemy_level import EnemyLevel as BossMsG
+from bin.menus.boot import Boot
 from bin.menus.credits import Credits
+from bin.menus.death_screen import Death
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
 from bin.menus.main_menu import MainMenu
-from bin.levels.lvl3_mr_phone import BossMrPhone
 from bin.menus.options import Options
-from bin.menus.death_screen import Death
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
@@ -36,10 +35,10 @@ class Main(object):
         self.FPS = 165
         self.last_time = time.time()  # Used for Delta Time (Framerate Independence)
         # Pygame Window Caption
-        pg.display.set_caption("Chan Wars")  # Sets Caption Text
+        pg.display.set_caption("Chan Wars 2: Electric Boogaloo")  # Sets Caption Text
         pg.display.set_icon(pg.image.load(os.getcwd() + "/resources/icon.png").convert_alpha())  # Caption Icon
         # Config File
-        self.config = Config()
+        self.config = Config(self.width, self.height)
         # Audio System
         self.audio = Audio()
         # Levels
@@ -60,8 +59,6 @@ class Main(object):
         pass
 
     def handler(self):
-        run = None
-        winning_state = None
         running = True
         # --------------------------------------------------------------------------------------------------------------
         while running:

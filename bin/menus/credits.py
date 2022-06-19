@@ -1,7 +1,5 @@
-import pygame as pg
 import sys
 import time
-import os
 
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level

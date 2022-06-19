@@ -1,6 +1,6 @@
+import os
 import sys
 import time
-import os
 
 from bin.classes.buttons import ButtonTriangle, ButtonRect
 from bin.classes.level import Level
@@ -48,7 +48,7 @@ class GameMenu(Level):
             elif self.freeze:  # To prevent the transition from happening offscreen
                 self.freeze = False
             self.fill_screens()
-            self.game_canvas.blit(self.config.img_boss_cards[self.choose_lvl], (0, 0))
+            self.game_canvas.blit(self.config.img_boss_select[self.choose_lvl], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if self.choose_lvl > 0:
                 if self.left_button.run(mx, my, white, self.click):

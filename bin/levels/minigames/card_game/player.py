@@ -1,6 +1,7 @@
 import random
-import pygame as pg
 from math import floor
+
+import pygame as pg
 
 pg.font.init()
 
