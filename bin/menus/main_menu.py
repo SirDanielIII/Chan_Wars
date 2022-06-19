@@ -34,6 +34,9 @@ class MainMenu(Level):
         self.b_quit = ButtonRect(self.game_canvas, 450, 750, 300, 100, cw_blue, "Quit", self.config.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
         self.transition_speed = 10
+        # ------------------------------------------------------------------------------------------------------------------
+        if not self.audio.music_channels[0].get_busy():
+            self.audio.dj(self.config.audio_menus["main_theme"], 0, None, None, True, None, None)
 
     def run(self):
         self.reload()

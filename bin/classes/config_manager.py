@@ -429,22 +429,13 @@ class Config(object):
         self.audio_interact = self.load_audio_dict(os.getcwd() + "/resources/audio/interact", "sfx")
 
     def load_audio_lvl_1(self):
-        self.audio_lvl_1["enemy_phase"] = os.getcwd() + "/resources/audio/level_1/enemy_phase.wav"
-        self.audio_lvl_1["boss_phase"] = os.getcwd() + "/resources/audio/level_1/boss_phase.wav"
-        self.audio_lvl_1["blip"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/level_1/blip.wav")
+        self.audio_lvl_1 = self.load_audio_dict(os.getcwd() + "/resources/audio/level_1/")
 
     def load_audio_lvl_2(self):
-        self.audio_lvl_2["enemy_phase"] = os.getcwd() + "/resources/audio/level_2/enemy_phase.wav", "music"
-        self.audio_lvl_2["to_siberia"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/level_2/blip.wav")
-        self.audio_lvl_2["siberia"] = os.getcwd() + "/resources/audio/level_2/siberia.wav"
-        self.audio_lvl_2["from_siberia"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/level_2/from_siberia.wav")
-        self.audio_lvl_2["boss_phase"] = os.getcwd() + "/resources/audio/level_2/boss_phase.wav"
-        self.audio_lvl_2["blip"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/level_2/blip.wav")
+        self.audio_lvl_2 = self.load_audio_dict(os.getcwd() + "/resources/audio/level_2/")
 
     def load_audio_lvl_3(self):
-        self.audio_lvl_3["enemy_phase"] = os.getcwd() + "/resources/audio/level_3/enemy_phase.wav"
-        self.audio_lvl_3["boss_phase"] = os.getcwd() + "/resources/audio/level_3/boss_phase.wav"
-        self.audio_lvl_3["blip"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/level_3/blip.wav")
+        self.audio_lvl_3 = self.load_audio_dict(os.getcwd() + "/resources/audio/level_3/")
 
     @staticmethod
     def load_audio_set(path_to_directory, extension):
@@ -553,13 +544,11 @@ class Config(object):
         return image_list
 
     @staticmethod
-    def load_audio_dict(path_to_directory, sound_type, exclude=""):
+    def load_audio_dict(path_to_directory, exclude=""):
         """
         Args:
             path_to_directory:string:
                 Directory of images
-            sound_type:string:
-                Music or SFX
             exclude:string:
                 String of characters not wanted in the keys
         """
@@ -569,8 +558,5 @@ class Config(object):
             if filename.endswith('.mp3') or filename.endswith('.wav') or filename.endswith('.ogg'):
                 path = os.path.join(path_to_directory, filename)
                 name = (os.path.basename(filename).split(".")[0]).lower()
-                if sound_type.lower() == "music":
-                    audio_dict[name.replace(exclude, "")] = path
-                elif sound_type.lower() == "sfx":
-                    audio_dict[name.replace(exclude, "")] = pg.mixer.Sound(path)
+                audio_dict[name.replace(exclude, "")] = pg.mixer.Sound(path)
         return audio_dict

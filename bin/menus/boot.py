@@ -27,7 +27,7 @@ class Boot(Level):
         self.msg = None
 
     def reload(self):
-        self.next_level = 1
+        self.next_level = 2
         self.task_timer = Timer()
         self.task_timer_delay = 0.2
         self.half_update = True

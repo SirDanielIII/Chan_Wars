@@ -27,7 +27,7 @@ class Audio(object):
     def dj(self, song, music_c, fade_channel, ms, update, sfx_c, sfx):
         """ Handles music activation, switching, and fading.
         Args:
-            song:pygame.mixer.Sound:
+            song:pygame.mixer.Sound():
                 Specific song to potentially play (can be null if not needed)
             music_c:int:
                 Specifies a specific Pygame Channel to play a specific song from Music channel list
@@ -52,13 +52,16 @@ class Audio(object):
             self.song = song
             self.music_channel = music_c
             self.update_song = update  # Whether the current song updates or not
-        try:
+
+        if sfx is not None:
             self.sfx_channels[sfx_c].play(sfx)  # Play sound effect if given
+
+        try:
             if fade_channel[0] == "music":
                 self.music_channels[fade_channel[1]].fadeout(ms)
             if fade_channel[0] == "sfx":
                 self.sfx_channels[fade_channel[1]].fadeout(ms)
-        except AttributeError:
+        except TypeError:
             pass
         # ------------------------------------------------------------------------------------------------------------------
 
