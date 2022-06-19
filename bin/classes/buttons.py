@@ -3,7 +3,7 @@
 
 from pygame import gfxdraw
 
-from bin.blit_tools import draw_text_center
+from bin.blit_tools import draw_text_center, draw_text_left
 from bin.colours import *
 
 
@@ -48,6 +48,51 @@ class ButtonRect(object):
         # Draw
         self.canvas.blit(self.overlay, (self.x, self.y))
         draw_text_center(self.text, self.text_clr, self.text_font, self.canvas, self.rect.x + self.rect.w / 2, self.rect.y + self.rect.h / 2 - 2)
+
+
+class OptionsButton(object):
+    def __init__(self, canvas, x, y, w, h, clr, inner_clr, clicked_clr, text, text_font, text_clr, size_offset):
+        self.canvas = canvas
+        self.x = x
+        self.y = y
+        self.rect = pg.Rect(x, y, w, h)
+        self.inner_rect = pg.Rect(x + size_offset / 2, y + size_offset / 2, w - size_offset, h - size_offset)
+        self.rect_clr = clr
+        self.inner_clr = inner_clr
+        self.clicked_clr = clicked_clr
+        self.text = text
+        self.text_font = text_font
+        self.text_clr = text_clr
+        self.overlay = pg.Surface((w, h), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
+
+    def check_click(self, mx, my, click):
+        """
+        Args:
+            mx:int:
+                x position of mouse
+            my:int:
+                y position of mouse
+            click::boolean:
+                Button press from event loop
+        Returns:
+            True/False to indicate if the button was pressed or not
+        Notes:
+            Call this method before draw_button()
+        """
+        if self.rect.collidepoint((mx, my)) and click:
+            return True
+        return False
+
+    def draw_button(self, mx, my, clicked):
+        self.overlay.fill((0, 0, 0, 0))
+        pg.draw.rect(self.canvas, self.rect_clr, self.rect)
+        pg.draw.rect(self.canvas, self.clicked_clr if clicked else self.inner_clr, self.inner_rect)
+        # Check for mouse hover
+        if self.rect.collidepoint((mx, my)):
+            self.overlay.fill((255, 255, 255, 75))
+        # Draw
+        self.canvas.blit(self.overlay, (self.x, self.y))
+        draw_text_left(self.text, self.text_clr, self.text_font, self.canvas, self.rect.x + self.rect.w * 2, self.rect.y + (self.rect.height - 40) / 2)
 
 
 # ------------------------------------------------------------------------------------------------------------------
