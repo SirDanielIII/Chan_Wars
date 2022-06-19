@@ -50,7 +50,7 @@ class HowToPlay(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
-                self.next_level = 1
+                self.next_level = 2
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)
