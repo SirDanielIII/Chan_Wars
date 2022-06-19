@@ -411,7 +411,7 @@ class BossDevilChan(Level):
         # ----------------------------------------------------------------------------------------------------------
         time_elapsed = Timer()
         time_elapsed.time_start()
-        while 1:
+        while True:
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -530,7 +530,7 @@ class BossDevilChan(Level):
             if ((self.boss.health and self.battle == "boss") or (self.enemy.health and self.battle == "enemy")) and self.player.health:
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
-            self.blit_screens(self.card_canvas, 0, self.card_canvas_y)
+            self.blit_screens([[self.card_canvas, (0, self.card_canvas_y)]])
             self.clock.tick(self.FPS)
             self.audio.audio_mixer()
             pg.display.update()
