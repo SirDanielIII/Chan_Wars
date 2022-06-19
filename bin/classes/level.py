@@ -17,6 +17,7 @@ class Level(ABC):
         self.FPS = fps
         self.last_time = last_time
         self.config = config
+        self.audio = audio
         self.text_canvas = pg.Surface((width, height), flags=pg.HWACCEL and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         # ------------------------------------------------------------------------------------------------------------------
         # Level Switching
@@ -31,9 +32,6 @@ class Level(ABC):
         self.click = False  # Mouse Click
         self.screen_offset = [0, 0]  # For screen shake
         self.freeze = True  # Stop logic processing of main game during transitions & off screen
-        # ------------------------------------------------------------------------------------------------------------------
-        # Event Handler
-        self.event = None
 
     # ------------------------------------------------------------------------------------------------------------------
     def restore(self):
