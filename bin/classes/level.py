@@ -32,9 +32,6 @@ class Level(ABC):
         self.click = False  # Mouse Click
         self.screen_offset = [0, 0]  # For screen shake
         self.freeze = True  # Stop logic processing of main game during transitions & off screen
-        # ------------------------------------------------------------------------------------------------------------------
-        # Event Handler
-        self.event = None
 
     # ------------------------------------------------------------------------------------------------------------------
     def restore(self):
