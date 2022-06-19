@@ -17,6 +17,7 @@ class Config(object):
         self.img_bosses = {}
         self.img_boss_select = {}
         self.img_end_screens = None
+        self.img_ui = {}
         # ----------------------------------------------------------------------------------------------------------------------------
         # Fonts
         self.f_hp_bar_hp = None
@@ -377,7 +378,7 @@ class Config(object):
         self.img_cards = self.load_images_dict(os.getcwd() + "/resources/chan_cards/", self.chan_card_size)
         self.img_cards["card_back"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/card_back.png"), self.chan_card_size)
 
-    def load_backgrounds(self):
+    def load_img_backgrounds(self):
         self.img_levels = {
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (self.width, self.height)),
             2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (self.width, self.height)),
@@ -397,9 +398,12 @@ class Config(object):
         self.img_enemies = {level: {} for level in range(1, 3)}
         self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True, "_chan")
 
-    def load_end_screens(self):
+    def load_img_end_screens(self):
         self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (self.width, self.height)),
                                 pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/win_screen.png").convert(), (self.width, self.height)))
+
+    def load_img_ui(self):
+        self.img_ui = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", None, True)
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)

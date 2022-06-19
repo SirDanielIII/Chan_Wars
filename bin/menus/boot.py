@@ -156,7 +156,7 @@ class Boot(Level):
                             self.msg = self.messages[random.randint(0, len(self.messages) - 1)]
                             self.half_update = False
                         if self.task_timer.seconds > self.task_timer_delay:
-                            self.config.load_backgrounds()
+                            self.config.load_img_backgrounds()
                             self.task_timer.time_reset()
                             self.task_num += 1
                     case 8:
@@ -177,66 +177,73 @@ class Boot(Level):
                         self.task_text = "Determining the Endgame"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
-                            self.config.load_end_screens()
+                            self.config.load_img_end_screens()
                             self.task_timer.time_reset()
                             self.task_num += 1
                     case 11:
+                        self.task_text = "Copy Pasting Images"
+                        self.rect_width += self.rect_width_add * dt
+                        if self.task_timer.seconds > self.task_timer_delay:
+                            self.config.load_img_ui()
+                            self.task_timer.time_reset()
+                            self.task_num += 1
+                    case 12:
                         self.task_text = "Loading Fonts"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_fonts()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 12:
+                    case 13:
                         self.task_text = "Loading Menu Soundtrack"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_menu()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 13:
+                    case 14:
                         self.task_text = "Loading Bipolar Noises"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_completion()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 14:
+                    case 15:
                         self.task_text = "Loading Game SFX"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_game()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 15:
+                    case 16:
                         self.task_text = "Loading Button Noises"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_interact()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 16:
+                    case 17:
                         self.task_text = "Devil Chan Misses Angel Chan"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_1()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 17:
+                    case 18:
                         self.task_text = "Loading Russian Soundtrack"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_2()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 18:
+                    case 19:
                         self.task_text = "Running Away From Mr. Phone"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_3()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 19:
+                    case 20:
                         self.task_text = "Loading Complete"
                         self.rect_width = self.bar_end
                         if not finished:
