@@ -28,7 +28,7 @@ class Options(Level):
         self.button_size = 50
         self.title_offset = 100
         self.text_offset = 5
-        self.on_buttons = ["FPS_30", "music_volume", "sfx_volume"]
+        self.on_buttons = ["FPS_165", "music_volume", "sfx_volume"]
         self.mutually_exclusives = {"FPS": []}
         self.rect_dict = {"FPS_30": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y, self.button_size, self.button_size, light_grey, red, orange, "FPS_30", None, cw_yellow, 10),
                           "FPS_60": OptionsButton(self.game_canvas, self.align_01_x, self.align_01_y + self.button_size * 2, self.button_size, self.button_size, light_grey, red, orange, "FPS_60", None, cw_yellow, 10),
@@ -83,25 +83,23 @@ class Options(Level):
             self.rect_dict[button].draw_button(mx, my, button in self.on_buttons)
 
     def change_options(self, button, option_action):
-        print(button, option_action, self.on_buttons)
         match button, option_action:
             case "FPS_30", "on":
-                self.FPS = 30
+                self.config.fps_value = 30
             case "FPS_60", "on":
-                self.FPS = 60
+                self.config.fps_value = 60
             case "FPS_75", "on":
-                self.FPS = 75
+                self.config.fps_value = 75
             case "FPS_165", "on":
-                self.FPS = 165
+                self.config.fps_value = 165
             case "fullscreen", "on":
-                print(button, option_action)
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
             case "fullscreen", "off":
                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
             case "show_fps", "start":
-                pass
+                self.config.fps_show = True
             case "show_fps", "stop":
-                pass
+                self.config.fps_show = False
             case "music_volume", "start":
                 self.audio.enable_music = True
             case "music_volume", "stop":
