@@ -11,14 +11,16 @@ class Enemy:
         self.name = None
         self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}, "phrase": {}}
         self.image = None
-        self.phrases = None
+        self.phrases = {}
 
     def initialize(self, name, phrases_data):
         self.name = name
-        print(phrases_data)
         self.attacks = {a: self.metadata["attacks"][b] for a, b in enumerate(self.metadata["attacks"])}
         self.health = self.metadata["hp"]
-        self.phrases = phrases_data
+        self.phrases["enemy_intro"] = {a: phrases_data["enemy_intro"][a] for a in ("text", "clear", "delay", "fade_in", "fade_out", "line", "pause", "shake", "wait")}
+        self.phrases["enemy_player_death"] = {0: {a: phrases_data["enemy_player_death"][0][a] for a in ("text", "clear", "delay", "fade_in", "fade_out", "line", "pause", "shake", "wait")},
+                                              1: {a: phrases_data["enemy_player_death"][1][a] for a in ("text", "clear", "delay", "fade_in", "fade_out", "line", "pause", "shake", "wait")}}
+        self.phrases["enemy_death"] = {a: phrases_data["enemy_death"][a] for a in ("text", "clear", "delay", "fade_in", "fade_out", "line", "pause", "shake", "wait")}
         self.phrases["enemy_intro"]["text"] = self.phrases["enemy_intro"]["text"].replace("---", self.metadata["name"])
         self.phrases["enemy_player_death"][0]["text"] = self.phrases["enemy_player_death"][0]["text"].replace("---", self.metadata["name"])
         self.phrases["enemy_death"]["text"] = self.phrases["enemy_death"]["text"].replace("---", self.metadata["name"])
@@ -63,6 +65,8 @@ class Enemy:
         damage += self.status_bar["Pained"]
         self.health += self.buff_bar["Regeneration"]
         self.health -= damage
+        if self.health < 0:
+            self.health = 0
         if status_effects != "None":
             for effect in status_effects:
                 self.status_bar[effect] += status_effects[effect]
