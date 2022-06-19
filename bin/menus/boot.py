@@ -12,9 +12,10 @@ from bin.colours import *
 
 
 class Boot(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
         self.config = config
+        self.audio = audio
         self.next_level = None
         self.task_timer = None
         self.task_timer_delay = None
@@ -55,15 +56,17 @@ class Boot(Level):
         ]
         self.msg = self.messages[random.randint(0, len(self.messages) - 1)]
         self.alpha_game = 255
+        self.transition_speed = 5
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------------------
-        boot_finished = pg.mixer.Sound(os.getcwd() + "/resources/boot_sfx/boot_confirm.mp3")
+        boot_finished = pg.mixer.Sound(os.getcwd() + "/resources/audio/boot/boot_confirm.mp3")
         boot_finished.set_volume(0.4)
+        boot_hdd = pg.mixer.Sound(os.getcwd() + "/resources/audio/boot/emily_is_away_hdd_bootup.wav")
         finished = False
         # ----------------------------------------------------------------------------------------------------------------------
         game_logo = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/logo_chan_wars_2.png"), (812, 243)).convert_alpha()
-        dev_logo = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/logo_daniel^2.png"), (600, 600)).convert_alpha()
+        chan_logo = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/icon.png"), (421, 419)).convert_alpha()
         # ----------------------------------------------------------------------------------------------------------------------
         f_boot = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 75)
         f_message = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 35)
@@ -74,6 +77,7 @@ class Boot(Level):
         # ----------------------------------------------------------------------------------------------------------------------
         self.reload()
         # ----------------------------------------------------------------------------------------------------------------------
+        self.audio.dj(None, None, ["", 0], 100, False, 0, boot_hdd)
         while True:
             # Framerate Independence
             dt = time.time() - self.last_time
@@ -94,6 +98,7 @@ class Boot(Level):
             # ------------------------------------------------------------------------------------------------------------------
             self.draw_message(self.msg, f_message, white, 140, self.game_canvas)
             self.game_canvas.blit(game_logo, (140, 115))
+            self.game_canvas.blit(chan_logo, (1018, 115))
             # ------------------------------------------------------------------------------------------------------------------
             if task_delay > 0.5:
                 self.task_timer.time_start()
@@ -101,7 +106,7 @@ class Boot(Level):
                     self.rect_width_add = 0
                     self.rect_width = self.bar_end
                 else:
-                    self.rect_width_add = 13 / self.task_num
+                    self.rect_width_add = 11 / self.task_num
                 # ------------------------------------------------------------------------------------------------------------------
                 match self.task_num:
                     case 1:
@@ -188,7 +193,7 @@ class Boot(Level):
                         self.task_text = "Loading Complete"
                         self.rect_width = self.bar_end
                         if not finished:
-                            pg.mixer.Channel(1).play(boot_finished)
+                            self.audio.dj(None, None, ["sfx", 0], 800, False, 1, boot_finished)
                             finished = True
                         if self.task_timer.seconds > self.task_timer_delay + 0.5:
                             self.fade_out = True
@@ -197,9 +202,15 @@ class Boot(Level):
             draw_text_left(self.task_text, white, f_boot, self.game_canvas, 140, 610)
             pg.draw.rect(self.game_canvas, white, (150, self.height - 200, self.rect_width, 50))
             gfxdraw.rectangle(self.game_canvas, (140, self.height - 210, self.width - 280, 70), white)
+            # ------------------------------------------------------------------------------------------------------------------
+            if not self.fade_out and not self.freeze:
+                self.transition_in("game", self.game_canvas, dt)
+            elif self.freeze:  # To prevent the transition from happening offscreen
+                self.freeze = False
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
+                self.transition_speed = 3
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()

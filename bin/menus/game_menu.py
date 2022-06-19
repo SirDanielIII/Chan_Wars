@@ -1,4 +1,3 @@
-import os
 import sys
 import time
 
@@ -8,8 +7,9 @@ from bin.colours import *
 
 
 class GameMenu(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+        self.audio = audio
         self.play_button = None
         self.back_button = None
         self.left_button = None
@@ -56,7 +56,7 @@ class GameMenu(Level):
                     self.choose_lvl += 1
             if self.play_button.check_click(mx, my, self.click):
                 self.fade_out = True
-                self.next_level = self.choose_lvl + 10
+                self.next_level = self.choose_lvl + 11
             self.play_button.draw_button(mx, my)
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
@@ -65,7 +65,7 @@ class GameMenu(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
-                self.next_level = 1
+                self.next_level = 2
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)

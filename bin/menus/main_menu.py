@@ -7,8 +7,9 @@ from bin.colours import *
 
 
 class MainMenu(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+        self.audio = audio
         self.f_regular_small = None
         self.f_regular = None
         self.f_regular_big = None
@@ -32,6 +33,7 @@ class MainMenu(Level):
         self.b_credits = ButtonRect(self.game_canvas, 100, 750, 300, 100, cw_blue, "Credits", self.config.f_regular, white)
         self.b_quit = ButtonRect(self.game_canvas, 450, 750, 300, 100, cw_blue, "Quit", self.config.f_regular, white)
         self.buttons = [self.b_play_game, self.b_options, self.b_help, self.b_credits, self.b_quit]
+        self.transition_speed = 10
 
     def run(self):
         self.reload()
@@ -67,7 +69,7 @@ class MainMenu(Level):
                 i.draw_button(mx, my)
             # --------------------------------------------------------------------------------------------------------------
             if self.b_play_game.check_click(mx, my, self.click):
-                self.next_level = 2
+                self.next_level = 3
                 self.fade_out = True
             # --------------------------------------------------------------------------------------------------------------
             if self.b_options.check_click(mx, my, self.click):

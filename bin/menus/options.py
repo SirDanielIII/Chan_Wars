@@ -1,19 +1,17 @@
-import pygame as pg
 import sys
 import time
-import os
 
-from bin.blit_tools import draw_text_center, draw_text_left
+from bin.blit_tools import draw_text_left
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.health_bar import HealthBar as SoundBar
 from bin.classes.level import Level
 from bin.colours import *
-from bin.classes.audio import Audio
-from bin.classes.health_bar import HealthBar as SoundBar
 
 
 class Options(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+        self.audio = audio
         self.background = None
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.f_options_title = None
@@ -208,7 +206,7 @@ class Options(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
-                self.next_level = 1
+                self.next_level = 2
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
             self.clock.tick(self.FPS)

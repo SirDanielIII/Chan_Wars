@@ -17,6 +17,7 @@ from bin.menus.credits import Credits
 from bin.menus.death_screen import Death
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
+from bin.menus.logo import Logo
 from bin.menus.main_menu import MainMenu
 from bin.menus.options import Options
 
@@ -43,16 +44,17 @@ class Main(object):
         self.audio = Audio()
         # Levels
         self.lvl = 0
-        self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
-        self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config)
+        self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_logo = Logo(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
         # ------------------------------------------------------------------------------------------------------------------
 
     def reload(self):
@@ -77,13 +79,12 @@ class Main(object):
             match self.lvl:
                 case 0:  # Boot Screen
                     self.lvl = self.lvl_boot.run()
-                case 1:  # Main Menu
+                case 1:  # Dev Logo
+                    self.lvl = self.lvl_logo.run()
+                case 2:  # Main Menu
                     self.lvl = self.lvl_main_menu.run()
-                case 2:  # Game Menu
+                case 3:  # Game Menu
                     self.lvl = self.lvl_game_menu.run()
-                case 3:  # Game Over
-                    # self.lvl = self.lvl_matching_game.run()
-                    self.lvl = 2
                 case 4:  # Options
                     self.lvl = self.lvl_options.run()
                 case 5:  # How to Play
@@ -93,21 +94,21 @@ class Main(object):
                 case 7:  # Quit
                     pg.quit()
                     sys.exit()
-                case 8:  # Game Over
+                case 8:  # Win Game State
+                    self.end_screen.set_background(8 - self.lvl)
+                    self.lvl = self.end_screen.run()
+                case 9:  # Lose Game State
+                    self.end_screen.set_background(8 - self.lvl)
+                    self.lvl = self.end_screen.run()
+                case 10:  # Game Over
                     pg.quit()
                     sys.exit()
-                case 10:  # Devil Chan Boss
+                case 11:  # Devil Chan Boss
                     self.lvl = self.lvl_devil_chan.run()
-                case 11:  # Ms.G Boss
+                case 12:  # Ms.G Boss
                     self.lvl = self.lvl_ms_g.run()
-                case 12:  # Mr. Phone Boss
+                case 13:  # Mr. Phone Boss
                     self.lvl = self.lvl_mr_phone.run()
-                case 13:
-                    self.end_screen.set_background(13 - self.lvl)
-                    self.lvl = self.end_screen.run()
-                case 14:
-                    self.end_screen.set_background(13 - self.lvl)
-                    self.lvl = self.end_screen.run()
             # ----------------------------------------------------------------------------------------------------------
             pg.display.update()
             self.clock.tick(self.FPS)

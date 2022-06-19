@@ -1,13 +1,15 @@
 import pygame as pg
 
 
-# Initialize pg.mixer.init() first
-# Then pg.mixer.pre_init(48000, -16, 2, 256)
-# This ensures any audio playback isn't heavily delayed
-
-
 class Audio(object):
     def __init__(self):
+        """
+        Make sure to have this at the beginning of your Pygame program:
+            pg.init()
+            pg.mixer.pre_init(48000, -16, 2, 256)
+            pg.mixer.set_num_channels(20)
+        This ensures any audio playback isn't heavily delayed, and sets 20 audio channels for you to use
+        """
         # Channels
         self.music_channels = [pg.mixer.Channel(i) for i in range(2)]  # Channels from 0 to 2
         self.sfx_channels = [pg.mixer.Channel(i) for i in range(2, 20)]  # Channels from 2 to 18
@@ -28,15 +30,15 @@ class Audio(object):
             song:pygame.mixer.Sound:
                 Specific song to potentially play (can be null if not needed)
             music_c:int:
-                Specifies a specific Pygame Channel to play a specific song
-            fade_channel::mixer.channel:
-                Specifies a specific Pygame Channel to fade its audio out
+                Specifies a specific Pygame Channel to play a specific song from Music channel list
+            fade_channel::list[string, int]:
+                Specifies a specific Pygame Channel to fade its audio out (from Music / SFX list)
             ms:int:
                 Specifies how long the fadeout is in milliseconds
             update:bool:
                 Changes global boolean to switch songs in play_sounds()
             sfx_c:mixer.channel:
-                Specifies a specific Pygame Channel to play a specific sound effect
+                Specifies a Pygame Channel to play a specific sound effect from SFX channel list
             sfx:pygame.mixer.Sound:
                 Specific sound effect to potentially play (can be null if not needed)
         Notes:
@@ -51,8 +53,11 @@ class Audio(object):
             self.music_channel = music_c
             self.update_song = update  # Whether the current song updates or not
         try:
-            sfx_c.play(sfx)  # Specified sound effect
-            fade_channel.fadeout(ms)
+            self.sfx_channels[sfx_c].play(sfx)  # Play sound effect if given
+            if fade_channel[0] == "music":
+                self.music_channels[fade_channel[1]].fadeout(ms)
+            if fade_channel[0] == "sfx":
+                self.sfx_channels[fade_channel[1]].fadeout(ms)
         except AttributeError:
             pass
         # ------------------------------------------------------------------------------------------------------------------

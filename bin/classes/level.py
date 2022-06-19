@@ -5,7 +5,7 @@ from bin.colours import *
 
 
 class Level(ABC):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
         super().__init__()
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler Attributes

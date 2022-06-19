@@ -1,25 +1,26 @@
+import math
 import random
 import sys
 import time
-import math
 
+import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
+from bin.classes.entities.bosses import DevilChan
+from bin.classes.entities.enemy import Enemy
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
-from bin.classes.entities.bosses import DevilChan
-from bin.classes.entities.enemy import Enemy
 from bin.colours import *
 from bin.levels.minigames.card_game.player import move_pos
-import bin.levels.minigames.card_game.player as card_pair
 
 
 class BossDevilChan(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config)
+    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+        self.audio = audio
         self.back_button = ButtonTriangle(self.game_canvas, cw_blue)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
@@ -500,7 +501,7 @@ class BossDevilChan(Level):
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
                 if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
-                    return 13 if self.player.health <= 0 else 14
+                    return 8 if self.player.health <= 0 else 9
                 elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
                     enemy_count += 1
                     if enemy_count != 3:
