@@ -102,7 +102,7 @@ class BossMsG(Level):
                         self.card_stopwatch.time_reset()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
+            self.player.draw_card_screen(mouse_pos, self.card_complete[0], self.config.img_levels["Card Game"], 0, self.energy and not self.card_stopwatch.seconds > 500)
             # This is the running code made by Daniel. In order of appearance, the code generates the cards, checks to see if any pairs of choices have been made
             # starts a timer for the player to admire their choices if they have made two of them, does a bunch of stuff based on whether they chose right
             # and finally blits it all after getting the mouses position if a click has been made

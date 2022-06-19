@@ -404,11 +404,26 @@ player:
           heal: 0
           status:
             Weakness: 2
-  columns: 3
-  energy: 3
+  columns: 7
+  energy: 5
   hp: 5
   rows: 4
   base_deck:
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
+    - oni_chan
     - oni_chan
     - oni_chan
     - oni_chan

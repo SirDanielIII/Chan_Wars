@@ -11,8 +11,8 @@ settings:
   skip_intro: False
 other:
   chan_card_size:
-    - 120
-    - 180
+    - 110
+    - 165
   boss_face_size:
     - 500
     - 500

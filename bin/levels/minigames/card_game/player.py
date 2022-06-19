@@ -1,5 +1,6 @@
 import random
 from math import floor
+from bin.colours import *
 
 import pygame as pg
 
@@ -21,7 +22,7 @@ def move_pos(in_out, elapsed_time, y, speed):
 class Card(object):
     def __init__(self, image, pos, size, m, columns, o_set, card_type):
         self.size = size
-        self.position = [o_set[0] - columns + (size[0] + m[0]) * pos[0], o_set[1] + (size[1] + m[1]) * pos[1]]
+        self.position = [o_set[0] + (size[0] + m[0]) * pos[0], o_set[1] + (size[1] + m[1]) * pos[1]]
         self.image = image
         self.chosen = 0
         self.clairvoyant = False
@@ -56,7 +57,9 @@ class Player:
         self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
+        self.size = None
         self.choices = {}
+        self.ui_rect = None
         self.deck = None
         self.played_cards = None
 
@@ -73,21 +76,33 @@ class Player:
         # ------------------------------------------------------------------------------------------------------------------
         if not self.deck:
             self.deck = deck
+        self.size = size
         images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
-        o_set = ((X - (margins[0] + size[0]) * self.columns) / 2, (Y - (margins[1] + size[1]) * 4) / 2)
+        o_set = ((X - margins[0] * (self.columns - 1) - self.size[0] * self.columns) / 2 + 200, (Y - margins[1] * (self.rows - 1) - self.size[1] * self.rows) / 2)
+        self.ui_rect = pg.Rect(o_set[0] - 4 * self.size[0], o_set[1], self.size[0] * 3.5, margins[1] * (self.rows - 1) + self.size[1] * self.rows)
         cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
         random.shuffle(pos_list)
-        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
+        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, self.size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_cards(self, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+    def draw_card_screen(self, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
                 card.choose(m_pos, choose_boolean)
         for card in self.played_cards:
             card.draw(self.image_dict["card_back"], self.screen, pos_mod)
+        self.draw_ui(ui_images, pos_mod)
+
+    def draw_ui(self, ui_images, pos_mod):
+        pg.draw.rect(self.screen, (224, 255, 255), self.ui_rect, 0, 25)
+        pg.draw.rect(self.screen, cyan, self.ui_rect, 5, 25)
+        for a in range(self.metadata["energy"]):
+            if a < self.energy:
+                self.screen.blit(ui_images["energy_full"], (self.ui_rect.x + 5 + a * 75, self.ui_rect.y + 10 + pos_mod))
+            else:
+                self.screen.blit(ui_images["energy_empty"], (self.ui_rect.x + 5 + a * 75, self.ui_rect.y + 10 + pos_mod))
 
     def complete(self):
         count = 0
