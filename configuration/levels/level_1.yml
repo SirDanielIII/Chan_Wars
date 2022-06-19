@@ -66,6 +66,13 @@ enemies:
         attack: Bloated Breath
         status:
           Vulnerable: 1
+      corpse_explosion:
+        block: 0
+        buff: None
+        damage: 25
+        heal: -10
+        attack: Corpse Explosion
+        status: None
       drowned_glare:
         block: 0
         buff: None
@@ -74,15 +81,8 @@ enemies:
         attack: Drowned Glare
         status:
           Fear: 1
-      corpse_explosion:
-        block: 0
-        buff: None
-        damage: 25
-        heal: -30
-        attack: Corpse Explosion
-        status: None
     hp: 30
-    name: Drowned Chan
+    name: Zombie Chan
   scrambled:
     attacks:
       claw_strike:
@@ -108,7 +108,7 @@ enemies:
         status:
           Fear: 1
     hp: 50
-    name: Flying Chan
+    name: Scrambled Chan
   goblin:
     attacks:
       evasive_maneuvers:
@@ -140,13 +140,13 @@ enemies:
       clear: true
       delay: 0.1
       fade_in: true
-      fade_out: false
+      fade_out: true
       line: 1
       pause: 1.4
       shake:
         - 2
         - 2
-      text: You have encounterd a wild ---!!!
+      text: You have encountered a wild ---!!!
       wait: 1.0
     enemy_player_death:
       0:
@@ -406,12 +406,12 @@ player:
             Weakness: 2
   columns: 3
   energy: 3
-  hp: 50
+  hp: 5
   rows: 4
   base_deck:
     - oni_chan
     - oni_chan
     - oni_chan
-    - angel_chan
-    - air_chan
-    - jesus_chan
+    - farquaad_chan
+    - jackie_chan
+    - upsidedown_chan

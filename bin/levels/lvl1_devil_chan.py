@@ -1,20 +1,20 @@
-import math
 import random
 import sys
 import time
+import math
 
-import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
 from bin.classes.buttons import ButtonTriangle
-from bin.classes.entities.bosses import DevilChan
-from bin.classes.entities.enemy import Enemy
 from bin.classes.health_bar import HealthBar
 from bin.classes.level import Level
 from bin.classes.queue import Queue
 from bin.classes.stopwatch import Timer
 from bin.classes.typewriter import Typewriter
+from bin.classes.entities.bosses import DevilChan
+from bin.classes.entities.enemy import Enemy
 from bin.colours import *
 from bin.levels.minigames.card_game.player import move_pos
+import bin.levels.minigames.card_game.player as card_pair
 
 
 class BossDevilChan(Level):
@@ -34,7 +34,7 @@ class BossDevilChan(Level):
         self.hp_bar_player = None
         self.player = card_pair.Player(self.card_canvas, None)
         self.margins = (20, 30)
-        self.card_complete = [0]
+        self.card_match = [0]
         self.size = None
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes
@@ -52,10 +52,10 @@ class BossDevilChan(Level):
         self.boss_face = None
         # ------------------------------------------------------------------------------------------------------------------
         # Battle Attributes
-        self.level = None
+        self.level = 1
         self.turn_counter = None
         self.completed = True
-        self.battle = "boss"
+        self.battle = "enemy"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -77,12 +77,11 @@ class BossDevilChan(Level):
         self.event = "enemy_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
-        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer()}
+        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer()}
 
-    def reload(self):  # Sets generic values here. Run every time
+    def reload(self):  # Sets generic values here. Run every time a new fight is initiated.
         # ------------------------------------------------------------------------------------------------------------------
-        # Level Attributes
-        self.level = 1
+        # Generic Attributes
         self.turn_counter = 0
         # ------------------------------------------------------------------------------------------------------------------
         # Text Box & Typewriter Attributes
@@ -103,26 +102,42 @@ class BossDevilChan(Level):
         for timer in self.timer_dict:
             self.timer_dict[timer].time_reset()
 
-    def initialize_player(self):
-        self.player.metadata = self.config.get_config("level")[self.level]["player"]
-        self.player.initialize(self.config.img_cards)
-        self.player.image_list = self.config.img_cards
+    def initialize_player(self):    # Run once at the start of the level. Player attributes are not reset between every battle.
+        # ------------------------------------------------------------------------------------------------------------------
+        # Player Attributes Initialization
+        self.player.metadata = self.config.level_confs[self.level]["player"]
+        self.player.initialize(self.config.img_chans)
+        self.player.image_list = self.config.img_chans
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
                                        cw_yellow)
         self.size = self.config.chan_card_size
 
-    def initialize_boss(self):
-        self.boss.metadata = self.config.get_config("boss")[self.boss_name]
+    def initialize_boss(self):    # Run once at the start of the level.
+        # ------------------------------------------------------------------------------------------------------------------
+        # Boss Attributes Initialization
+        self.boss.metadata = self.config.boss_confs[self.boss_name]
         self.boss.initialize()
         self.hp_bar_boss = HealthBar(self.game_canvas, self.hp_boss_rect, self.boss.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.boss_face = self.config.img_bosses[self.level]
 
-    def initialize_enemy(self):
-        self.enemy_name = random.choice(list(self.config.get_config("level")[self.level]["enemies"].keys())[:-1])
-        self.enemy.metadata = self.config.get_config("level")[self.level]["enemies"][self.enemy_name]
-        self.enemy.initialize(self.enemy_name, self.config.get_config("level")[self.level]["enemies"]["phrases"])
+    def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
+        # ------------------------------------------------------------------------------------------------------------------
+        # Enemy Attributes Initialization
+        self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
+        self.enemy.metadata = self.config.level_confs[self.level]["enemies"][self.enemy_name]
+        self.enemy.initialize(self.enemy_name, self.config.level_confs[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
         self.enemy_face = self.config.img_enemies[self.enemy_name]
+
+    def battle_reset(self):
+        self.player.played_cards = None
+        self.player.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.player.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
+        self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+        self.turn_counter = 0
+        self.completed = True
+        self.updated = True
+        self.acted = True
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------
@@ -140,6 +155,8 @@ class BossDevilChan(Level):
             draw_text_right(self.boss.metadata["name"], white, self.config.f_hp_bar_name, self.game_canvas,
                             self.hp_bar_boss.x + self.hp_bar_boss.w + 5, self.hp_bar_boss.y + self.hp_bar_boss.h * 2 + 10)
             self.hp_bar_boss.render(self.boss.health, 0.3, dt, True)
+        # ------------------------------------------------------------------------------------------------------------------
+        # Enemy Text & Health Bar
         if self.battle == "enemy":
             draw_text_right(str(math.ceil(self.enemy.health)) + "HP", white, self.config.f_hp_bar_hp, self.game_canvas,
                             self.hp_bar_enemy.x + self.hp_bar_enemy.w + 10, self.hp_bar_enemy.y)
@@ -148,78 +165,90 @@ class BossDevilChan(Level):
             self.hp_bar_enemy.render(self.enemy.health, 0.3, dt, True)
 
     def draw_boss(self):
+        # ------------------------------------------------------------------------------------------------------------------
+        # Draws the Boss
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
         center_blit_image(self.game_canvas, self.boss_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def draw_enemy(self):
+        # ------------------------------------------------------------------------------------------------------------------
+        # Draws the Enemy
         offset = 10 * math.sin(pg.time.get_ticks() / 500)
         center_blit_image(self.game_canvas, self.enemy_face, self.width / 2, self.height / 2 - 100 + offset)
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        if self.card_canvas_y != self.height:
-            if not self.player.played_cards:
+        if self.card_canvas_y != self.height:   # Makes sure that the card game is only run while teh screen is up.
+            if not self.player.played_cards:    # Generates a new set of cards if no cards already exist.
                 self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
-                # This if statement prevents you from changing the state of the cards while the screen is moving or you don't have enough energy - Daniel
-                if self.card_complete[0] != 2:
-                    self.card_complete = self.player.complete()
-                if self.card_complete[0] == 2:
+                if self.card_match[0] != 2:     # If a match hasn't been made, allow teh player to continue trying to match.
+                    self.card_match = self.player.complete()
+                # ------------------------------------------------------------------------------------------------------------------
+                # Completes the card matching process
+                if self.card_match[0] == 2:
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
-                    if self.timer_dict["card"].seconds > 0.25:
+                    if self.timer_dict["card"].seconds > 0.25:  # Completes the match by reducing the player's energy
                         self.player.energy -= 1
                         self.player.reset()
                         self.timer_dict["card"].time_reset()
-                        self.card_complete = self.player.complete()
+                        self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_cards(mouse_pos, self.card_complete[0], self.config.img_levels["Card_Game"], 0,
+            self.player.draw_cards(mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"], 0,
                                    self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+            # Draws the cards and creates matches between clicked cards.
             self.game_canvas.blit(self.card_canvas, (0, self.card_canvas_y))
 
-    def trigger_in(self):
+    def trigger_in(self):   # Called to bring the card game back in.
         if not self.card_game:
             self.game_transition_in = True
             self.game_transition_out = False
 
-    def trigger_out(self):
+    def trigger_out(self):  # Called to transition out of the card game.
         if self.card_game:
             self.game_transition_in = False
             self.game_transition_out = True
 
     def event_handler(self, dt):
         match self.event:
-            case "boss_intro":
+            # ------------------------------------------------------------------------------------------------------------------
+            # Generic Events
+            case "attack":  # Event happens after dialogue is complete. Brings up the card game screen.
+                self.attack()
+            # ------------------------------------------------------------------------------------------------------------------
+            # Boss events
+            case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("boss_intro", "multiple")
                 self.dialogue(1.0, dt)
-            case "attack":
-                self.attack()
-            case "boss_special":
+            case "boss_special":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_special", "random")
                 self.dialogue(1.0, dt)
-            case "boss_basic":
+            case "boss_basic":  # Event happens when the boss uses its basic move. Basic attack dialogue is initiated.
                 self.typewriter_queue("boss_basic", "random")
                 self.dialogue(1.0, dt)
-            case "boss_death":
+            case "boss_death":  # Event happens when the boss is defeated. Boss death dialogue is initiated.
                 self.typewriter_queue("boss_death", "multiple")
                 self.dialogue(1.0, dt)
-            case "boss_player_death":
+            case "boss_player_death":   # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
                 self.typewriter_queue("boss_player_death", "multiple")
                 self.dialogue(1.0, dt)
-            case "enemy_intro":
+            # ------------------------------------------------------------------------------------------------------------------
+            # Enemy events
+            case "enemy_intro":     # Event happens when the enemy fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("enemy_intro")
                 self.dialogue(1.0, dt)
-            case "enemy_basic":
+            case "enemy_basic":     # Event happens when the enemy uses its basic move. Basic attack dialogue is initiated.
                 self.typewriter_queue("enemy_basic")
                 self.dialogue(1.0, dt)
-            case "enemy_death":
+            case "enemy_death":     # Event happens when the enemy is defeated. Enemy death dialogue is initiated.
                 self.typewriter_queue("enemy_death")
                 self.dialogue(1.0, dt)
-            case "enemy_player_death":
-                self.typewriter_queue("enemy_player_death")
+            case "enemy_player_death":  # Event happens when the player dies while fighting an enemy. Enemy winning dialogue is initiated.
+                self.typewriter_queue("enemy_player_death", "multiple")
                 self.dialogue(1.0, dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
@@ -227,28 +256,32 @@ class BossDevilChan(Level):
         if self.typ_queue_update:  # Only runs once
             self.typ_queue_update = False
             self.timer_dict["dialogue"].time_start()
+            # ------------------------------------------------------------------------------------------------------------------
+            # Dialogue for boss events
             if "boss" in e:
-                if quote_type == "multiple":
+                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
                     for key in self.boss.phrases[e]:
-                        self.typ_queue.enqueue(self.boss.phrases[e][key])  # Queue all messages in order
-                elif quote_type == "random":
+                        self.typ_queue.enqueue(self.boss.phrases[e][key])
+                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
-                else:
+                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.boss.phrases[e])
+            # ------------------------------------------------------------------------------------------------------------------
+            # Dialogue for enemy events
             if "enemy" in e:
-                if quote_type == "multiple":
+                print(self.enemy.phrases[e])
+                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
                     for key in self.enemy.phrases[e]:
                         self.typ_queue.enqueue(self.enemy.phrases[e][key])  # Queue all messages in order
-                elif quote_type == "random":
+                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.enemy.phrases[e]) - 1)])
-                else:
+                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.enemy.phrases[e])
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
-        print(self.typ_queue.peek())
-        if seconds > delay:
+        if seconds > delay:     # Implements delay before the message is blit onto the screen.
             if not self.typ_queue.is_empty():
                 clear = self.typ_queue.peek()["clear"]
                 wait = self.typ_queue.peek()["wait"]
@@ -361,10 +394,12 @@ class BossDevilChan(Level):
 
     def run(self):
         # ----------------------------------------------------------------------------------------------------------
+        # Initializes the generic attributes, teh player attributes, the boss attributes and teh enemy attributes.
         self.reload()
         self.initialize_player()
         self.initialize_enemy()
         self.initialize_boss()
+        enemy_count = 0
         self.timer_dict["dialogue"].time_start()
         self.typ_l1.time_start()
         self.typ_l2.time_start()
@@ -407,18 +442,22 @@ class BossDevilChan(Level):
             self.game_canvas.blit(self.config.img_levels[self.level], (0, 0))
             # ------------------------------------------------------------------------------------------------------------------
             if not self.card_game:  # Don't render if the card game is fully up
-                if not self.timer_dict["update_delay"].activate_timer and not self.updated and not self.completed:
-                    self.timer_dict["update_delay"].time_start()
+                if not self.timer_dict["update"].activate_timer and not self.updated and not self.completed:
+                    self.timer_dict["update"].time_start()
                 if not self.timer_dict["action"].activate_timer and not self.completed:
                     self.timer_dict["action"].time_start()
-                if self.timer_dict["update_delay"].seconds > 1.5:
+                # ------------------------------------------------------------------------------------------------------------------
+                if self.timer_dict["update"].seconds > 1:
+                    # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["status"])
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["status"])
                     self.updated = True
-                    self.timer_dict["update_delay"].time_reset()
-                if self.timer_dict["action"].seconds > 2.5 and not self.acted and "death" not in self.event:
+                    self.timer_dict["update"].time_reset()
+                # ------------------------------------------------------------------------------------------------------------------
+                if self.timer_dict["action"].seconds > 2 and not self.acted and "death" not in self.event:
+                    # Makes the opponent act.
                     if self.battle == "boss":
                         phrase = self.boss.act(self.turn_counter)
                         if "basic" in phrase:
@@ -429,21 +468,25 @@ class BossDevilChan(Level):
                         self.enemy.act(self.turn_counter)
                         self.event = "enemy_basic"
                     self.acted = True
-                elif self.timer_dict["action"].seconds > 4 and "death" not in self.event:
-                    self.player.update(self.boss.move["damage"], self.boss.move["status"])
+                # ------------------------------------------------------------------------------------------------------------------
+                elif self.timer_dict["action"].seconds > 3 and "death" not in self.event:
+                    # Completes the process, updates the player's state and puts the dialogue on screen.
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     if self.battle == "boss":
+                        self.player.update(self.boss.move["damage"], self.boss.move["status"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     elif self.battle == "enemy":
+                        self.player.update(self.enemy.attack["damage"], self.enemy.attack["status"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True
+                # ------------------------------------------------------------------------------------------------------------------
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 if self.battle == "boss":
                     self.draw_boss()  # Draw Boss' Image (See Method Above)
                 if self.battle == "enemy":
-                    self.draw_enemy()  # Draw Boss' Image (See Method Above)
+                    self.draw_enemy()  # Draw Enemy's Image (See Method Above)
                 # Textbox
                 pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
@@ -456,15 +499,25 @@ class BossDevilChan(Level):
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
-                if "death" in self.event:
+                if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
                     return 13 if self.player.health <= 0 else 14
+                elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
+                    enemy_count += 1
+                    if enemy_count != 3:
+                        self.battle_reset()
+                        self.initialize_enemy()
+                        self.event = "enemy_intro"
+                    else:
+                        self.battle_reset()
+                        self.battle = "boss"
+                        self.event = "boss_intro"
                 if self.player.health <= 0 and self.battle == "boss":
                     self.event = "boss_player_death"
-                elif self.boss.health <= 0:
+                elif self.boss.health <= 0 and self.battle == "boss":
                     self.event = "boss_death"
                 if self.player.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_player_death"
-                elif self.enemy.health <= 0:
+                elif self.enemy.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
