@@ -1,6 +1,7 @@
 import random
 from math import floor
 from bin.colours import *
+from bin.blit_tools import *
 
 import pygame as pg
 
@@ -20,7 +21,7 @@ def move_pos(in_out, elapsed_time, y, speed):
 
 
 class Card(object):
-    def __init__(self, image, pos, size, m, columns, o_set, card_type):
+    def __init__(self, image, pos, size, m, o_set, card_type):
         self.size = size
         self.position = [o_set[0] + (size[0] + m[0]) * pos[0], o_set[1] + (size[1] + m[1]) * pos[1]]
         self.image = image
@@ -50,16 +51,17 @@ class Player:
         self.columns = 0
         self.image_dict = {}
         self.damage = 0
+        self.margins = (20, 30)
         self.block = 0
         self.health = 0
         self.energy = 0
         self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
-        self.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.status_bar = {"Fear": 0, "Weakness": 0, "Vulnerable": 0, "Disappointment": 0, "Pained": 0, "Marked": 0}
         self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.acted = False
         self.size = None
         self.choices = {}
-        self.ui_rect = None
+        self.ui = {}
         self.deck = None
         self.played_cards = None
 
@@ -78,31 +80,43 @@ class Player:
             self.deck = deck
         self.size = size
         images = {chan.split()[-1]: self.image_dict[chan.split()[-1]] for chan in self.deck}
-        o_set = ((X - margins[0] * (self.columns - 1) - self.size[0] * self.columns) / 2 + 2 * self.size[0], (Y - margins[1] * (self.rows - 1) - self.size[1] * self.rows) / 2)
-        self.ui_rect = pg.Rect(o_set[0] - 4 * self.size[0], o_set[1], self.size[0] * 3.5, margins[1] * (self.rows - 1) + self.size[1] * self.rows)
+        o_set = ((X - (self.columns - 4.5) * self.size[0] - (self.columns - 1) * margins[0]) / 2, (Y - margins[1] * (self.rows - 1) - self.size[1] * self.rows) / 2)
+        self.ui["rect"] = pg.Rect((X - (self.columns + 4.5) * self.size[0] - (self.columns - 1) * margins[0]) / 2, o_set[1], self.size[0] * 4, margins[1] * (self.rows - 1) + self.size[1] * self.rows)
+        self.ui["surface"] = pg.Surface((self.size[0] * 4, margins[1] * (self.rows - 1) + self.size[1] * self.rows), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA).convert_alpha()
         cards = random.sample(self.deck, int((self.columns * self.rows) / 2))
         pos_list = [(a, b) for a in range(self.columns) for b in range(self.rows)]
         random.shuffle(pos_list)
-        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, self.size, margins, self.columns, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
+        self.played_cards = [Card(images[cards[floor(a/2)].split()[-1]], position, self.size, margins, o_set, cards[floor(a/2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_card_screen(self, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+    def draw_card_screen(self, font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
                 card.choose(m_pos, choose_boolean)
         for card in self.played_cards:
             card.draw(self.image_dict["card_back"], self.screen, pos_mod)
-        self.draw_ui(ui_images, pos_mod)
+        self.draw_ui(ui_images, pos_mod, font)
 
-    def draw_ui(self, ui_images, pos_mod):
-        pg.draw.rect(self.screen, (224, 255, 255), self.ui_rect, 0, 25)
-        pg.draw.rect(self.screen, cyan, self.ui_rect, 5, 25)
+    def draw_ui(self, ui_images, pos_mod, font):
+        self.ui["surface"].fill((224, 255, 255, 200))
+        self.screen.blit(self.ui["surface"], (self.ui["rect"].x, self.ui["rect"].y))
+        pg.draw.rect(self.screen, cyan, self.ui["rect"], 5)
         for a in range(self.metadata["energy"]):
             if a < self.energy:
-                self.screen.blit(ui_images["energy_full"], (self.ui_rect.x + 5 + a * 75, self.ui_rect.y + 10 + pos_mod))
+                x = self.ui["rect"].width / 2 - ui_images["energy_full"].get_rect().width / 2
+                self.screen.blit(ui_images["energy_full"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
             else:
-                self.screen.blit(ui_images["energy_empty"], (self.ui_rect.x + 5 + a * 75, self.ui_rect.y + 10 + pos_mod))
+                x = self.ui["rect"].width / 2 - ui_images["energy_empty"].get_rect().width / 2
+                self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
+        m = [(a, self.buff_bar[a]) for a in self.buff_bar if self.buff_bar[a]] + [(a, self.status_bar[a]) for a in self.status_bar if self.status_bar[a]]
+        size = (ui_images["status"]["Vulnerable"].get_rect().width, ui_images["status"]["Vulnerable"].get_rect().width)
+        mod = ((self.ui["rect"].width - self.margins[0]) // (size[0] + self.margins[0]))
+        for a, b in enumerate(m):
+            i = self.ui["rect"].x + (a % mod) * (size[0] + self.margins[0]) + (self.ui["rect"].width - self.margins[0] * (mod - 1) - size[0] * mod) / 2
+            j = self.ui["rect"].y + 100 + pos_mod + (size[1] + self.margins[1]) * (a // mod)
+            self.screen.blit(ui_images["status" if b[0] in list(ui_images["status"].keys()) else "buff"][b[0]], (i, j))
+            draw_text_right(str(b[1]), black, font, self.screen, i + size[0] + 10, j + size[1] + 10)
 
     def complete(self):
         count = 0
@@ -136,7 +150,7 @@ class Player:
                         self.attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
                         if self.cards[card[-1]]["upgrades"][upgrade]["status"] != "None":
                             for status in self.cards[card[-1]]["upgrades"][upgrade]["status"]:
-                                if status == "None":
+                                if self.attack["status"] == "None":
                                     self.attack["status"] = {status: self.cards[card[-1]]["upgrades"][upgrade]["status"][status]}
                                 else:
                                     self.attack["status"][status] = self.attack["status"].get(status, 0)
@@ -152,12 +166,7 @@ class Player:
                     self.attack["heal"] += self.attack["damage"]
                 if self.buff_bar["Armor"]:
                     self.attack["block"] += self.buff_bar["Armor"]
-                self.health += self.attack["heal"]
-                if self.health > self.metadata["hp"]:
-                    self.health = self.metadata["hp"]
-                self.block = self.attack["block"]
                 self.acted = True
-                print(self.attack, self.buff_bar, self.status_bar, 1)
                 return 2, self.attack["damage"], self.attack["status"]
             else:
                 count += number
@@ -187,8 +196,12 @@ class Player:
         else:
             damage -= self.block
         self.block = 0
+        self.block = self.attack["block"]
         damage += self.status_bar["Poison"]
         self.health += self.buff_bar["Regeneration"]
+        self.health += self.attack["heal"]
+        if self.health > self.metadata["hp"]:
+            self.health = self.metadata["hp"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
         self.health -= damage
@@ -198,11 +211,9 @@ class Player:
         for b in self.buff_bar:
             if self.buff_bar[b]:
                 self.buff_bar[b] -= 1
-        print(self.buff_bar, 2)
         if status_effects != "None":
             for effect in status_effects:
                 self.status_bar[effect] += status_effects[effect]
         if self.attack["buff"] != "None":
             for buff in self.attack["buff"]:
                 self.buff_bar[buff] += self.attack["buff"][buff]
-        print(self.buff_bar, 3)

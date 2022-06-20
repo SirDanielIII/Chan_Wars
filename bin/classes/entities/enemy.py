@@ -45,10 +45,8 @@ class Enemy:
                 self.attack["buff"][buff] += attack["buff"][buff]
         if self.buff_bar["Lifesteal"]:
             self.attack["heal"] += self.attack["damage"]
-        self.health += attack["heal"]
         if self.buff_bar["Armor"]:
             self.attack["block"] += self.buff_bar["Armor"]
-        self.block = self.attack["block"]
         self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
                                        "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [0, 0], "wait": 0.5}
 
@@ -62,8 +60,12 @@ class Enemy:
         else:
             damage -= self.block
         self.block = 0
+        self.block = self.attack["block"]
         damage += self.status_bar["Pained"]
+        self.health += self.attack["heal"]
         self.health += self.buff_bar["Regeneration"]
+        if self.health > self.metadata["hp"]:
+            self.health = self.metadata["hp"]
         self.health -= damage
         if self.health < 0:
             self.health = 0

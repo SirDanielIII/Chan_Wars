@@ -24,6 +24,7 @@ class Config(object):
         self.f_hp_bar_name = None
         self.f_boss_text = None
         self.f_options_title = None
+        self.f_status = None
         self.f_regular = None
         self.f_regular_small = None
         self.f_regular_big = None
@@ -404,12 +405,14 @@ class Config(object):
 
     def load_img_ui(self):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
+        self.img_ui["status"] = {k: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/status effects placeholder.png").convert(), (30, 30)) for k in self.global_conf["other"]["effects"]["status"]}
+        self.img_ui["buff"] = {k: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/status effects placeholder.png").convert(), (30, 30)) for k in self.global_conf["other"]["effects"]["buff"]}
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
-
+        self.f_status = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 30)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
         self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)
