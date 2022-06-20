@@ -200,7 +200,7 @@ class BossDevilChan(Level):
                         self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_card_screen(self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"], 0,
+            self.player.draw_card_screen(self.config.f_status, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"], 0,
                                          self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # Draws the cards and creates matches between clicked cards.
 
@@ -471,13 +471,13 @@ class BossDevilChan(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 elif self.timer_dict["action"].seconds > 3 and "death" not in self.event:
                     # Completes the process, updates the player's state and puts the dialogue on screen.
-                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     if self.battle == "boss":
                         self.player.update(self.boss.move["damage"], self.boss.move["status"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     elif self.battle == "enemy":
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["status"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True

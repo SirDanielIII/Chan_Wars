@@ -18,3 +18,18 @@ other:
     - 500
   highest_level_beat: 1
   last_level: 1
+  effects:
+    status:
+      - Fear
+      - Weakness
+      - Vulnerable
+      - Disappointment
+      - Marked
+      - Pained
+    buff:
+      - Power
+      - Lifesteal
+      - Regeneration
+      - Energized
+      - Armor
+      - Clairvoyant

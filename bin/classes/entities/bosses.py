@@ -72,8 +72,6 @@ class DevilChan(Boss):
             self.move["damage"] *= 0.75
         if self.buff_bar["Power"]:
             self.move["damage"] *= 1.25
-        self.health += self.move["heal"]
-        self.block += self.move["block"]
         return move_type
 
     def update(self, damage, status_effects):
@@ -86,9 +84,15 @@ class DevilChan(Boss):
         else:
             damage -= self.block
         self.block = 0
-        damage += self.status_bar["Pained"]
+        self.block = self.move["block"]
+        self.health += self.move["heal"]
         self.health += self.buff_bar["Regeneration"]
+        if self.health > self.metadata["hp"]:
+            self.health = self.metadata["hp"]
+        damage += self.status_bar["Pained"]
         self.health -= damage
+        if self.health < 0:
+            self.health = 0
         if status_effects != "None":
             for effect in status_effects:
                 self.status_bar[effect] += status_effects[effect]
