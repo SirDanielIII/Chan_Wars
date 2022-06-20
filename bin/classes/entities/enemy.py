@@ -6,10 +6,10 @@ class Enemy:
         self.energy = None
         self.attacks = None
         self.block = 0
-        self.status_bar = {"Weakness": 0, "Vulnerable": 0, "Disappointment": 0, "Pained": 0, "Marked": 0}
-        self.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Armor": 0}
+        self.debuff_bar = {"weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
+        self.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "armor": 0}
         self.name = None
-        self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}, "phrase": {}}
+        self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}, "phrase": {}}
         self.image = None
         self.phrases = {}
 
@@ -28,50 +28,50 @@ class Enemy:
     def act(self, turn_counter):
         attack = self.attacks[turn_counter % len(self.attacks)]
         mod = 1
-        if self.status_bar["Weakness"]:
+        if self.debuff_bar["weakness"]:
             mod *= 0.75
-        if self.buff_bar["Power"]:
+        if self.buff_bar["power"]:
             mod *= 1.25
         self.attack["damage"] += attack["damage"] * mod
         self.attack["block"] += attack["block"]
         self.attack["heal"] += attack["heal"]
-        if attack["status"] != "None":
-            for status in attack["status"]:
-                self.attack["status"][status] = self.attack["status"].get(status, 0)
-                self.attack["status"][status] += attack["status"][status]
+        if attack["debuff"] != "None":
+            for debuff in attack["debuff"]:
+                self.attack["debuff"][debuff] = self.attack["debuff"].get(debuff, 0)
+                self.attack["debuff"][debuff] += attack["debuff"][debuff]
         if attack["buff"] != "None":
             for buff in attack["buff"]:
                 self.attack["buff"][buff] = self.attack["buff"].get(buff, 0)
                 self.attack["buff"][buff] += attack["buff"][buff]
-        if self.buff_bar["Lifesteal"]:
+        if self.buff_bar["lifesteal"]:
             self.attack["heal"] += self.attack["damage"]
-        if self.buff_bar["Armor"]:
-            self.attack["block"] += self.buff_bar["Armor"]
+        if self.buff_bar["armor"]:
+            self.attack["block"] += self.buff_bar["armor"]
         self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
                                        "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [0, 0], "wait": 0.5}
 
-    def update(self, damage, status_effects):
-        if self.status_bar["Vulnerable"]:
+    def update(self, damage, debuff):
+        if self.debuff_bar["vulnerable"]:
             damage *= 1.25
-        if self.status_bar["Marked"] and damage:
-            damage += self.status_bar["Marked"]
+        if self.debuff_bar["marked"] and damage:
+            damage += self.debuff_bar["marked"]
         if self.block >= damage:
             damage = 0
         else:
             damage -= self.block
         self.block = 0
         self.block = self.attack["block"]
-        damage += self.status_bar["Pained"]
+        damage += self.debuff_bar["wounded"]
         self.health += self.attack["heal"]
-        self.health += self.buff_bar["Regeneration"]
+        self.health += self.buff_bar["regeneration"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
         self.health -= damage
         if self.health < 0:
             self.health = 0
-        if status_effects != "None":
-            for effect in status_effects:
-                self.status_bar[effect] += status_effects[effect]
+        if debuff != "None":
+            for effect in debuff:
+                self.debuff_bar[effect] += debuff[effect]
         if self.attack["buff"] != "None":
             for buff in self.attack["buff"]:
                 self.buff_bar[buff] += self.attack["buff"][buff]

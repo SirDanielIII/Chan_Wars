@@ -13,8 +13,8 @@ moves:
     - You have to build capacity.
     - You chose that? Come on, that's crazy talk!!!
     - Can't you be doing more?
-    status:
-      Disappointment: 1
+    debuff:
+      disappointment: 1
   basic_2:
     block: 0
     buff: None
@@ -25,8 +25,8 @@ moves:
     - Reflect, reflect, REFLECT HARDER!!!
     - Face the monster... ME!
     - Keep your head on a swivel!
-    status:
-      Fear: 2
+    debuff:
+      fear: 2
   special:
     block: 0
     buff: None
@@ -35,7 +35,7 @@ moves:
     phrases:
     - Next time, just practice perfectly.
     - My record just increased :p
-    status: None
+    debuff: None
 name: Mr. Phone
 phrases:
   death:

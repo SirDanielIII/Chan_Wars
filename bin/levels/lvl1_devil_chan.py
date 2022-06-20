@@ -130,9 +130,10 @@ class BossDevilChan(Level):
 
     def battle_reset(self):
         self.player.played_cards = None
-        self.player.debuff_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
-        self.player.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
-        self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+        self.player.debuff_bar = {"fear": 0, "weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
+        self.player.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
+        self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
+        self.player.chosen_cards = []
         self.turn_counter = 0
         self.completed = True
         self.updated = True
@@ -197,8 +198,8 @@ class BossDevilChan(Level):
                         self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_card_screen(self.config.f_status, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"], 0,
-                                         self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"],
+                                         0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # Draws the cards and creates matches between clicked cards.
 
     def trigger_in(self):   # Called to bring the card game back in.
@@ -446,9 +447,9 @@ class BossDevilChan(Level):
                 if self.timer_dict["update"].seconds > 1:
                     # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
                     if self.battle == "boss":
-                        self.boss.update(self.player.attack["damage"], self.player.attack["status"])
+                        self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                     elif self.battle == "enemy":
-                        self.enemy.update(self.player.attack["damage"], self.player.attack["status"])
+                        self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -468,12 +469,12 @@ class BossDevilChan(Level):
                 elif self.timer_dict["action"].seconds > 3 and "death" not in self.event:
                     # Completes the process, updates the player's state and puts the dialogue on screen.
                     if self.battle == "boss":
-                        self.player.update(self.boss.move["damage"], self.boss.move["status"])
-                        self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                        self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
+                        self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     elif self.battle == "enemy":
-                        self.player.update(self.enemy.attack["damage"], self.enemy.attack["status"])
-                        self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
-                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
+                        self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
+                        self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
+                    self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True

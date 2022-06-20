@@ -56,13 +56,14 @@ class Player:
         self.health = 0
         self.energy = 0
         self.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
-        self.debuff_bar = {"fear": 0, "weakness": 0, "vulnerable": 0, "disappointment": 0, "pained": 0, "marked": 0}
+        self.debuff_bar = {"fear": 0, "weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
         self.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
         self.acted = False
         self.size = None
         self.choices = {}
         self.ui = {}
         self.deck = None
+        self.chosen_cards = []
         self.played_cards = None
 
     def initialize(self, image_dict):
@@ -91,34 +92,51 @@ class Player:
         self.played_cards = [Card(images[cards[floor(a / 2)].split()[-1]], position, self.size, margins, o_set, cards[floor(a / 2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_card_screen(self, font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+    def draw_card_screen(self, effects_font, intro_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
                 card.choose(m_pos, choose_boolean)
         for card in self.played_cards:
             card.draw(self.image_dict["card_back"], self.screen, pos_mod)
-        self.draw_ui(ui_images, pos_mod, font)
+        self.draw_ui(ui_images, pos_mod, effects_font, intro_font)
 
-    def draw_ui(self, ui_images, pos_mod, font):
+    def draw_ui(self, ui_images, pos_mod, effects_font, intro_font):
         self.ui["surface"].fill((224, 255, 255, 200))
         self.screen.blit(self.ui["surface"], (self.ui["rect"].x, self.ui["rect"].y))
         pg.draw.rect(self.screen, cyan, self.ui["rect"], 5)
-        for a in range(self.metadata["energy"]):
+        # ------------------------------------------------------------------------------------------------------------------
+        # Energy
+        for a in range(self.metadata["energy"] + self.buff_bar["energized"]):
             if a < self.energy:
                 x = self.ui["rect"].width / 2 - ui_images["energy_full"].get_rect().width / 2
                 self.screen.blit(ui_images["energy_full"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
             else:
                 x = self.ui["rect"].width / 2 - ui_images["energy_empty"].get_rect().width / 2
                 self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
+        # ------------------------------------------------------------------------------------------------------------------
+        # Status Effects
         m = [(a, self.buff_bar[a]) for a in self.buff_bar if self.buff_bar[a]] + [(a, self.debuff_bar[a]) for a in self.debuff_bar if self.debuff_bar[a]]
         size = (ui_images["debuff"]["vulnerable"].get_rect().width, ui_images["debuff"]["vulnerable"].get_rect().width)
         mod = ((self.ui["rect"].width - self.margins[0]) // (size[0] + self.margins[0]))
         for a, b in enumerate(m):
             i = self.ui["rect"].x + (a % mod) * (size[0] + self.margins[0]) + (self.ui["rect"].width - self.margins[0] * (mod - 1) - size[0] * mod) / 2
             j = self.ui["rect"].y + 100 + pos_mod + (size[1] + self.margins[1]) * (a // mod)
-            self.screen.blit(ui_images["status" if b[0] in list(ui_images["status"].keys()) else "buff"][b[0]], (i, j))
-            draw_text_right(str(b[1]), black, font, self.screen, i + size[0] + 10, j + size[1] + 10)
+            self.screen.blit(ui_images["debuff" if b[0].lower() in list(ui_images["debuff"].keys()) else "buff"][b[0].lower()], (i, j))
+            draw_text_right(str(b[1]), black, effects_font, self.screen, i + size[0] + 10, j + size[1] + 10)
+        # ------------------------------------------------------------------------------------------------------------------
+        # Card Overview
+        for a, card in enumerate(self.chosen_cards):
+            self.screen.blit(pg.transform.smoothscale(self.image_dict[card], (150, 225)).convert_alpha(), (self.ui["rect"].x + 20, a * 250 + 300))
+            draw_text_left(card[:-5] + " " + card[-4:], black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 300)
+            draw_text_left("Damage: " + str(self.cards[card]["damage"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 320)
+            draw_text_left("Block: " + str(self.cards[card]["block"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 340)
+            draw_text_left("Heal: " + str(self.cards[card]["heal"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 360)
+            draw_text_left("Buff: " + str(self.cards[card]["buff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 380)
+            draw_text_left("Debuff: " + str(self.cards[card]["debuff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 400)
+            draw_text_left("Upgrades: ", black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 420)
+            for m, n in enumerate(self.cards[card]["upgrades"].keys()):
+                draw_text_left(str(n), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 440 + m * 20)
 
     def complete(self):
         count = 0
@@ -126,21 +144,25 @@ class Player:
         for a in self.played_cards:
             self.choices[a.card_type] = self.choices.get(a.card_type, 0)
             self.choices[a.card_type] += a.chosen
+            if a.chosen and a.card_type.split()[-1] not in self.chosen_cards:
+                self.chosen_cards.insert(0, a.card_type.split()[-1])
+                if len(self.chosen_cards) > 2:
+                    self.chosen_cards = self.chosen_cards[:2]
         for card_type, number in self.choices.items():
             if number == 2 and not self.acted:
                 card = card_type.split(" ")
                 mod = 1
-                if self.debuff_bar["Weakness"]:
+                if self.debuff_bar["weakness"]:
                     mod *= 0.75
-                if self.buff_bar["Power"]:
+                if self.buff_bar["power"]:
                     mod *= 1.25
                 self.attack["damage"] += self.cards[card[-1]]["damage"] * mod
                 self.attack["block"] += self.cards[card[-1]]["block"]
                 self.attack["heal"] += self.cards[card[-1]]["heal"]
-                if self.cards[card[-1]]["status"] != "None":
-                    for status in self.cards[card[-1]]["status"]:
-                        self.attack["status"][status] = self.attack["status"].get(status, 0)
-                        self.attack["status"][status] += self.cards[card[-1]]["status"][status]
+                if self.cards[card[-1]]["debuff"] != "None":
+                    for debuff in self.cards[card[-1]]["debuff"]:
+                        self.attack["debuff"][debuff] = self.attack["debuff"].get(debuff, 0)
+                        self.attack["debuff"][debuff] += self.cards[card[-1]]["debuff"][debuff]
                 if self.cards[card[-1]]["buff"] != "None":
                     for buff in self.cards[card[-1]]["buff"]:
                         self.attack["buff"][buff] = self.attack["buff"].get(buff, 0)
@@ -150,13 +172,13 @@ class Player:
                         self.attack["damage"] += self.cards[card[-1]]["upgrades"][upgrade]["damage"]
                         self.attack["block"] += self.cards[card[-1]]["upgrades"][upgrade]["block"]
                         self.attack["heal"] += self.cards[card[-1]]["upgrades"][upgrade]["heal"]
-                        if self.cards[card[-1]]["upgrades"][upgrade]["status"] != "None":
-                            for status in self.cards[card[-1]]["upgrades"][upgrade]["status"]:
-                                if self.attack["status"] == "None":
-                                    self.attack["status"] = {status: self.cards[card[-1]]["upgrades"][upgrade]["status"][status]}
+                        if self.cards[card[-1]]["upgrades"][upgrade]["debuff"] != "None":
+                            for debuff in self.cards[card[-1]]["upgrades"][upgrade]["debuff"]:
+                                if self.attack["debuff"] == "None":
+                                    self.attack["debuff"] = {debuff: self.cards[card[-1]]["upgrades"][upgrade]["debuff"][debuff]}
                                 else:
-                                    self.attack["status"][status] = self.attack["status"].get(status, 0)
-                                    self.attack["status"][status] += self.cards[card[-1]]["upgrades"][upgrade]["status"][status]
+                                    self.attack["debuff"][debuff] = self.attack["debuff"].get(debuff, 0)
+                                    self.attack["debuff"][debuff] += self.cards[card[-1]]["upgrades"][upgrade]["debuff"][debuff]
                         if self.cards[card[-1]]["upgrades"][upgrade]["buff"] != "None":
                             for buff in self.cards[card[-1]]["upgrades"][upgrade]["buff"]:
                                 if self.attack["buff"] == "None":
@@ -164,12 +186,12 @@ class Player:
                                 else:
                                     self.attack["buff"][buff] = self.attack["buff"].get(buff, 0)
                                     self.attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
-                if self.buff_bar["Lifesteal"]:
+                if self.buff_bar["lifesteal"]:
                     self.attack["heal"] += self.attack["damage"]
-                if self.buff_bar["Armor"]:
-                    self.attack["block"] += self.buff_bar["Armor"]
+                if self.buff_bar["armor"]:
+                    self.attack["block"] += self.buff_bar["armor"]
                 self.acted = True
-                return 2, self.attack["damage"], self.attack["status"]
+                return 2, self.attack["damage"], self.attack["debuff"]
             else:
                 count += number
         if count == 2:
@@ -186,21 +208,22 @@ class Player:
             self.played_cards.pop(index)
         self.acted = False
 
-    def update(self, damage, status_effects):
+    def update(self, damage, debuff):
+        print(self.buff_bar)
         self.energy = self.metadata["energy"]
-        self.energy += self.buff_bar["Energized"]
-        if self.debuff_bar["Vulnerable"]:
+        self.energy += self.buff_bar["energized"]
+        if self.debuff_bar["vulnerable"]:
             damage *= 1.25
-        if self.debuff_bar["Marked"] and damage:
-            damage += self.debuff_bar["Marked"]
+        if self.debuff_bar["marked"] and damage:
+            damage += self.debuff_bar["marked"]
         if self.block >= damage:
             damage = 0
         else:
             damage -= self.block
         self.block = 0
         self.block = self.attack["block"]
-        damage += self.debuff_bar["Poison"]
-        self.health += self.buff_bar["Regeneration"]
+        damage += self.debuff_bar["wounded"]
+        self.health += self.buff_bar["regeneration"]
         self.health += self.attack["heal"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
@@ -213,9 +236,9 @@ class Player:
         for b in self.buff_bar:
             if self.buff_bar[b]:
                 self.buff_bar[b] -= 1
-        if status_effects != "None":
-            for effect in status_effects:
-                self.debuff_bar[effect] += status_effects[effect]
+        if debuff != "None":
+            for effect in debuff:
+                self.debuff_bar[effect] += debuff[effect]
         if self.attack["buff"] != "None":
             for buff in self.attack["buff"]:
                 self.buff_bar[buff] += self.attack["buff"][buff]
