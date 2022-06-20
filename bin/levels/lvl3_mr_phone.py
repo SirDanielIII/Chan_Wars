@@ -14,8 +14,8 @@ from bin.colours import *
 
 
 class BossMrPhone(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, last_time, config, audio)
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
@@ -255,7 +255,7 @@ class BossMrPhone(Level):
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
-            self.clock.tick(self.FPS)
+            self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
             pg.display.update()
             # print(self.clock.get_fps(), self.card_game, self.card_canvas_y, self.game_transition_in, self.game_transition_out)

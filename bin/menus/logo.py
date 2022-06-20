@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 
 from bin.blit_tools import center_blit_image
@@ -8,8 +7,8 @@ from bin.colours import *
 
 
 class Logo(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, last_time, config, audio)
         self.config = config
         self.audio = audio
         self.transition_speed = 3
@@ -40,8 +39,7 @@ class Logo(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    pg.quit()
-                    sys.exit()
+                    self.config.shutdown(None)
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens(pg.Color("#171717"))
             center_blit_image(self.game_canvas, dev_logo, self.width / 2, self.height / 2)
@@ -64,4 +62,5 @@ class Logo(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
+            self.clock.tick(self.config.FPS)
             pg.display.update()

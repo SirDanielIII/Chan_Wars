@@ -44,17 +44,17 @@ class Main(object):
         self.audio = Audio()
         # Levels
         self.lvl = 0
-        self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_logo = Logo(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
-        self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.FPS, self.last_time, self.config, self.audio)
+        self.lvl_boot = Boot(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_logo = Logo(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_main_menu = MainMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_game_menu = GameMenu(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_options = Options(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_how_to_play = HowToPlay(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_credits = Credits(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_devil_chan = BossDevilChan(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_ms_g = BossMsG(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.lvl_mr_phone = BossMrPhone(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
+        self.end_screen = Death(self.width, self.height, self.surface, self.game_canvas, self.clock, self.last_time, self.config, self.audio)
         # ------------------------------------------------------------------------------------------------------------------
 
     def reload(self):

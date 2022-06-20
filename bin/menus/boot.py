@@ -1,6 +1,5 @@
 import os
 import random
-import sys
 import time
 
 from pygame import gfxdraw
@@ -12,8 +11,8 @@ from bin.colours import *
 
 
 class Boot(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, last_time, config, audio)
         self.next_level = None
         self.task_timer = None
         self.task_timer_delay = None
@@ -27,7 +26,7 @@ class Boot(Level):
         self.msg = None
 
     def reload(self):
-        self.next_level = 2
+        self.next_level = 1
         self.task_timer = Timer()
         self.task_timer_delay = 0.2
         self.half_update = True
@@ -87,8 +86,7 @@ class Boot(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    pg.quit()
-                    sys.exit()
+                    self.config.shutdown(None)
                 if event.type == milliseconds:  # Timers
                     self.task_timer.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
@@ -115,41 +113,57 @@ class Boot(Level):
                             self.task_timer.time_reset()
                             self.task_num += 1
                     case 2:
+                        self.task_text = "Applying Global Changes"
+                        self.rect_width += self.rect_width_add * dt
+                        if self.task_timer.seconds > self.task_timer_delay:
+                            if self.config.fullscreen:
+                                self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
+                            if self.config.skip_intro:
+                                self.next_level = 2
+                            if self.config.faster_boot:
+                                self.task_timer_delay = 0.02
+                            self.audio.enable_music = self.config.global_conf["settings"]["audio"]["enable_music"]
+                            self.audio.enable_sfx = self.config.global_conf["settings"]["audio"]["enable_sfx"]
+                            self.audio.music_vol = self.config.global_conf["settings"]["audio"]["music_vol"]
+                            self.audio.sfx_vol = self.config.global_conf["settings"]["audio"]["sfx_vol"]
+                            self.task_timer.time_reset()
+                            self.task_num += 1
+                    case 3:
                         self.task_text = "Loading Level Configs"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_level_confs()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 3:
+                    case 4:
                         self.task_text = "Loading Boss Configs"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_boss_confs()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 4:
+                    case 5:
                         self.task_text = "Importing Menu Images"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_menus()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 5:
+                    case 6:
                         self.task_text = "Hiring the Bosses"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_boss_select()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 6:
+                    case 7:
                         self.task_text = "Gathering the Chans"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_chan_cards()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 7:
+                    case 8:
                         self.task_text = "Hanging Up Paintings"
                         self.rect_width += self.rect_width_add * dt
                         if self.half_update:
@@ -159,91 +173,91 @@ class Boot(Level):
                             self.config.load_img_backgrounds()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 8:
+                    case 9:
                         self.task_text = "Loading Boss Images"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_bosses()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 9:
+                    case 10:
                         self.task_text = "Facing the Monster"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_enemies()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 10:
+                    case 11:
                         self.task_text = "Determining the Endgame"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_end_screens()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 11:
+                    case 12:
                         self.task_text = "Copy Pasting Images"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_img_ui()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 12:
+                    case 13:
                         self.task_text = "Loading Fonts"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_fonts()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 13:
+                    case 14:
                         self.task_text = "Loading Menu Soundtrack"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_menu()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 14:
+                    case 15:
                         self.task_text = "Loading Bipolar Noises"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_completion()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 15:
+                    case 16:
                         self.task_text = "Loading Game SFX"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_game()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 16:
+                    case 17:
                         self.task_text = "Loading Button Noises"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_interact()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 17:
+                    case 18:
                         self.task_text = "Devil Chan Misses Angel Chan"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_1()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 18:
-                        self.task_text = "Loading Russian Soundtrack"
+                    case 19:
+                        self.task_text = "Singing Russian Music"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_2()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 19:
+                    case 20:
                         self.task_text = "Running Away From Mr. Phone"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
                             self.config.load_audio_lvl_3()
                             self.task_timer.time_reset()
                             self.task_num += 1
-                    case 20:
+                    case 21:
                         self.task_text = "Loading Complete"
                         self.rect_width = self.bar_end
                         if not finished:
@@ -265,10 +279,11 @@ class Boot(Level):
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 self.transition_speed = 3
+                self.next_level = 4
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
-            self.clock.tick(self.FPS)
+            self.clock.tick(self.config.FPS)
             pg.display.update()
 
     # ----------------------------------------------------------------------------------------------------------------------

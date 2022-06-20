@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pygame as pg
 import yaml  # https://zetcode.com/python/yaml/
@@ -30,14 +31,12 @@ class Config(object):
         self.f_regular_big = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Settings
-        self.enable_music = None
-        self.enable_sfx = None
-        self.music_vol = None
-        self.sfx_vol = None
+        # NOTE - AUDIO SETTINGS ARE LOCATED IN THE AUDIO CLASS & LOADED DURING BOOT
         self.fps_show = None
-        self.fps_value = 165  # Needs to have a value set due to boot menu
+        self.FPS = 165
         self.fullscreen = None
         self.skip_intro = None
+        self.faster_boot = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Other
         self.highest_level_beat = None
@@ -63,6 +62,14 @@ class Config(object):
         self.levels = 3
         self.bosses = ["devil_chan", "ms_g", "mr_phone"]
 
+    @staticmethod
+    def shutdown(new_dict):
+        if new_dict is not None:
+            with open(os.getcwd() + "/configuration/config.yml", "w") as f:
+                yaml.dump(new_dict, f, sort_keys=False)
+        pg.quit()
+        sys.exit()
+
     def load_global_conf(self):
         if not os.path.exists(os.getcwd() + "/configuration/config.yml"):
             with open(os.getcwd() + "/configuration/config.yml", "w") as f:
@@ -70,17 +77,16 @@ class Config(object):
                 yaml.dump({'settings': {'audio': {'enable_music': True, 'enable_sfx': True, 'music_vol': 1.0, 'sfx_vol': 1.0},
                                         'fps': {'show': False, 'value': 165}, 'fullscreen': False},
                            'other': {'levels': 3, 'bosses': ['devil_chan', 'mr_phone', 'ms_g'], 'chan_card_size': [120, 180],
-                                     'boss_face_size': [500, 500], 'highest_level_beat': 0}}, f)
+                                     'boss_face_size': [500, 500], 'highest_level_beat': 0}}, f, sort_keys=False)
 
         with open(os.getcwd() + "/configuration/config.yml", "r") as f:
+            # Audio settings are found in the Audio class, and are loaded during boot
             self.global_conf = yaml.safe_load(f)  # Save .yml file data into variable
-            self.enable_music = self.global_conf["settings"]["audio"]["enable_music"]
-            self.enable_sfx = self.global_conf["settings"]["audio"]["enable_sfx"]
-            self.music_vol = self.global_conf["settings"]["audio"]["music_vol"]
-            self.sfx_vol = self.global_conf["settings"]["audio"]["sfx_vol"]
             self.fps_show = self.global_conf["settings"]["fps"]["show"]
-            self.fps_value = self.global_conf["settings"]["fps"]["value"]
+            self.FPS = self.global_conf["settings"]["fps"]["value"]
             self.fullscreen = self.global_conf["settings"]["fullscreen"]
+            self.skip_intro = self.global_conf["settings"]["skip_intro"]
+            self.faster_boot = self.global_conf["settings"]["faster_boot"]
             self.boss_face_size = self.global_conf["other"]["boss_face_size"]
             self.chan_card_size = self.global_conf["other"]["chan_card_size"]
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
@@ -158,7 +164,7 @@ class Config(object):
                                                                               'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
                                                                                                                      'status': {'Weakness': 2}}}}}, 'columns': 3, 'energy': 3,
-                                                                    'hp': 50, 'rows': 4}}, f)
+                                                                    'hp': 50, 'rows': 4}}, f, sort_keys=False)
                         case 2:
                             yaml.dump({'enemies': {'bat': {
                                 'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}},
@@ -225,7 +231,7 @@ class Config(object):
                                                                               'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
                                                                                                                      'status': {'Weakness': 2}}}}}, 'columns': 5, 'energy': 4,
-                                                                    'hp': 75, 'rows': 4}}, f)
+                                                                    'hp': 75, 'rows': 4}}, f, sort_keys=False)
                         case 3:
                             yaml.dump({'enemies': {'bat': {
                                 'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}},
@@ -294,7 +300,7 @@ class Config(object):
                                                                               'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
                                                                                                                      'status': {'Weakness': 2}}}}}, 'columns': 7, 'energy': 5,
-                                                                    'hp': 100, 'rows': 4}}, f)
+                                                                    'hp': 100, 'rows': 4}}, f, sort_keys=False)
 
         for i in range(1, self.levels + 1):
             filename = "level_" + str(i)
@@ -344,7 +350,7 @@ class Config(object):
                                             'phrases': ['Do it on repl.it!!!', "One of them is a woman, the other has an Indian accent if you're into it."], 'status': 'None'},
                                 'siberia': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You!!! How did you escape Siberia!?'], 'status': 'None'},
                                 'special': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You! Go to Siberia!', 'You deserve to go to Siberia!'],
-                                            'status': 'None'}}}, f)
+                                            'status': 'None'}}}, f, sort_keys=False)
                         case "mr_phone":
                             yaml.dump({'hp': 200, 'name': 'Mr. Phone',
                                        'phrases': {'death': ['Huh.', 'Looks like you did practice perfectly.', "Welp, I'll be on my way then.", '*leaves*'],
@@ -364,7 +370,7 @@ class Config(object):
                                                                                                       'special': {'block': 0, 'buff': 'None', 'damage': 999, 'heal': 0,
                                                                                                                   'phrases': ['Next time, just practice perfectly.',
                                                                                                                               'My record just increased :p'], 'status': 'None'}}},
-                                      f)
+                                      f, sort_keys=False)
         for i in self.bosses:
             with open(os.getcwd() + "/configuration/bosses/" + i + ".yml", "r") as f:
                 self.boss_confs[i] = yaml.safe_load(f)
@@ -405,8 +411,8 @@ class Config(object):
 
     def load_img_ui(self):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
-        self.img_ui["status"] = {k: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/status effects placeholder.png").convert(), (30, 30)) for k in self.global_conf["other"]["effects"]["status"]}
-        self.img_ui["buff"] = {k: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/status effects placeholder.png").convert(), (30, 30)) for k in self.global_conf["other"]["effects"]["buff"]}
+        self.img_ui["buff"] = self.load_images_dict(os.getcwd() + "/resources/ui/buffs", (30, 30), True, "", False)
+        self.img_ui["debuff"] = self.load_images_dict(os.getcwd() + "/resources/ui/debuffs", (30, 30), True, "", False)
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
@@ -471,7 +477,7 @@ class Config(object):
         return image_list
 
     @staticmethod
-    def load_images_dict(path_to_directory, resize=None, alpha=False, exclude=""):
+    def load_images_dict(path_to_directory, resize=None, alpha=False, exclude="", smooth=True):
         """
         Args:
             path_to_directory:string:
@@ -482,6 +488,8 @@ class Config(object):
                 Whether to convert the image to alpha or not
             exclude:string:
                 String of characters not wanted in the keys
+            smooth:string:
+                Whether to use smooth scale or not
         """
         image_dict = {}
         name = None
@@ -489,7 +497,7 @@ class Config(object):
             if filename.endswith('.png') or filename.endswith('.jpg'):
                 path = os.path.join(path_to_directory, filename)
                 if resize is not None:
-                    image = pg.transform.smoothscale(pg.image.load(path), resize)
+                    image = pg.transform.smoothscale(pg.image.load(path), resize) if smooth else pg.transform.scale(pg.image.load(path), resize)
                 else:
                     image = pg.image.load(path)
                 if alpha:

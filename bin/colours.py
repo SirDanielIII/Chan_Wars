@@ -17,6 +17,7 @@
 import pygame as pg
 
 cw_green = pg.Color("#08f26e")
+cw_dark_green = pg.Color("#06bf56")
 cw_tan = pg.Color("#ffffb9")
 cw_gold = pg.Color("#ffaa00")
 cw_light_blue = pg.Color("#01baef")

@@ -1,9 +1,6 @@
 import math
 import random
-import sys
 import time
-
-import pygame.draw
 
 import bin.levels.minigames.card_game.player as card_pair
 from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
@@ -20,8 +17,8 @@ from bin.levels.minigames.card_game.player import move_pos
 
 
 class BossDevilChan(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, last_time, config, audio)
         self.back_button = ButtonTriangle(self.game_canvas, cw_blue)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Game Attributes
@@ -133,7 +130,7 @@ class BossDevilChan(Level):
 
     def battle_reset(self):
         self.player.played_cards = None
-        self.player.status_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
+        self.player.debuff_bar = {"Fear": 0, "Weakness": 0, "Blindness": 0, "Vulnerable": 0, "Disappointment": 0, "Poison": 0, "Marked": 0}
         self.player.buff_bar = {"Power": 0, "Lifesteal": 0, "Regeneration": 0, "Energized": 0, "Armor": 0, "Clairvoyant": 0}
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "status": {}}
         self.turn_counter = 0
@@ -421,8 +418,7 @@ class BossDevilChan(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    pg.quit()
-                    sys.exit()
+                    self.config.shutdown(self.config.global_conf)
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -494,6 +490,11 @@ class BossDevilChan(Level):
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
                     self.next_level = 2
+                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
+                    self.audio.dj(None, None, None, 800, False, 1, self.config.audio_interact["fade"])
+                if self.back_button.check_hover():
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["highlight"])
+                    self.next_level = 2
                 if self.transition_out("game", self.game_canvas, dt):
                     self.restore()
                     return self.next_level
@@ -527,6 +528,6 @@ class BossDevilChan(Level):
                 self.run_card_game(self.click)
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens([[self.card_canvas, (0, self.card_canvas_y)]])
-            self.clock.tick(self.FPS)
+            self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
             pg.display.update()

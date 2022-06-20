@@ -1,4 +1,3 @@
-import sys
 import time
 
 from bin.classes.buttons import ButtonTriangle
@@ -8,8 +7,8 @@ from bin.colours import *
 
 
 class Death(Level):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
-        super().__init__(width, height, surface, game_canvas, clock, fps, last_time, config, audio)
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
+        super().__init__(width, height, surface, game_canvas, clock, last_time, config, audio)
         self.background = None
         self.back_button = ButtonTriangle(self.text_canvas, cw_blue)
         self.death_stopwatch = Timer()
@@ -36,8 +35,7 @@ class Death(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    pg.quit()
-                    sys.exit()
+                    self.config.shutdown(self.config.global_conf)
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -66,6 +64,6 @@ class Death(Level):
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
-            self.clock.tick(self.FPS)
+            self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
             pg.display.update()

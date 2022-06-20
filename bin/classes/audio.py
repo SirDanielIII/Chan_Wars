@@ -24,7 +24,7 @@ class Audio(object):
         self.song = None
         self.music_channel = 0
 
-    def dj(self, song, music_c, fade_channel, ms, update, sfx_c, sfx):
+    def dj(self, song, music_c, fade_channel, ms, update, sfx_c, sfx, overlap="unused"):
         """ Handles music activation, switching, and fading.
         Args:
             song:pygame.mixer.Sound():
@@ -41,6 +41,8 @@ class Audio(object):
                 Specifies a Pygame Channel to play a specific sound effect from SFX channel list
             sfx:pygame.mixer.Sound:
                 Specific sound effect to potentially play (can be null if not needed)
+            overlap:string:
+                Find unused SFX channel to play the sound effect. True by default.
         Notes:
             - This method is built to be called once - E.G. Button Click
             - If switching music, it is best to fade out the old music channel and play the new music on another channel
@@ -56,11 +58,13 @@ class Audio(object):
         if sfx is not None:
             if not self.sfx_channels[sfx_c].get_busy():
                 self.sfx_channels[sfx_c].play(sfx)  # Play sound effect if given
-            else:
-                for i in self.sfx_channels[sfx_c:]:
+            elif overlap == "unused":  # Find unused channel
+                for i in self.sfx_channels[sfx_c + 1:]:
                     if not i.get_busy():  # Play sound effect in an unused channel if given one is busy
                         i.play(sfx)
                         break
+            elif overlap == "override":  # Override current channel
+                self.sfx_channels[sfx_c].play(sfx)
 
         try:
             if fade_channel[0] == "music":

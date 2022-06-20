@@ -5,7 +5,7 @@ from bin.colours import *
 
 
 class Level(ABC):
-    def __init__(self, width, height, surface, game_canvas, clock, fps, last_time, config, audio):
+    def __init__(self, width, height, surface, game_canvas, clock, last_time, config, audio):
         super().__init__()
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler Attributes
@@ -14,7 +14,6 @@ class Level(ABC):
         self.surface = surface
         self.game_canvas = game_canvas
         self.clock = clock
-        self.FPS = fps
         self.last_time = last_time
         self.config = config
         self.audio = audio
@@ -30,6 +29,7 @@ class Level(ABC):
         self.transition_speed = 10  # 0 -> Nothing | 1 -> Fade In | 2 -> Fade Out
         self.next_level = None  # Point to next game level (E.G. Main Menu, choose bosses, etc)
         self.click = False  # Mouse Click
+        self.hold = False  # Mouse Hold
         self.screen_offset = [0, 0]  # For screen shake
         self.freeze = True  # Stop logic processing of main game during transitions & off screen
 
