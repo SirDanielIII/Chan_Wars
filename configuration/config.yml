@@ -1,6 +1,6 @@
 settings:
   audio:
-    enable_music: false
+    enable_music: true
     enable_sfx: true
     music_vol: 1.0
     sfx_vol: 1.0

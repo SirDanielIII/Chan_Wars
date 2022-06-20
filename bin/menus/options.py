@@ -39,6 +39,8 @@ class Options(Level):
         self.buttons_settings["FASTER_BOOT"].clicked = self.config.faster_boot  # Load default FPS value
         self.buttons_music["MUSIC"].clicked = self.audio.enable_music  # Load default FPS value
         self.buttons_music["SFX"].clicked = self.audio.enable_sfx  # Load default FPS value
+        for i in self.buttons_music:
+            self.lock_slider(not self.buttons_music[i].clicked, self.volume_sliders, i)
 
     def reload(self):
         self.background = self.config.img_menus["settings"]
@@ -143,8 +145,10 @@ class Options(Level):
                 match i:
                     case "MUSIC":
                         self.audio.enable_music = self.config.global_conf["settings"]["audio"]["enable_music"] = self.buttons_music[i].clicked
+                        self.lock_slider(not self.buttons_music[i].clicked, self.volume_sliders, i)
                     case "SFX":
                         self.audio.enable_sfx = self.config.global_conf["settings"]["audio"]["enable_sfx"] = self.buttons_music[i].clicked
+                        self.lock_slider(not self.buttons_music[i].clicked, self.volume_sliders, i)
                 if self.buttons_music[i].clicked:
                     self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["enable"])
                 elif self.audio.enable_sfx:
@@ -158,6 +162,13 @@ class Options(Level):
         for i in button_dict:
             if i != this:
                 button_dict[i].turn_off_button()
+
+    @staticmethod
+    def lock_slider(lock, button_dict, this):
+        if lock:
+            button_dict[this].lock_slider()
+        else:
+            button_dict[this].unlock_slider()
 
     def run(self):
         self.reload()
@@ -202,17 +213,6 @@ class Options(Level):
             draw_text_left("Music", cw_yellow, self.f_options_title, self.text_canvas, self.align_03_x, self.align_y - self.title_offset)
             # ------------------------------------------------------------------------------------------------------------------
             self.draw_buttons(mx, my, dt)
-            # ------------------------------------------------------------------------------------------------------------------
-            # Volume Sliders
-            # pg.draw.rect(
-            #     self.game_canvas, cw_red, (self.align_03_x + self.button_size * 17 / 2, self.align_y + self.button_size * 2, self.button_size, self.button_size))
-            # pg.draw.rect(
-            #     self.game_canvas, cw_red, (self.align_03_x + self.button_size * 17 / 2, self.align_y + self.button_size * 6, self.button_size, self.button_size))
-
-            # pg.draw.rect(
-            #     self.game_canvas, cw_red, (self.align_03_x + self.button_size * 2, self.align_y + int(self.button_size * 2.25), self.button_size * 7, self.button_size // 2))
-            # pg.draw.rect(self.game_canvas, cw_red, (self.align_03_x + self.button_size * 2, self.align_y + int(self.button_size * 6.25), self.button_size * 7, self.button_size // 2))
-            # self.draw_bar_left(self.game_canvas, )
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True
