@@ -7,7 +7,7 @@ settings:
   fps:
     show: true
     value: 165
-  fullscreen: false
+  fullscreen: true
   skip_intro: true
   faster_boot: true
 other:
