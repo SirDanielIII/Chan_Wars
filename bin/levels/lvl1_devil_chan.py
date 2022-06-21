@@ -73,7 +73,7 @@ class BossDevilChan(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "attack"
+        self.event = "enemy_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer()}
@@ -198,12 +198,8 @@ class BossDevilChan(Level):
                         self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"],
+            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"],
                                          0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
-            for a in range(self.width // 5):
-                pg.draw.line(self.card_canvas, black, (a * 5, 0), (a * 5, self.height))
-            for a in range(self.height // 5):
-                pg.draw.line(self.card_canvas, black, (0, a * 5), (self.width, a * 5))
             # Draws the cards and creates matches between clicked cards.
 
     def trigger_in(self):   # Called to bring the card game back in.

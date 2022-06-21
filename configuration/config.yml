@@ -19,18 +19,3 @@ other:
   - 500
   highest_level_beat: 1
   last_level: 1
-  effects:
-    status:
-    - fear
-    - weakness
-    - vulnerable
-    - disappointment
-    - marked
-    - wounded
-    buff:
-    - power
-    - lifesteal
-    - regeneration
-    - energized
-    - armor
-    - clairvoyant
