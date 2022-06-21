@@ -184,9 +184,9 @@ phrases:
     2:
       clear: true
       delay: 0.06
-      fade_in: false
+      fade_in: true
       fade_out: true
-      line: 2
+      line: 1
       pause: 1.4
       shake:
         - 0
@@ -194,10 +194,10 @@ phrases:
       text: '*leaves*'
       wait: 1.0
   boss_player_death:
-    clear: false
+    clear: true
     delay: 0.05
     fade_in: true
-    fade_out: false
+    fade_out: true
     line: 1
     pause: 1.0
     shake:
@@ -206,10 +206,10 @@ phrases:
     text: Remember, make your TQPs.
     wait: 0
   boss_intro:
-    clear: false
+    clear: true
     delay: 0.06
     fade_in: true
-    fade_out: false
+    fade_out: true
     line: 1
     pause: 0.9
     shake:
