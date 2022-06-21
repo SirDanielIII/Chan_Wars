@@ -135,7 +135,13 @@ class OptionsButton(object):
 
         pg.draw.rect(self.canvas, self.clr_outer, self.outer_rect)
         pg.draw.rect(self.canvas, self.clr_inner_off if not self.clicked else self.clr_inner_on, self.inner_rect)
-        draw_text_left(self.text, self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2, self.outer_rect.y + (self.outer_rect.height - 40) / 2)
+
+        if not self.clicked:
+            draw_text_left(self.text[0], self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2,
+                           self.outer_rect.y + (self.outer_rect.height - 40) / 2)
+        else:
+            draw_text_left(self.text[1], self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2,
+                           self.outer_rect.y + (self.outer_rect.height - 40) / 2)
 
 
 class SliderButton(object):
@@ -174,6 +180,12 @@ class SliderButton(object):
 
     def unlock_slider(self):
         self.locked = False
+
+    def return_percentage(self, percent=True):
+        if percent:
+            return (self.current_pos / self.max_pos) * 100
+        else:
+            return self.current_pos / self.max_pos
 
     def check_click(self, mx, my, click):
         if self.outer_rect.collidepoint(mx, my) and not self.locked:

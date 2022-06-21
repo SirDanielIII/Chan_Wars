@@ -120,7 +120,7 @@ class Boot(Level):
                                 self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA and pg.FULLSCREEN)
                             if self.config.skip_intro:
                                 self.next_level = 2
-                            if self.config.faster_boot:
+                            if self.config.fast_boot:
                                 self.task_timer_delay = 0.02
                             self.audio.enable_music = self.config.global_conf["settings"]["audio"]["enable_music"]
                             self.audio.enable_sfx = self.config.global_conf["settings"]["audio"]["enable_sfx"]

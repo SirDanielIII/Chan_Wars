@@ -36,7 +36,7 @@ class Options(Level):
         self.buttons_settings["SHOW_FPS"].clicked = self.config.fps_show  # Load default FPS value
         self.buttons_settings["FULLSCREEN"].clicked = self.config.fullscreen  # Load default FPS value
         self.buttons_settings["SKIP_INTRO"].clicked = self.config.skip_intro  # Load default FPS value
-        self.buttons_settings["FASTER_BOOT"].clicked = self.config.faster_boot  # Load default FPS value
+        self.buttons_settings["FAST_BOOT"].clicked = self.config.fast_boot  # Load default FPS value
         self.buttons_music["MUSIC"].clicked = self.audio.enable_music  # Load default FPS value
         self.buttons_music["SFX"].clicked = self.audio.enable_sfx  # Load default FPS value
         for i in self.buttons_music:
@@ -48,33 +48,33 @@ class Options(Level):
         self.f_regular_small = self.config.f_regular_small
         self.buttons_fps = {
             30: OptionsButton(self.game_canvas, self.align_01_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, "30 FPS", self.f_regular_small, white),
+                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["30 FPS", "30 FPS"], self.f_regular_small, white),
             60: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 2, self.button_size, self.button_size, self.stroke_size,
-                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, "60 FPS", self.f_regular_small, white),
+                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["60 FPS", "60 FPS"], self.f_regular_small, white),
             75: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
-                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, "75 FPS", self.f_regular_small, white),
+                              cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["75 FPS", "75 FPS"], self.f_regular_small, white),
             144: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
-                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, "144 FPS", self.f_regular_small, white),
+                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["144 FPS", "144 FPS"], self.f_regular_small, white),
             165: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 8, self.button_size, self.button_size, self.stroke_size,
-                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, "165 FPS", self.f_regular_small, white)
+                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["165 FPS", "165 FPS"], self.f_regular_small, white)
         }
 
         self.buttons_settings = {
             "SHOW_FPS": OptionsButton(self.game_canvas, self.align_02_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                                      cw_tan, cw_gold, cw_dark_grey, cw_red, "Show FPS", self.f_regular_small, white),
+                                      cw_tan, cw_gold, cw_dark_grey, cw_red, ["Show FPS (Disabled)", "Show FPS (Enabled)"], self.f_regular_small, white),
             "FULLSCREEN": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 2, self.button_size, self.button_size, self.stroke_size,
-                                        cw_tan, cw_gold, cw_dark_grey, cw_dark_red, "Fullscreen", self.f_regular_small, white),
+                                        cw_tan, cw_gold, cw_dark_grey, cw_dark_red, ["Fullscreen (Disabled)", "Fullscreen (Enabled)"], self.f_regular_small, white),
             "SKIP_INTRO": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
-                                        cw_tan, cw_gold, cw_dark_grey, cw_light_blue, "Skip Logo Intro", self.f_regular_small, white),
-            "FASTER_BOOT": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
-                                         cw_tan, cw_gold, cw_dark_grey, cw_light_blue, "Faster Boot Up", self.f_regular_small, white)
+                                        cw_tan, cw_gold, cw_dark_grey, cw_light_blue, ["Skip Intro (Disabled)", "Skip Intro (Enabled)"], self.f_regular_small, white),
+            "FAST_BOOT": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
+                                       cw_tan, cw_gold, cw_dark_grey, cw_light_blue, ["Fast Boot (Disabled)", "Fast Boot (Enabled)"], self.f_regular_small, white)
         }
 
         self.buttons_music = {
             "MUSIC": OptionsButton(self.game_canvas, self.align_03_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                                   cw_tan, cw_gold, cw_dark_grey, cw_blue, "Music", self.f_regular_small, white),
+                                   cw_tan, cw_gold, cw_dark_grey, cw_blue, ["Music", "Music (Disabled)"], self.f_regular_small, white),
             "SFX": OptionsButton(self.game_canvas, self.align_03_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
-                                 cw_tan, cw_gold, cw_dark_grey, cw_blue, "SFX", self.f_regular_small, white)
+                                 cw_tan, cw_gold, cw_dark_grey, cw_blue, ["SFX", "SFX (Disabled)"], self.f_regular_small, white)
         }
         self.volume_sliders = {
             "MUSIC": SliderButton(self.game_canvas, self.align_03_x + self.button_size * 8,
@@ -130,8 +130,8 @@ class Options(Level):
                             self.surface = pg.display.set_mode((self.width, self.height), flags=pg.HWSURFACE and pg.DOUBLEBUF and pg.SRCALPHA)
                     case "SKIP_INTRO":
                         self.config.skip_intro = self.config.global_conf["settings"]["skip_intro"] = self.buttons_settings[i].clicked
-                    case "FASTER_BOOT":
-                        self.config.faster_boot = self.config.global_conf["settings"]["faster_boot"] = self.buttons_settings[i].clicked
+                    case "FAST_BOOT":
+                        self.config.fast_boot = self.config.global_conf["settings"]["fast_boot"] = self.buttons_settings[i].clicked
                 if self.buttons_settings[i].clicked:
                     self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["enable"])
                 else:
@@ -156,6 +156,10 @@ class Options(Level):
 
         for i in self.volume_sliders:
             self.volume_sliders[i].draw_slider(mx, my, self.hold)
+
+    def update_volume_sliders(self):
+        self.buttons_music["MUSIC"].text = [str(self.volume_sliders["MUSIC"].return_percentage()) + "%", "Music (Disabled)"]
+        self.buttons_music["SFX"].text = [str(self.volume_sliders["SFX"].return_percentage()) + "%", "SFX (Disabled)"]
 
     @staticmethod
     def turn_off_other_buttons(button_dict, this):
@@ -213,6 +217,7 @@ class Options(Level):
             draw_text_left("Music", cw_yellow, self.f_options_title, self.text_canvas, self.align_03_x, self.align_y - self.title_offset)
             # ------------------------------------------------------------------------------------------------------------------
             self.draw_buttons(mx, my, dt)
+            self.update_volume_sliders()
             # ------------------------------------------------------------------------------------------------------------------
             if self.back_button.run(mx, my, cw_light_blue, self.click):
                 self.fade_out = True

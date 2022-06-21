@@ -63,12 +63,12 @@ class BossDevilChan(Level):
         self.typ_transition_out = False
         self.typ_l1 = Typewriter()
         self.typ_l2 = Typewriter()
-        self.typ_finished = False
-        self.typ_update = True
         self.typ_box_align_x = 130
         self.typ_box_align_y1 = 670
         self.typ_box_align_y2 = 730
         self.typ_queue = Queue()
+        self.typ_finished = False
+        self.typ_update = True
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
