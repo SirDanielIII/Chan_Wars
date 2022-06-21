@@ -26,8 +26,10 @@ class Config(object):
         self.f_boss_text = None
         self.f_options_title = None
         self.f_status = None
+        self.f_intro = None
         self.f_regular = None
         self.f_regular_small = None
+        self.f_block = None
         self.f_regular_big = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Settings
@@ -100,206 +102,206 @@ class Config(object):
                     match i:
                         case 1:
                             yaml.dump({'enemies': {'bat': {
-                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 1}},
+                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'weakness': 1}},
                                             'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 40,
                                 'name': 'Bat Chan'}, 'big': {
                                 'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 75,
                                 'name': 'Big Chan'}, 'dark': {
-                                'attacks': {'dark_curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 1}},
+                                'attacks': {'dark_curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'vulnerable': 1}},
                                             'dark_orb': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'},
-                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 2}}}, 'hp': 40,
+                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'weakness': 2}}}, 'hp': 40,
                                 'name': 'Dark Chan'}, 'drowned': {
-                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}},
+                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'vulnerable': 1}},
                                             'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 25, 'heal': -30, 'phrase': 'Corpse Explosion', 'status': 'None'},
-                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 1}}}, 'hp': 30,
+                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'fear': 1}}}, 'hp': 30,
                                 'name': 'Drowned Chan'}, 'flying': {
                                 'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'},
                                             'fly_up': {'block': 10, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'},
-                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 1}}}, 'hp': 50,
+                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'fear': 1}}}, 'hp': 50,
                                 'name': 'Flying Chan'}, 'goblin': {
                                 'attacks': {'evasive_maneuvers': {'block': 10, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'},
-                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 2}},
+                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'weakness': 2}},
                                             'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 30,
-                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2},
-                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10,
+                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'weakness': 2},
+                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 10,
                                                                                                                     'status': 'None'}}},
                                                                               'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {
-                                                                                  'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
-                                                                              'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1},
-                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0,
-                                                                                                                      'status': {'Weakness': 1}}}},
-                                                                              'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
-                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0,
+                                                                                  'bright': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
+                                                                              'avatar_chan': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 5, 'status': {'weakness': 1},
+                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 0,
+                                                                                                                      'status': {'weakness': 1}}}},
+                                                                              'earth_chan': {'block': 10, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
+                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0,
                                                                                                                     'status': 'None'}}},
-                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3},
-                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0,
-                                                                                                                          'status': {'Marked': 2}}}},
-                                                                              'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
-                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0,
+                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'marked': 3},
+                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'armor': 5}, 'damage': -5, 'heal': 0,
+                                                                                                                          'status': {'marked': 2}}}},
+                                                                              'fire_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'power': 1}, 'damage': 0, 'heal': 0,
                                                                                                                      'status': {'Pained': 5}}}},
-                                                                              'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Weakness': 2}, 'upgrades': {
-                                                                                      'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0,
-                                                                                                 'status': {'Weakness': 1}}}},
-                                                                              'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
+                                                                              'jackie_chan': {'block': 10, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'weakness': 2}, 'upgrades': {
+                                                                                      'famous': {'block': 5, 'buff': {'clairvoyant': 1}, 'damage': 0, 'heal': 0,
+                                                                                                 'status': {'weakness': 1}}}},
+                                                                              'jesus_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
                                                                                              'upgrades': {
-                                                                                                 'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5,
+                                                                                                 'farsighted': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 5,
                                                                                                                 'status': 'None'}}},
-                                                                              'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                              'oni_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
                                                                                            'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0,
-                                                                                                                    'status': {'Vulnerable': 2}}}},
+                                                                                                                    'status': {'vulnerable': 2}}}},
                                                                               'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {
-                                                                                  'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0,
-                                                                                             'status': {'Vulnerable': 2}}}},
-                                                                              'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Marked': 3}, 'upgrades': {
-                                                                                      'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                  'swampy': {'block': 0, 'buff': {'lifesteal': 1}, 'damage': 0, 'heal': 0,
+                                                                                             'status': {'vulnerable': 2}}}},
+                                                                              'square_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'marked': 3}, 'upgrades': {
+                                                                                      'symmetric': {'block': 0, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
                                                                                                     'status': {'Pained': 4}}}},
-                                                                              'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
+                                                                              'un-chany_chan': {'block': 0, 'buff': {'energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
                                                                                                 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10,
-                                                                                                                         'status': {'Vulnerable': 2}}}},
-                                                                              'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
+                                                                                                                         'status': {'vulnerable': 2}}}},
+                                                                              'upsidedown_chan': {'block': 10, 'buff': {'lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
                                                                                                   'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10,
-                                                                                                                            'status': {'Marked': 2}}}},
-                                                                              'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
+                                                                                                                            'status': {'marked': 2}}}},
+                                                                              'water_chan': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
-                                                                                                                     'status': {'Weakness': 2}}}}}, 'columns': 3, 'energy': 3,
+                                                                                                                     'status': {'weakness': 2}}}}}, 'columns': 3, 'energy': 3,
                                                                     'hp': 50, 'rows': 4}}, f, sort_keys=False)
                         case 2:
                             yaml.dump({'enemies': {'bat': {
-                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}},
+                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'weakness': 2}},
                                             'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 40,
                                 'name': 'Bat Chan'}, 'big': {
                                 'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 100,
                                 'name': 'Big Chan'}, 'dark': {
-                                'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 1}},
+                                'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'vulnerable': 1}},
                                             'dark_orb': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'},
-                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 2}}}, 'hp': 50,
+                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'weakness': 2}}}, 'hp': 50,
                                 'name': 'Dark Chan'}, 'drowned': {
-                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}},
+                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'vulnerable': 1}},
                                             'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 35, 'heal': -40, 'phrase': 'Corpse Explosion', 'status': 'None'},
-                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 2}}}, 'hp': 40,
+                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'fear': 2}}}, 'hp': 40,
                                 'name': 'Drowned Chan'}, 'flying': {
                                 'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'},
                                             'fly_Up': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'},
-                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 2}}}, 'hp': 75,
+                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'fear': 2}}}, 'hp': 75,
                                 'name': 'Flying Chan'}, 'goblin': {
                                 'attacks': {'evasive_maneuvers': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'},
-                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 3}},
+                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'weakness': 3}},
                                             'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 35,
-                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2},
-                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10,
+                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'weakness': 2},
+                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 10,
                                                                                                                     'status': 'None'}}},
                                                                               'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {
-                                                                                  'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
-                                                                              'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1},
-                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0,
-                                                                                                                      'status': {'Weakness': 1}}}},
-                                                                              'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
-                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0,
+                                                                                  'bright': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
+                                                                              'avatar_chan': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 5, 'status': {'weakness': 1},
+                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 0,
+                                                                                                                      'status': {'weakness': 1}}}},
+                                                                              'earth_chan': {'block': 10, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
+                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0,
                                                                                                                     'status': 'None'}}},
-                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3},
-                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0,
-                                                                                                                          'status': {'Marked': 2}}}},
-                                                                              'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
-                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0,
+                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'marked': 3},
+                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'armor': 5}, 'damage': -5, 'heal': 0,
+                                                                                                                          'status': {'marked': 2}}}},
+                                                                              'fire_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'power': 1}, 'damage': 0, 'heal': 0,
                                                                                                                      'status': {'Pained': 5}}}},
-                                                                              'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Weakness': 2}, 'upgrades': {
-                                                                                      'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0,
-                                                                                                 'status': {'Weakness': 1}}}},
-                                                                              'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
+                                                                              'jackie_chan': {'block': 10, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'weakness': 2}, 'upgrades': {
+                                                                                      'famous': {'block': 5, 'buff': {'clairvoyant': 1}, 'damage': 0, 'heal': 0,
+                                                                                                 'status': {'weakness': 1}}}},
+                                                                              'jesus_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
                                                                                              'upgrades': {
-                                                                                                 'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5,
+                                                                                                 'farsighted': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 5,
                                                                                                                 'status': 'None'}}},
-                                                                              'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                              'oni_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
                                                                                            'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0,
-                                                                                                                    'status': {'Vulnerable': 2}}}},
+                                                                                                                    'status': {'vulnerable': 2}}}},
                                                                               'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {
-                                                                                  'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0,
-                                                                                             'status': {'Vulnerable': 2}}}},
-                                                                              'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Marked': 3}, 'upgrades': {
-                                                                                      'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                  'swampy': {'block': 0, 'buff': {'lifesteal': 1}, 'damage': 0, 'heal': 0,
+                                                                                             'status': {'vulnerable': 2}}}},
+                                                                              'square_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'marked': 3}, 'upgrades': {
+                                                                                      'symmetric': {'block': 0, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
                                                                                                     'status': {'Pained': 4}}}},
-                                                                              'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
+                                                                              'un-chany_chan': {'block': 0, 'buff': {'energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
                                                                                                 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10,
-                                                                                                                         'status': {'Vulnerable': 2}}}},
-                                                                              'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
+                                                                                                                         'status': {'vulnerable': 2}}}},
+                                                                              'upsidedown_chan': {'block': 10, 'buff': {'lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
                                                                                                   'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10,
-                                                                                                                            'status': {'Marked': 2}}}},
-                                                                              'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
+                                                                                                                            'status': {'marked': 2}}}},
+                                                                              'water_chan': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
-                                                                                                                     'status': {'Weakness': 2}}}}}, 'columns': 5, 'energy': 4,
+                                                                                                                     'status': {'weakness': 2}}}}}, 'columns': 5, 'energy': 4,
                                                                     'hp': 75, 'rows': 4}}, f, sort_keys=False)
                         case 3:
                             yaml.dump({'enemies': {'bat': {
-                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'Weakness': 2}},
+                                'attacks': {'resonate': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Resonate', 'status': {'weakness': 2}},
                                             'screech': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'phrase': 'Screech', 'status': 'None'},
                                             'sonic_attack': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Sonic Attack', 'status': 'None'}}, 'hp': 50,
                                 'name': 'Bat Chan'}, 'big': {
                                 'attacks': {'big_smack': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Biggus Smackus', 'status': 'None'}}, 'hp': 150,
                                 'name': 'Big Chan'}, 'dark': {
-                                'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'Vulnerable': 2}},
+                                'attacks': {'curse': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Dark Curse', 'status': {'vulnerable': 2}},
                                             'dark_claw': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Dark Claw', 'status': 'None'},
                                             'dark_orb': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Dark Orb', 'status': 'None'},
-                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'Weakness': 3}}}, 'hp': 60,
+                                            'darkness': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Darkness', 'status': {'weakness': 3}}}, 'hp': 60,
                                 'name': 'Dark Chan'}, 'drowned': {
-                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'Vulnerable': 1}},
+                                'attacks': {'bloated_breath': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Bloated Breath', 'status': {'vulnerable': 1}},
                                             'corpse_explosion': {'block': 0, 'buff': 'None', 'damage': 50, 'heal': -50, 'phrase': 'Corpse Explosion', 'status': 'None'},
-                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'Fear': 2}}}, 'hp': 50,
+                                            'drowned_glare': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Drowned Glare', 'status': {'fear': 2}}}, 'hp': 50,
                                 'name': 'Drowned Chan'}, 'flying': {
                                 'attacks': {'claw_strike': {'block': 0, 'buff': 'None', 'damage': 20, 'heal': 0, 'phrase': 'Claw Strike', 'status': 'None'},
                                             'fly_Up': {'block': 25, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Fly Up', 'status': 'None'},
-                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'Fear': 2}}}, 'hp': 100,
+                                            'swoop_in': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Swoop In', 'status': {'fear': 2}}}, 'hp': 100,
                                 'name': 'Flying Chan'}, 'goblin': {
                                 'attacks': {'evasive_maneuvers': {'block': 25, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Evasive Maneuvers', 'status': 'None'},
-                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'Weakness': 3}},
+                                            'hamstring': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrase': 'Hamstring', 'status': {'weakness': 3}},
                                             'tiny_stab': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'phrase': 'Tiny Stab', 'status': 'None'}}, 'hp': 50,
-                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'Weakness': 2},
-                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 10,
+                                'name': 'Goblin Chan'}}, 'player': {'cards': {'air_chan': {'block': 5, 'buff': 'None', 'damage': 0, 'heal': 5, 'status': {'weakness': 2},
+                                                                                           'upgrades': {'flighty': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 10,
                                                                                                                     'status': 'None'}}},
                                                                               'angel_chan': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10, 'status': 'None', 'upgrades': {
-                                                                                  'bright': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
-                                                                              'avatar_chan': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 5, 'status': {'Weakness': 1},
-                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'Power': 1}, 'damage': 5, 'heal': 0,
-                                                                                                                      'status': {'Weakness': 1}}}},
-                                                                              'earth_chan': {'block': 10, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
-                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'Armor': 3}, 'damage': 0, 'heal': 0,
+                                                                                  'bright': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 5, 'heal': 5, 'status': 'None'}}},
+                                                                              'avatar_chan': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 5, 'status': {'weakness': 1},
+                                                                                              'upgrades': {'master': {'block': 5, 'buff': {'power': 1}, 'damage': 5, 'heal': 0,
+                                                                                                                      'status': {'weakness': 1}}}},
+                                                                              'earth_chan': {'block': 10, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0, 'status': 'None',
+                                                                                             'upgrades': {'tough': {'block': 5, 'buff': {'armor': 3}, 'damage': 0, 'heal': 0,
                                                                                                                     'status': 'None'}}},
-                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'Marked': 3},
-                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'Armor': 5}, 'damage': -5, 'heal': 0,
-                                                                                                                          'status': {'Marked': 2}}}},
-                                                                              'fire_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
-                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'Power': 1}, 'damage': 0, 'heal': 0,
+                                                                              'farquaad_chan': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': {'marked': 3},
+                                                                                                'upgrades': {'despotic': {'block': 0, 'buff': {'armor': 5}, 'damage': -5, 'heal': 0,
+                                                                                                                          'status': {'marked': 2}}}},
+                                                                              'fire_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                                            'upgrades': {'burning': {'block': 0, 'buff': {'power': 1}, 'damage': 0, 'heal': 0,
                                                                                                                      'status': {'Pained': 5}}}},
-                                                                              'jackie_chan': {'block': 10, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Weakness': 2}, 'upgrades': {
-                                                                                      'famous': {'block': 5, 'buff': {'Clairvoyant': 1}, 'damage': 0, 'heal': 0,
-                                                                                                 'status': {'Weakness': 1}}}},
-                                                                              'jesus_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
+                                                                              'jackie_chan': {'block': 10, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'weakness': 2}, 'upgrades': {
+                                                                                      'famous': {'block': 5, 'buff': {'clairvoyant': 1}, 'damage': 0, 'heal': 0,
+                                                                                                 'status': {'weakness': 1}}}},
+                                                                              'jesus_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 15, 'status': 'None',
                                                                                              'upgrades': {
-                                                                                                 'farsighted': {'block': 5, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 5,
+                                                                                                 'farsighted': {'block': 5, 'buff': {'energized': 1}, 'damage': 0, 'heal': 5,
                                                                                                                 'status': 'None'}}},
-                                                                              'oni_chan': {'block': 0, 'buff': {'Power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
+                                                                              'oni_chan': {'block': 0, 'buff': {'power': 2}, 'damage': 10, 'heal': 0, 'status': 'None',
                                                                                            'upgrades': {'vicious': {'block': 5, 'buff': 'None', 'damage': 5, 'heal': 0,
-                                                                                                                    'status': {'Vulnerable': 2}}}},
+                                                                                                                    'status': {'vulnerable': 2}}}},
                                                                               'shrek_chan': {'block': 10, 'buff': 'None', 'damage': 10, 'heal': 0, 'status': 'None', 'upgrades': {
-                                                                                  'swampy': {'block': 0, 'buff': {'Lifesteal': 1}, 'damage': 0, 'heal': 0,
-                                                                                             'status': {'Vulnerable': 2}}}},
-                                                                              'square_chan': {'block': 0, 'buff': {'Clairvoyant': 2}, 'damage': 0, 'heal': 0,
-                                                                                              'status': {'Marked': 3}, 'upgrades': {
-                                                                                      'symmetric': {'block': 0, 'buff': {'Energized': 1}, 'damage': 0, 'heal': 0,
+                                                                                  'swampy': {'block': 0, 'buff': {'lifesteal': 1}, 'damage': 0, 'heal': 0,
+                                                                                             'status': {'vulnerable': 2}}}},
+                                                                              'square_chan': {'block': 0, 'buff': {'clairvoyant': 2}, 'damage': 0, 'heal': 0,
+                                                                                              'status': {'marked': 3}, 'upgrades': {
+                                                                                      'symmetric': {'block': 0, 'buff': {'energized': 1}, 'damage': 0, 'heal': 0,
                                                                                                     'status': {'Pained': 4}}}},
-                                                                              'un-chany_chan': {'block': 0, 'buff': {'Energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
+                                                                              'un-chany_chan': {'block': 0, 'buff': {'energized': 1}, 'damage': 15, 'heal': 0, 'status': 'None',
                                                                                                 'upgrades': {'strange': {'block': 0, 'buff': 'None', 'damage': -5, 'heal': 10,
-                                                                                                                         'status': {'Vulnerable': 2}}}},
-                                                                              'upsidedown_chan': {'block': 10, 'buff': {'Lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
+                                                                                                                         'status': {'vulnerable': 2}}}},
+                                                                              'upsidedown_chan': {'block': 10, 'buff': {'lifesteal': 2}, 'damage': 5, 'heal': 0, 'status': 'None',
                                                                                                   'upgrades': {'sinister': {'block': 0, 'buff': 'None', 'damage': 5, 'heal': 10,
-                                                                                                                            'status': {'Marked': 2}}}},
-                                                                              'water_chan': {'block': 0, 'buff': {'Regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
+                                                                                                                            'status': {'marked': 2}}}},
+                                                                              'water_chan': {'block': 0, 'buff': {'regeneration': 5}, 'damage': 0, 'heal': 10, 'status': 'None',
                                                                                              'upgrades': {'raging': {'block': 0, 'buff': 'None', 'damage': 10, 'heal': 0,
-                                                                                                                     'status': {'Weakness': 2}}}}}, 'columns': 7, 'energy': 5,
+                                                                                                                     'status': {'weakness': 2}}}}}, 'columns': 7, 'energy': 5,
                                                                     'hp': 100, 'rows': 4}}, f, sort_keys=False)
 
         for i in range(1, self.levels + 1):
@@ -314,7 +316,7 @@ class Config(object):
                     match i:
                         case "devil_chan":
                             yaml.dump({'moves': {'basic': {0: {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0, 'status': 'None'},
-                                                           1: {'block': 0, 'buff': {'Armor': 10}, 'damage': 10, 'heal': 0, 'status': {'weakness': 2}},
+                                                           1: {'block': 0, 'buff': {'armor': 10}, 'damage': 10, 'heal': 0, 'status': {'weakness': 2}},
                                                            2: {'block': 15, 'buff': {'power': 1}, 'damage': 0, 'heal': 0, 'status': {'vulnerable': 1}}},
                                                  'special': {'block': 0, 'buff': {'lifesteal': 2}, 'damage': 10, 'heal': 20, 'status': 'None'}}, 'hp': 60, 'name': 'Devil Chan',
                                        'phrases': {'special': ["That's a neat little hack that I found!", "With this hack, I'll steal your health for myself.",
@@ -343,9 +345,9 @@ class Config(object):
                             yaml.dump({'hp': 100, 'name': 'Ms. G', 'phrases': {'death': ['why must you use... list comphrehension... *dies*'],
                                                                                'opening': ['Hello Sean!', 'How are you doing?', "Wait, you're not Sean!"]}, 'moves': {
                                 'basic_1': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0,
-                                            'phrases': ['For Sean!', "I'll only give you 100% if youâ€™re one of my favourite students."], 'status': {'Vulnerable': 1}},
+                                            'phrases': ['For Sean!', "I'll only give you 100% if youâ€™re one of my favourite students."], 'status': {'vulnerable': 1}},
                                 'basic_2': {'block': 0, 'buff': 'None', 'damage': 15, 'heal': 0,
-                                            'phrases': ["Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'], 'status': {'Weakness': 2}},
+                                            'phrases': ["Don't ask me, use your brain.", 'I have WELHpon *pulls out a meter stick*'], 'status': {'weakness': 2}},
                                 'basic_3': {'block': 20, 'buff': 'None', 'damage': 0, 'heal': 0,
                                             'phrases': ['Do it on repl.it!!!', "One of them is a woman, the other has an Indian accent if you're into it."], 'status': 'None'},
                                 'siberia': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': ['You!!! How did you escape Siberia!?'], 'status': 'None'},
@@ -362,11 +364,11 @@ class Config(object):
                                                                                                                               'You have to build capacity.',
                                                                                                                               "You chose that? Come on, that's crazy talk!!!",
                                                                                                                               "Can't you be doing more?"],
-                                                                                                                  'status': {'Disappointment': 1}},
+                                                                                                                  'status': {'disappointment': 1}},
                                                                                                       'basic_2': {'block': 0, 'buff': 'None', 'damage': 0, 'heal': 0, 'phrases': [
                                                                                                           'Almost everything is a choice... including breathing!',
                                                                                                           'Reflect, reflect, REFLECT HARDER!!!', 'Face the monster... ME!',
-                                                                                                          'Keep your head on a swivel!'], 'status': {'Fear': 2}},
+                                                                                                          'Keep your head on a swivel!'], 'status': {'fear': 2}},
                                                                                                       'special': {'block': 0, 'buff': 'None', 'damage': 999, 'heal': 0,
                                                                                                                   'phrases': ['Next time, just practice perfectly.',
                                                                                                                               'My record just increased :p'], 'status': 'None'}}},
@@ -413,12 +415,15 @@ class Config(object):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
         self.img_ui["buff"] = self.load_images_dict(os.getcwd() + "/resources/ui/buffs", (30, 30), True, "", False)
         self.img_ui["debuff"] = self.load_images_dict(os.getcwd() + "/resources/ui/debuffs", (30, 30), True, "", False)
+        self.img_ui["block"] = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/block.png").convert(), (40, 40))
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
+        self.f_block = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 45)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
-        self.f_status = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 30)
+        self.f_status = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 40)
+        self.f_intro = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 35)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
         self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)

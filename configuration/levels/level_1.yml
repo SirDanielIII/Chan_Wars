@@ -7,15 +7,15 @@ enemies:
         damage: 0
         heal: 0
         attack: Resonate
-        status:
-          Weakness: 1
+        debuff:
+          weakness: 1
       sonic_attack:
         block: 0
         buff: None
         damage: 10
         heal: 0
         attack: Sonic Attack
-        status: None
+        debuff: None
     hp: 40
     name: Bat Chan
   big:
@@ -26,7 +26,7 @@ enemies:
         damage: 15
         heal: 0
         attack: Biggus Smackus
-        status: None
+        debuff: None
     hp: 75
     name: Big Chan
   dark:
@@ -37,23 +37,23 @@ enemies:
         damage: 0
         heal: 0
         attack: Dark Curse
-        status:
-          Vulnerable: 1
+        debuff:
+          vulnerable: 1
       dark_orb:
         block: 0
         buff: None
         damage: 10
         heal: 0
         attack: Dark Orb
-        status: None
+        debuff: None
       darkness:
         block: 0
         buff: None
         damage: 0
         heal: 0
         attack: Darkness
-        status:
-          Weakness: 2
+        debuff:
+          weakness: 2
     hp: 40
     name: Dark Chan
   zombie:
@@ -64,23 +64,23 @@ enemies:
         damage: 0
         heal: 0
         attack: Bloated Breath
-        status:
-          Vulnerable: 1
+        debuff:
+          vulnerable: 1
       corpse_explosion:
         block: 0
         buff: None
         damage: 25
         heal: -10
         attack: Corpse Explosion
-        status: None
+        debuff: None
       drowned_glare:
         block: 0
         buff: None
         damage: 0
         heal: 0
         attack: Drowned Glare
-        status:
-          Fear: 1
+        debuff:
+          fear: 1
     hp: 30
     name: Zombie Chan
   scrambled:
@@ -91,22 +91,22 @@ enemies:
         damage: 10
         heal: 0
         attack: Claw Strike
-        status: None
+        debuff: None
       fly_up:
         block: 10
         buff: None
         damage: 0
         heal: 0
         attack: Fly Up
-        status: None
+        debuff: None
       swoop_in:
         block: 0
         buff: None
         damage: 0
         heal: 0
         attack: Swoop In
-        status:
-          Fear: 1
+        debuff:
+          fear: 1
     hp: 50
     name: Scrambled Chan
   goblin:
@@ -117,22 +117,22 @@ enemies:
         damage: 0
         heal: 0
         attack: Evasive Maneuvers
-        status: None
+        debuff: None
       hamstring:
         block: 0
         buff: None
         damage: 0
         heal: 0
         attack: Hamstring
-        status:
-          Weakness: 2
+        debuff:
+          weakness: 2
       tiny_stab:
         block: 0
         buff: None
         damage: 10
         heal: 0
         attack: Tiny Stab
-        status: None
+        debuff: None
     hp: 30
     name: Goblin Chan
   phrases:
@@ -192,241 +192,237 @@ player:
       buff: None
       damage: 0
       heal: 5
-      status:
-        Weakness: 2
+      debuff:
+        weakness: 2
       upgrades:
         flighty:
           block: 5
           buff:
-            Energized: 1
+            energized: 1
           damage: 0
           heal: 10
-          status: None
+          debuff: None
     angel_chan:
       block: 0
       buff: None
       damage: 5
       heal: 10
-      status: None
+      debuff: None
       upgrades:
         bright:
           block: 0
           buff:
-            Regeneration: 5
+            regeneration: 5
           damage: 5
           heal: 5
-          status: None
+          debuff: None
     avatar_chan:
       block: 5
       buff:
-        Power: 1
+        power: 1
       damage: 5
       heal: 5
-      status:
-        Weakness: 1
+      debuff:
+        weakness: 1
       upgrades:
         master:
           block: 5
           buff:
-            Power: 1
+            power: 1
           damage: 5
           heal: 0
-          status:
-            Weakness: 1
+          debuff:
+            weakness: 1
     earth_chan:
       block: 10
       buff:
-        Armor: 3
+        armor: 3
       damage: 0
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         tough:
           block: 5
           buff:
-            Armor: 3
+            armor: 3
           damage: 0
           heal: 0
-          status: None
+          debuff: None
     farquaad_chan:
       block: 0
       buff: None
       damage: 10
       heal: 0
-      status:
-        Marked: 3
+      debuff:
+        marked: 3
       upgrades:
         despotic:
           block: 0
           buff:
-            Armor: 5
+            armor: 5
           damage: -5
           heal: 0
-          status:
-            Marked: 2
+          debuff:
+            marked: 2
     fire_chan:
       block: 0
       buff:
-        Power: 2
+        power: 2
       damage: 10
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         burning:
           block: 0
           buff:
-            Power: 1
+            power: 1
           damage: 0
           heal: 0
-          status:
-            Pained: 5
+          debuff:
+            wounded: 5
     jackie_chan:
       block: 10
       buff:
-        Energized: 1
+        energized: 1
       damage: 0
       heal: 0
-      status:
-        Weakness: 2
+      debuff:
+        weakness: 2
       upgrades:
         famous:
           block: 5
           buff:
-            Clairvoyant: 1
+            clairvoyant: 1
           damage: 0
           heal: 0
-          status:
-            Weakness: 1
+          debuff:
+            weakness: 1
     jesus_chan:
       block: 0
       buff:
-        Clairvoyant: 2
+        clairvoyant: 2
       damage: 0
       heal: 15
-      status: None
+      debuff: None
       upgrades:
         farsighted:
           block: 5
           buff:
-            Energized: 1
+            energized: 1
           damage: 0
           heal: 5
-          status: None
+          debuff: None
     oni_chan:
       block: 0
       buff:
-        Power: 2
+        power: 2
       damage: 10
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         vicious:
           block: 5
           buff: None
           damage: 5
           heal: 0
-          status:
-            Vulnerable: 2
+          debuff:
+            vulnerable: 2
     shrek_chan:
       block: 10
       buff: None
       damage: 10
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         swampy:
           block: 0
           buff:
-            Lifesteal: 1
+            lifesteal: 1
           damage: 0
           heal: 0
-          status:
-            Vulnerable: 2
+          debuff:
+            vulnerable: 2
     square_chan:
       block: 0
       buff:
-        Clairvoyant: 2
+        clairvoyant: 2
       damage: 0
       heal: 0
-      status:
-        Marked: 3
+      debuff:
+        marked: 3
       upgrades:
         symmetric:
           block: 0
           buff:
-            Energized: 1
+            energized: 1
           damage: 0
           heal: 0
-          status:
-            Pained: 4
+          debuff:
+            wounded: 4
     un-chany_chan:
       block: 0
       buff:
-        Energized: 1
+        energized: 1
       damage: 15
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         strange:
           block: 0
           buff: None
           damage: -5
           heal: 10
-          status:
-            Vulnerable: 2
+          debuff:
+            vulnerable: 2
     upsidedown_chan:
       block: 10
       buff:
-        Lifesteal: 2
+        lifesteal: 2
       damage: 5
       heal: 0
-      status: None
+      debuff: None
       upgrades:
         sinister:
           block: 0
           buff: None
           damage: 5
           heal: 10
-          status:
-            Marked: 2
+          debuff:
+            marked: 2
     water_chan:
       block: 0
       buff:
-        Regeneration: 5
+        regeneration: 5
       damage: 0
       heal: 10
-      status: None
+      debuff: None
       upgrades:
         raging:
           block: 0
           buff: None
           damage: 10
           heal: 0
-          status:
-            Weakness: 2
+          debuff:
+            weakness: 2
   columns: 3
   energy: 3
   hp: 50
   rows: 4
   base_deck:
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - jesus_chan
     - farquaad_chan
     - jackie_chan
-    - upsidedown_chan
+    - sinister upsidedown_chan

@@ -11,20 +11,20 @@ Fight your way through the bosses with this unique memory game, loosely based on
 Stacks are reduced at the end of the turn.
 
 **Status Effects**
-* Fear: One pair of cards cannot be matched. Player specific. Falls by one stack every turn.
-* Weakness: Deals 25% less damage. Falls by one stack every turn.
-* Vulnerable: Takes 25% more damage. Falls by one stack every turn.
-* Disappointment: Emotional damage. Falls by one stack every turn.
-* Marked: Takes one extra damage per stack after being attacked. Stacks do not disappear.
+* fear: One pair of cards cannot be matched. Player specific. Falls by one stack every turn.
+* weakness: Deals 25% less damage. Falls by one stack every turn.
+* vulnerable: Takes 25% more damage. Falls by one stack every turn.
+* disappointment: Emotional damage. Falls by one stack every turn.
+* marked: Takes one extra damage per stack after being attacked. Stacks do not disappear.
 * Poison: Takes one damage at the end of the turn per stack. Falls by one stack every turn.
 
 **Buffs**
-* Power: Deals 25% more damage. Falls by one stack every turn.
-* Lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
-* Regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
-* Energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
-* Armor: Gain 1 block per stack. Falls by one stack every turn.
-* Clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
+* power: Deals 25% more damage. Falls by one stack every turn.
+* lifesteal: Heals 50% of damage dealt after dealing damage. Falls by one stack every turn.
+* regeneration: Heals 1 hp per stack at the end of the turn. Falls by one stack every turn.
+* energized: Gain one energy next turn. Player specific. Falls by one stack every turn.
+* armor: Gain 1 block per stack. Falls by one stack every turn.
+* clairvoyant: One card is revealed per stack. Player specific. Stacks do not disappear
 
 
 # Requirements / Dependencies

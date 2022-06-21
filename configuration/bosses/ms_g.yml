@@ -8,8 +8,8 @@ moves:
     phrases:
     - For Sean!
     - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
-    status:
-      Vulnerable: 1
+    debuff:
+      vulnerable: 1
   basic_2:
     block: 0
     buff: None
@@ -18,8 +18,8 @@ moves:
     phrases:
     - Don't ask me, use your brain.
     - I have WELHpon *pulls out a meter stick*
-    status:
-      Weakness: 2
+    debuff:
+      weakness: 2
   basic_3:
     block: 20
     buff: None
@@ -28,7 +28,7 @@ moves:
     phrases:
     - Do it on repl.it!!!
     - One of them is a woman, the other has an Indian accent if you're into it.
-    status: None
+    debuff: None
   siberia:
     block: 0
     buff: None
@@ -36,7 +36,7 @@ moves:
     heal: 0
     phrases:
     - You!!! How did you escape Siberia!?
-    status: None
+    debuff: None
   special:
     block: 0
     buff: None
@@ -45,7 +45,7 @@ moves:
     phrases:
     - You! Go to Siberia!
     - You deserve to go to Siberia!
-    status: None
+    debuff: None
 name: Ms. G
 phrases:
   death:
