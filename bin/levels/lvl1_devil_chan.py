@@ -54,7 +54,7 @@ class BossDevilChan(Level):
         self.level = 1
         self.turn_counter = None
         self.completed = True
-        self.battle = "enemy"
+        self.battle = "boss"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ class BossDevilChan(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "enemy_intro"
+        self.event = "boss_player_death"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer()}
@@ -220,6 +220,9 @@ class BossDevilChan(Level):
                 self.attack()
             # ------------------------------------------------------------------------------------------------------------------
             # Boss events
+            case "boss_player_death":   # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
+                self.typewriter_queue("boss_player_death", "multiple")
+                self.dialogue(1.0, dt)
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("boss_intro", "multiple")
                 self.dialogue(1.0, dt)
@@ -231,9 +234,6 @@ class BossDevilChan(Level):
                 self.dialogue(1.0, dt)
             case "boss_death":  # Event happens when the boss is defeated. Boss death dialogue is initiated.
                 self.typewriter_queue("boss_death", "multiple")
-                self.dialogue(1.0, dt)
-            case "boss_player_death":   # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
-                self.typewriter_queue("boss_player_death", "multiple")
                 self.dialogue(1.0, dt)
             # ------------------------------------------------------------------------------------------------------------------
             # Enemy events
@@ -372,11 +372,13 @@ class BossDevilChan(Level):
                     if clear:  # Clears textbox if true & after the textbox finishes fading out
                         self.typ_l1.clear()
                         self.typ_l2.clear()
+                        print(1)
                         self.next_msg(wait)
             else:
                 if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
                     self.typ_l1.clear()
                     self.typ_l2.clear()
+                    print(2)
                 self.next_msg(wait)
 
     def next_msg(self, wait):
@@ -501,26 +503,27 @@ class BossDevilChan(Level):
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
-                if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
-                    return 8 if self.player.health <= 0 else 9
-                elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
-                    enemy_count += 1
-                    if enemy_count != 3:
-                        self.battle_reset()
-                        self.initialize_enemy()
-                        self.event = "enemy_intro"
-                    else:
-                        self.battle_reset()
-                        self.battle = "boss"
-                        self.event = "boss_intro"
-                if self.player.health <= 0 and self.battle == "boss":
-                    self.event = "boss_player_death"
-                elif self.boss.health <= 0 and self.battle == "boss":
-                    self.event = "boss_death"
-                if self.player.health <= 0 and self.battle == "enemy":
-                    self.event = "enemy_player_death"
-                elif self.enemy.health <= 0 and self.battle == "enemy":
-                    self.event = "enemy_death"
+                # if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
+                #     return 8 if self.player.health <= 0 else 9
+                # elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
+                #     enemy_count += 1
+                #     if enemy_count != 3:
+                #         self.battle_reset()
+                #         self.initialize_enemy()
+                #         self.event = "enemy_intro"
+                #     else:
+                #         self.battle_reset()
+                #         self.battle = "boss"
+                #         self.event = "boss_intro"
+                if "death" not in self.event:
+                    if self.player.health <= 0 and self.battle == "boss":
+                        self.event = "boss_player_death"
+                    elif self.boss.health <= 0 and self.battle == "boss":
+                        self.event = "boss_death"
+                    if self.player.health <= 0 and self.battle == "enemy":
+                        self.event = "enemy_player_death"
+                    elif self.enemy.health <= 0 and self.battle == "enemy":
+                        self.event = "enemy_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)

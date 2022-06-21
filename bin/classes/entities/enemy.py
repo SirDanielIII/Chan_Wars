@@ -48,7 +48,7 @@ class Enemy:
         if self.buff_bar["armor"]:
             self.attack["block"] += self.buff_bar["armor"]
         self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
-                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [0, 0], "wait": 0.5}
+                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 0.1, "shake": [5, 5], "wait": 0.2}
 
     def update(self, damage, debuff):
         if self.debuff_bar["vulnerable"]:
