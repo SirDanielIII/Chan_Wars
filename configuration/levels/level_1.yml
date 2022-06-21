@@ -409,11 +409,19 @@ player:
   hp: 50
   rows: 4
   base_deck:
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - oni_chan
-    - air_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
+    - earth_chan
     - jesus_chan
     - farquaad_chan
     - jackie_chan

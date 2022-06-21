@@ -63,6 +63,7 @@ class Player:
         self.choices = {}
         self.ui = {}
         self.deck = None
+        self.intro_size = 20
         self.chosen_cards = []
         self.played_cards = None
 
@@ -116,27 +117,33 @@ class Player:
                 self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
         # ------------------------------------------------------------------------------------------------------------------
         # Status Effects
+        self.debuff_bar = {"fear": 1, "weakness": 1, "vulnerable": 1, "disappointment": 1, "wounded": 1, "marked": 1}
+        self.buff_bar = {"power": 1, "lifesteal": 1, "regeneration": 1, "energized": 1, "armor": 1, "clairvoyant": 1}
         m = [(a, self.buff_bar[a]) for a in self.buff_bar if self.buff_bar[a]] + [(a, self.debuff_bar[a]) for a in self.debuff_bar if self.debuff_bar[a]]
         size = (ui_images["debuff"]["vulnerable"].get_rect().width, ui_images["debuff"]["vulnerable"].get_rect().width)
         mod = ((self.ui["rect"].width - self.margins[0]) // (size[0] + self.margins[0]))
         for a, b in enumerate(m):
             i = self.ui["rect"].x + (a % mod) * (size[0] + self.margins[0]) + (self.ui["rect"].width - self.margins[0] * (mod - 1) - size[0] * mod) / 2
-            j = self.ui["rect"].y + 100 + pos_mod + (size[1] + self.margins[1]) * (a // mod)
+            j = self.ui["rect"].y + 95 + pos_mod + (size[1] + self.margins[1]) * (a // mod)
             self.screen.blit(ui_images["debuff" if b[0].lower() in list(ui_images["debuff"].keys()) else "buff"][b[0].lower()], (i, j))
             draw_text_right(str(b[1]), black, effects_font, self.screen, i + size[0] + 10, j + size[1] + 10)
         # ------------------------------------------------------------------------------------------------------------------
+        # Block
+        self.screen.blit(ui_images["block"], (self.ui["rect"].x + 20, 275))
+        draw_text_left(str(self.block) + " Block", black, effects_font, self.screen, self.ui["rect"].x + 65, 280)
+        # ------------------------------------------------------------------------------------------------------------------
         # Card Overview
         for a, card in enumerate(self.chosen_cards):
-            self.screen.blit(pg.transform.smoothscale(self.image_dict[card], (150, 225)).convert_alpha(), (self.ui["rect"].x + 20, a * 250 + 300))
-            draw_text_left(card[:-5] + " " + card[-4:], black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 300)
-            draw_text_left("Damage: " + str(self.cards[card]["damage"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 320)
-            draw_text_left("Block: " + str(self.cards[card]["block"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 340)
-            draw_text_left("Heal: " + str(self.cards[card]["heal"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 360)
-            draw_text_left("Buff: " + str(self.cards[card]["buff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 380)
-            draw_text_left("Debuff: " + str(self.cards[card]["debuff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 400)
-            draw_text_left("Upgrades: ", black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 420)
+            self.screen.blit(pg.transform.smoothscale(self.image_dict[card], (150, 225)).convert_alpha(), (self.ui["rect"].x + 20, a * 250 + 330))
+            draw_text_left(card[0].upper() + card[1:-5] + " " + card[-4].upper() + card[-3:], black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330)
+            draw_text_left("Damage: " + str(self.cards[card]["damage"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + self.intro_size)
+            draw_text_left("Block: " + str(self.cards[card]["block"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 2 * self.intro_size)
+            draw_text_left("Heal: " + str(self.cards[card]["heal"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 3 * self.intro_size)
+            draw_text_left("Buff: " + str(self.cards[card]["buff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 4 * self.intro_size)
+            draw_text_left("Debuff: " + str(self.cards[card]["debuff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 5 * self.intro_size)
+            draw_text_left("Upgrades: ", black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 6 * self.intro_size)
             for m, n in enumerate(self.cards[card]["upgrades"].keys()):
-                draw_text_left(str(n), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 440 + m * 20)
+                draw_text_left(str(n), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + (m + 7) * self.intro_size)
 
     def complete(self):
         count = 0
@@ -188,8 +195,7 @@ class Player:
                                     self.attack["buff"][buff] += self.cards[card[-1]]["upgrades"][upgrade]["buff"][buff]
                 if self.buff_bar["lifesteal"]:
                     self.attack["heal"] += self.attack["damage"]
-                if self.buff_bar["armor"]:
-                    self.attack["block"] += self.buff_bar["armor"]
+                self.block += self.attack["block"] - self.block
                 self.acted = True
                 return 2, self.attack["damage"], self.attack["debuff"]
             else:
@@ -209,9 +215,10 @@ class Player:
         self.acted = False
 
     def update(self, damage, debuff):
-        print(self.buff_bar)
         self.energy = self.metadata["energy"]
         self.energy += self.buff_bar["energized"]
+        if self.buff_bar["armor"]:
+            self.block += self.buff_bar["armor"]
         if self.debuff_bar["vulnerable"]:
             damage *= 1.25
         if self.debuff_bar["marked"] and damage:
@@ -221,7 +228,6 @@ class Player:
         else:
             damage -= self.block
         self.block = 0
-        self.block = self.attack["block"]
         damage += self.debuff_bar["wounded"]
         self.health += self.buff_bar["regeneration"]
         self.health += self.attack["heal"]
