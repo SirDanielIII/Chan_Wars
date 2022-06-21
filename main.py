@@ -11,7 +11,7 @@ from bin.classes.audio import Audio
 from bin.classes.config_manager import Config
 from bin.levels.lvl1_devil_chan import BossDevilChan
 from bin.levels.lvl3_mr_phone import BossMrPhone
-from bin.levels.minigames.card_game.enemy_level import EnemyLevel as BossMsG
+from bin.levels.lvl2_boss_ms_g import BossMsG
 from bin.menus.boot import Boot
 from bin.menus.credits import Credits
 from bin.menus.death_screen import Death

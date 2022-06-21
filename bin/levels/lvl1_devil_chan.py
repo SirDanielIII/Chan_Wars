@@ -138,6 +138,8 @@ class BossDevilChan(Level):
         self.completed = True
         self.updated = True
         self.acted = True
+        for timer in self.timer_dict:
+            self.timer_dict[timer].time_reset()
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------

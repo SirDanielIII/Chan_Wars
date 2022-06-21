@@ -6,7 +6,7 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Resonate
+        attack: Resonate
         debuff:
           weakness: 2
       sonic_attack:
@@ -14,7 +14,7 @@ enemies:
         buff: None
         damage: 15
         heal: 0
-        phrase: Sonic Attack
+        attack: Sonic Attack
         debuff: None
     hp: 40
     name: Bat Chan
@@ -25,7 +25,7 @@ enemies:
         buff: None
         damage: 15
         heal: 0
-        phrase: Biggus Smackus
+        attack: Biggus Smackus
         debuff: None
     hp: 100
     name: Big Chan
@@ -36,7 +36,7 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Dark Curse
+        attack: Dark Curse
         debuff:
           vulnerable: 1
       dark_orb:
@@ -44,14 +44,14 @@ enemies:
         buff: None
         damage: 20
         heal: 0
-        phrase: Dark Orb
+        attack: Dark Orb
         debuff: None
       darkness:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Darkness
+        attack: Darkness
         debuff:
           weakness: 2
     hp: 50
@@ -90,21 +90,21 @@ enemies:
         buff: None
         damage: 15
         heal: 0
-        phrase: Claw Strike
+        attack: Claw Strike
         debuff: None
       fly_Up:
         block: 20
         buff: None
         damage: 0
         heal: 0
-        phrase: Fly Up
+        attack: Fly Up
         debuff: None
       swoop_in:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Swoop In
+        attack: Swoop In
         debuff:
           fear: 2
     hp: 75
@@ -116,14 +116,14 @@ enemies:
         buff: None
         damage: 0
         heal: 0
-        phrase: Evasive Maneuvers
+        attack: Evasive Maneuvers
         debuff: None
       hamstring:
         block: 0
         buff: None
         damage: 0
         heal: 0
-        phrase: Hamstring
+        attack: Hamstring
         debuff:
           weakness: 3
       tiny_stab:
@@ -131,9 +131,9 @@ enemies:
         buff: None
         damage: 10
         heal: 0
-        phrase: Tiny Stab
+        attack: Tiny Stab
         debuff: None
-    hp: 35
+    hp: 3
     name: Goblin Chan
   phrases:
     enemy_intro:

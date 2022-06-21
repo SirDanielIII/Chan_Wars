@@ -111,6 +111,7 @@ class MsG(Boss):
         self.siberia = False
 
     def initialize(self):
+        print(self.metadata["moves"])
         self.moves = {b: self.metadata["moves"][b] for b in self.metadata["moves"] if "basic" in b}
         self.moves["special"] = self.metadata["moves"]["special"]
         self.moves["siberia"] = self.metadata["moves"]["siberia"]
