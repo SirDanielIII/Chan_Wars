@@ -122,7 +122,7 @@ class BossDevilChan(Level):
     def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
-        self.enemy_name = "zombie"  # random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
+        self.enemy_name = "goblin" # random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
         self.enemy.metadata = self.config.level_confs[self.level]["enemies"][self.enemy_name]
         self.enemy.initialize(self.enemy_name, self.config.level_confs[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
@@ -199,7 +199,7 @@ class BossDevilChan(Level):
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
             self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"],
-                                         0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
+                                         0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out, self.audio, self.config.audio_interact["click"])
             # Draws the cards and creates matches between clicked cards.
 
     def trigger_in(self):   # Called to bring the card game back in.
@@ -448,8 +448,12 @@ class BossDevilChan(Level):
                     # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
+                        if self.player.attack["damage"] > self.boss.block:
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
+                        if self.player.attack["damage"] > self.enemy.block:
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -470,9 +474,13 @@ class BossDevilChan(Level):
                     # Completes the process, updates the player's state and puts the dialogue on screen.
                     if self.battle == "boss":
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
+                        if self.boss.move["damage"] > self.player.block:
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     elif self.battle == "enemy":
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
+                        if self.enemy.attack["damage"] > self.player.block:
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
@@ -513,14 +521,18 @@ class BossDevilChan(Level):
                         self.battle_reset()
                         self.battle = "boss"
                         self.event = "boss_intro"
+                        self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["introduce_boss"])
                 if self.player.health <= 0 and self.battle == "boss":
                     self.event = "boss_player_death"
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
                 elif self.boss.health <= 0 and self.battle == "boss":
                     self.event = "boss_death"
                 if self.player.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_player_death"
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
                 elif self.enemy.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_death"
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["enemy_death"])
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)

@@ -27,19 +27,23 @@ class Card(object):
         self.image = image
         self.chosen = 0
         self.clairvoyant = False
+        self.scared = False
         self.card_type = card_type
         self.collision = pg.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
 
-    def choose(self, m_pos, choose_boolean):
+    def choose(self, m_pos, choose_boolean, audio, click_sound):
         if choose_boolean:
             if self.collision.collidepoint(m_pos):
                 self.chosen = 1
+                audio.dj(None, None, None, 800, False, 0, click_sound)
 
-    def draw(self, default, screen, pos_mod):
-        if self.chosen:
+    def draw(self, fear_symbol, default, screen, pos_mod):
+        if self.chosen or self.clairvoyant:
             screen.blit(self.image, (self.position[0], self.position[1] + pos_mod))
         else:
             screen.blit(default, (self.position[0], self.position[1] + pos_mod))
+            if self.scared:
+                screen.blit(pg.transform.smoothscale(fear_symbol, (100, 100)), (self.position[0] + self.size[0] / 2 - 50, self.position[1] + pos_mod + self.size[1] / 2 - 50))
 
 
 class Player:
@@ -93,13 +97,13 @@ class Player:
         self.played_cards = [Card(images[cards[floor(a / 2)].split()[-1]], position, self.size, margins, o_set, cards[floor(a / 2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_card_screen(self, effects_font, intro_font, stats_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+    def draw_card_screen(self, effects_font, intro_font, stats_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean, audio, click_sound):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
-                card.choose(m_pos, choose_boolean)
+                card.choose(m_pos, choose_boolean, audio, click_sound)
         for card in self.played_cards:
-            card.draw(self.image_dict["card_back"], self.screen, pos_mod)
+            card.draw(ui_images["debuff"]["fear"], self.image_dict["card_back"], self.screen, pos_mod)
         self.draw_ui(ui_images, intro_font, stats_font, effects_font, pos_mod)
 
     def draw_ui(self, ui_images, intro_font, stats_font, effects_font, pos_mod):
@@ -128,7 +132,7 @@ class Player:
         # ------------------------------------------------------------------------------------------------------------------
         # Block
         self.screen.blit(ui_images["block"], (self.ui["rect"].x + 20, 270))
-        draw_text_left(str(self.block) + " Block", black, effects_font, self.screen, self.ui["rect"].x + 65, 270)
+        draw_text_left(str(self.block) + " Block", black, effects_font, self.screen, self.ui["rect"].x + 70, 270)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Overview
         for a, card in enumerate(self.chosen_cards):
@@ -147,14 +151,15 @@ class Player:
         count = 0
         self.choices = {}
         for a in self.played_cards:
-            self.choices[a.card_type] = self.choices.get(a.card_type, 0)
-            self.choices[a.card_type] += a.chosen
+            self.choices[a.card_type] = self.choices.get(a.card_type, [0, False])
+            self.choices[a.card_type][0] += a.chosen
+            self.choices[a.card_type][1] = a.scared
             if a.chosen and a.card_type.split()[-1] not in self.chosen_cards:
                 self.chosen_cards.insert(0, a.card_type.split()[-1])
                 if len(self.chosen_cards) > 2:
                     self.chosen_cards = self.chosen_cards[:2]
         for card_type, number in self.choices.items():
-            if number == 2 and not self.acted:
+            if number[0] == 2 and not self.acted and not number[1]:
                 card = card_type.split(" ")
                 mod = 1
                 if self.debuff_bar["weakness"]:
@@ -197,7 +202,7 @@ class Player:
                 self.acted = True
                 return 2, self.attack["damage"], self.attack["debuff"]
             else:
-                count += number
+                count += number[0]
         if count == 2:
             self.acted = True
         return count, 0, "None"
@@ -205,7 +210,7 @@ class Player:
     def reset(self):
         remove_list = []
         for m, a in enumerate(self.played_cards):
-            if a.chosen and self.choices[a.card_type] == 2:
+            if a.chosen and self.choices[a.card_type][0] == 2:
                 remove_list.append(m)
             a.chosen = 0
         for index in remove_list[::-1]:
@@ -213,6 +218,9 @@ class Player:
         self.acted = False
 
     def update(self, damage, debuff):
+        for a in self.played_cards:
+            a.clairvoyant = False
+            a.scared = False
         self.energy = self.metadata["energy"]
         self.energy += self.buff_bar["energized"]
         if self.buff_bar["armor"]:
@@ -246,3 +254,7 @@ class Player:
         if self.attack["buff"] != "None":
             for buff in self.attack["buff"]:
                 self.buff_bar[buff] += self.attack["buff"][buff]
+        for a in range(min(self.buff_bar["clairvoyant"], len(self.played_cards))):
+            self.played_cards[random.randint(0, len(self.played_cards) - 1)].clairvoyant = True
+        for a in range(min(self.debuff_bar["fear"], len(self.played_cards))):
+            self.played_cards[random.randint(0, len(self.played_cards) - 1)].scared = True
