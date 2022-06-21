@@ -29,6 +29,7 @@ class Config(object):
         self.f_intro = None
         self.f_regular = None
         self.f_regular_small = None
+        self.f_block = None
         self.f_regular_big = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Settings
@@ -414,13 +415,15 @@ class Config(object):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
         self.img_ui["buff"] = self.load_images_dict(os.getcwd() + "/resources/ui/buffs", (30, 30), True, "", False)
         self.img_ui["debuff"] = self.load_images_dict(os.getcwd() + "/resources/ui/debuffs", (30, 30), True, "", False)
+        self.img_ui["block"] = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/block.png").convert(), (40, 40))
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
+        self.f_block = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 45)
         self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
-        self.f_status = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 30)
-        self.f_intro = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 20)
+        self.f_status = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 40)
+        self.f_intro = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 35)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
         self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)
