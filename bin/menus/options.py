@@ -1,3 +1,4 @@
+import math
 import time
 
 from bin.blit_tools import draw_text_left
@@ -41,6 +42,8 @@ class Options(Level):
         self.buttons_music["SFX"].clicked = self.audio.enable_sfx  # Load default FPS value
         for i in self.buttons_music:
             self.lock_slider(not self.buttons_music[i].clicked, self.volume_sliders, i)
+        self.volume_sliders["MUSIC"].set_current_pos(self.audio.vol_music)
+        self.volume_sliders["SFX"].set_current_pos(self.audio.vol_sfx)
 
     def reload(self):
         self.background = self.config.img_menus["settings"]
@@ -72,9 +75,9 @@ class Options(Level):
 
         self.buttons_music = {
             "MUSIC": OptionsButton(self.game_canvas, self.align_03_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                                   cw_tan, cw_gold, cw_dark_grey, cw_blue, ["Music", "Music (Disabled)"], self.f_regular_small, white),
+                                   cw_tan, cw_gold, cw_dark_grey, cw_blue, ["Music (Disabled)", "Music"], self.f_regular_small, white),
             "SFX": OptionsButton(self.game_canvas, self.align_03_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
-                                 cw_tan, cw_gold, cw_dark_grey, cw_blue, ["SFX", "SFX (Disabled)"], self.f_regular_small, white)
+                                 cw_tan, cw_gold, cw_dark_grey, cw_blue, ["SFX (Disabled)", "SFX"], self.f_regular_small, white)
         }
         self.volume_sliders = {
             "MUSIC": SliderButton(self.game_canvas, self.align_03_x + self.button_size * 8,
@@ -85,7 +88,6 @@ class Options(Level):
                                 self.align_03_x + self.button_size * 2, self.align_y + self.button_size * 5.5,
                                 self.button_size, self.button_size, self.stroke_size, white, cw_gold, cw_red, cw_grey,
                                 self.button_size / 3, white)
-
         }
 
         self.defaults_from_conf()
@@ -156,10 +158,14 @@ class Options(Level):
 
         for i in self.volume_sliders:
             self.volume_sliders[i].draw_slider(mx, my, self.hold)
+            self.audio.calculate_volume(i, self.volume_sliders[i].current_pos + self.volume_sliders[i].button_w / 2,
+                                        self.volume_sliders[i].min_pos, self.volume_sliders[i].return_range())
+            self.config.global_conf["settings"]["audio"]["vol_music"] = self.audio.vol_music
+            self.config.global_conf["settings"]["audio"]["vol_sfx"] = self.audio.vol_sfx
 
     def update_volume_sliders(self):
-        self.buttons_music["MUSIC"].text = [str(self.volume_sliders["MUSIC"].return_percentage()) + "%", "Music (Disabled)"]
-        self.buttons_music["SFX"].text = [str(self.volume_sliders["SFX"].return_percentage()) + "%", "SFX (Disabled)"]
+        self.buttons_music["MUSIC"].text = ["Music (Disabled)", f"Music ({str(math.ceil(self.audio.vol_music * 100))} %)"]
+        self.buttons_music["SFX"].text = ["SFX (Disabled)", f"SFX ({str(math.ceil(self.audio.vol_sfx * 100))} %)"]
 
     @staticmethod
     def turn_off_other_buttons(button_dict, this):

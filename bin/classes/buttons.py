@@ -168,6 +168,15 @@ class SliderButton(object):
         self.outer_rect = pg.Rect(max_pos, button_y, button_w, button_h)
         self.slider_rect = pg.Rect(min_pos, button_y + ((button_h - self.slider_size) / 2), max_pos - min_pos, self.slider_size)
 
+    def percent_to_x(self, percent):
+        return self.min_pos + (self.return_range() * percent)
+
+    def set_current_pos(self, percent):
+        self.current_pos = self.percent_to_x(percent) - (self.button_w / 2)
+
+    def return_range(self):
+        return self.max_pos - self.min_pos
+
     def check_hover(self):
         """This method is built to only fire once when the mouse hovers on top of the button"""
         if self.selected and not self.hovered:
@@ -180,12 +189,6 @@ class SliderButton(object):
 
     def unlock_slider(self):
         self.locked = False
-
-    def return_percentage(self, percent=True):
-        if percent:
-            return (self.current_pos / self.max_pos) * 100
-        else:
-            return self.current_pos / self.max_pos
 
     def check_click(self, mx, my, click):
         if self.outer_rect.collidepoint(mx, my) and not self.locked:

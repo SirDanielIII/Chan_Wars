@@ -124,8 +124,8 @@ class Boot(Level):
                                 self.task_timer_delay = 0.02
                             self.audio.enable_music = self.config.global_conf["settings"]["audio"]["enable_music"]
                             self.audio.enable_sfx = self.config.global_conf["settings"]["audio"]["enable_sfx"]
-                            self.audio.music_vol = self.config.global_conf["settings"]["audio"]["music_vol"]
-                            self.audio.sfx_vol = self.config.global_conf["settings"]["audio"]["sfx_vol"]
+                            self.audio.vol_music = self.config.global_conf["settings"]["audio"]["vol_music"]
+                            self.audio.vol_sfx = self.config.global_conf["settings"]["audio"]["vol_sfx"]
                             self.task_timer.time_reset()
                             self.task_num += 1
                     case 3:
@@ -279,7 +279,7 @@ class Boot(Level):
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 self.transition_speed = 3
-                self.next_level = 11
+                self.next_level = 4
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
