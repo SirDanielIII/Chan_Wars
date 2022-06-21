@@ -35,11 +35,11 @@ phrases:
   boss_basic:
     0:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
       - 2
       - 2
@@ -47,93 +47,93 @@ phrases:
       wait: 1.0
     1:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
-      - 2
-      - 2
+        - 2
+        - 2
       text: WORLD SHAKING EXPLOSION FIST!!!
       wait: 1.0
     2:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
-      - 2
-      - 2
+        - 2
+        - 2
       text: NORTH STAR SPEAR!!!
       wait: 1.0
     3:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
-      - 2
-      - 2
+        - 2
+        - 2
       text: MILLION SOUL BOMB!!!
       wait: 1.0
     4:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
-      - 2
-      - 2
+        - 2
+        - 2
       text: BURNING SUN BEAM!!!
       wait: 1.0
     5:
       clear: true
-      delay: 0.1
+      delay: 0.07
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.0
       shake:
-      - 2
-      - 2
+        - 2
+        - 2
       text: .2 ELECTRON VOLTS!!!
       wait: 1.0
   boss_death:
     0:
       clear: false
-      delay: 0.12
+      delay: 0.05
       fade_in: true
       fade_out: false
       line: 1
-      pause: 0.5
+      pause: 1.0
       shake:
-      - 3
-      - 3
+        - 3
+        - 3
       text: NOOOOOOO!!!
       wait: 0
     1:
       clear: true
-      delay: 0.08
+      delay: 0.06
       fade_in: false
       fade_out: true
       line: 2
       pause: 1.4
       shake:
-      - 15
-      - 15
+        - 15
+        - 15
       text: THIS IS BLASPHEMYYYYYY!!! *dies*
       wait: 1.0
   boss_player_death:
     0:
       clear: false
-      delay: 0.08
+      delay: 0.05
       fade_in: true
       fade_out: false
       line: 1
@@ -145,7 +145,7 @@ phrases:
       wait: 0
     1:
       clear: true
-      delay: 0.05
+      delay: 0.06
       fade_in: false
       fade_out: true
       line: 2
@@ -195,11 +195,11 @@ phrases:
   boss_special:
     0:
       clear: true
-      delay: 0.1
+      delay: 0.06
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.3
       shake:
         - 2
         - 2
@@ -207,11 +207,11 @@ phrases:
       wait: 1.0
     1:
       clear: true
-      delay: 0.1
+      delay: 0.05
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.3
       shake:
         - 2
         - 2
@@ -219,11 +219,11 @@ phrases:
       wait: 1.0
     2:
       clear: true
-      delay: 0.1
+      delay: 0.06
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.3
       shake:
         - 2
         - 2
@@ -231,11 +231,11 @@ phrases:
       wait: 1.0
     3:
       clear: true
-      delay: 0.1
+      delay: 0.05
       fade_in: true
       fade_out: true
       line: 1
-      pause: 1.4
+      pause: 1.3
       shake:
         - 2
         - 2

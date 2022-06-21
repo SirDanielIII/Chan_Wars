@@ -372,13 +372,11 @@ class BossDevilChan(Level):
                     if clear:  # Clears textbox if true & after the textbox finishes fading out
                         self.typ_l1.clear()
                         self.typ_l2.clear()
-                        print(1)
                         self.next_msg(wait)
             else:
                 if clear:  # Clears textbox if true (even if fade out isn't true) - Instant clear
                     self.typ_l1.clear()
                     self.typ_l2.clear()
-                    print(2)
                 self.next_msg(wait)
 
     def next_msg(self, wait):
@@ -447,6 +445,7 @@ class BossDevilChan(Level):
                     self.timer_dict["action"].time_start()
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.timer_dict["update"].seconds > 1:
+                    print(1)
                     # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
@@ -455,7 +454,8 @@ class BossDevilChan(Level):
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
-                if self.timer_dict["action"].seconds > 2 and not self.acted and "death" not in self.event:
+                elif self.timer_dict["action"].seconds > 2 and not self.acted and "death" not in self.event:
+                    print(2)
                     # Makes the opponent act.
                     if self.battle == "boss":
                         phrase = self.boss.act(self.turn_counter)
@@ -469,6 +469,7 @@ class BossDevilChan(Level):
                     self.acted = True
                 # ------------------------------------------------------------------------------------------------------------------
                 elif self.timer_dict["action"].seconds > 3 and "death" not in self.event:
+                    print(3)
                     # Completes the process, updates the player's state and puts the dialogue on screen.
                     if self.battle == "boss":
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
@@ -515,15 +516,14 @@ class BossDevilChan(Level):
                 #         self.battle_reset()
                 #         self.battle = "boss"
                 #         self.event = "boss_intro"
-                if "death" not in self.event:
-                    if self.player.health <= 0 and self.battle == "boss":
-                        self.event = "boss_player_death"
-                    elif self.boss.health <= 0 and self.battle == "boss":
-                        self.event = "boss_death"
-                    if self.player.health <= 0 and self.battle == "enemy":
-                        self.event = "enemy_player_death"
-                    elif self.enemy.health <= 0 and self.battle == "enemy":
-                        self.event = "enemy_death"
+                if self.player.health <= 0 and self.battle == "boss":
+                    self.event = "boss_player_death"
+                elif self.boss.health <= 0 and self.battle == "boss":
+                    self.event = "boss_death"
+                if self.player.health <= 0 and self.battle == "enemy":
+                    self.event = "enemy_player_death"
+                elif self.enemy.health <= 0 and self.battle == "enemy":
+                    self.event = "enemy_death"
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)
