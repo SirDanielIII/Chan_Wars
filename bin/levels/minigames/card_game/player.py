@@ -117,8 +117,6 @@ class Player:
                 self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10))
         # ------------------------------------------------------------------------------------------------------------------
         # Status Effects
-        self.debuff_bar = {"fear": 1, "weakness": 1, "vulnerable": 1, "disappointment": 1, "wounded": 1, "marked": 1}
-        self.buff_bar = {"power": 1, "lifesteal": 1, "regeneration": 1, "energized": 1, "armor": 1, "clairvoyant": 1}
         m = [(a, self.buff_bar[a]) for a in self.buff_bar if self.buff_bar[a]] + [(a, self.debuff_bar[a]) for a in self.debuff_bar if self.debuff_bar[a]]
         size = (ui_images["debuff"]["vulnerable"].get_rect().width, ui_images["debuff"]["vulnerable"].get_rect().width)
         mod = ((self.ui["rect"].width - self.margins[0]) // (size[0] + self.margins[0]))
