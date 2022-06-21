@@ -47,8 +47,10 @@ class Enemy:
             self.attack["heal"] += self.attack["damage"]
         if self.buff_bar["armor"]:
             self.attack["block"] += self.buff_bar["armor"]
-        self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.2,
-                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 0.1, "shake": [5, 5], "wait": 0.2}
+        self.health += self.attack["heal"]
+        self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.07,
+                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 1.0, "shake": [5, 5], "wait": 0.1}
+        print(self.attack["heal"], 2)
 
     def update(self, damage, debuff):
         if self.debuff_bar["vulnerable"]:
@@ -62,7 +64,6 @@ class Enemy:
         self.block = 0
         self.block = self.attack["block"]
         damage += self.debuff_bar["wounded"]
-        self.health += self.attack["heal"]
         self.health += self.buff_bar["regeneration"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
