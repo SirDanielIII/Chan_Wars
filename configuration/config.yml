@@ -2,14 +2,14 @@ settings:
   audio:
     enable_music: false
     enable_sfx: true
-    music_vol: 1.0
-    sfx_vol: 1.0
+    vol_music: 1.0
+    vol_sfx: 1.0
   fps:
     show: true
     value: 165
-  fullscreen: true
+  fullscreen: false
   skip_intro: true
-  faster_boot: true
+  fast_boot: true
 other:
   chan_card_size:
   - 110

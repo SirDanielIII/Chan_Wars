@@ -123,10 +123,10 @@ class Audio(object):
 
             volume = ((position - minimum range) / bar_range) / 100
         """
-        if vol_type == "sfx":
-            self.vol_sfx = ((pos - min_range) / bar_range)
-        elif vol_type == "music":
-            self.vol_music = ((pos - min_range) / bar_range)
+        if vol_type == "MUSIC":
+            self.vol_music = round(((pos - min_range) / bar_range), 3)
+        elif vol_type == "SFX":
+            self.vol_sfx = round(((pos - min_range) / bar_range), 3)
 
     @staticmethod
     def fade_out_mixer(time):

@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-
-from bin.blit_tools import draw_rect_outline
 from bin.colours import *
 
 
@@ -137,63 +135,6 @@ class Level(ABC):
         if self.fade_out:
             if self.fade_screen_out(screen_type, screen, self.transition_speed, dt):
                 return True
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def bar_percentage(pos, max_pos, percent=True):
-        if percent:
-            return (pos / max_pos) * 100
-        else:
-            return pos / max_pos
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def bar_percentage_of(total, pos, max_pos):
-        return total * (pos / max_pos)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def bar_pos(pos, min_pos, max_pos, percent=True):
-        if percent:
-            return ((pos - min_pos) / 100) * max_pos
-        else:
-            return (pos - min_pos) * max_pos
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def draw_bar_left(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
-        if highlight:
-            bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
-            pg.draw.rect(screen, clr_highlight, bar_highlight)
-        bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
-        pg.draw.rect(screen, clr_main, bar_main)
-        draw_rect_outline(screen, clr_stroke,
-                          pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def draw_bar_value_left(screen, max_current, current, rectangle, clr_main, clr_stroke, stroke_size=3,
-                            back=False, clr_back=(255, 0, 0),
-                            highlight=False, last_current=0, clr_highlight=pg.Color("#FFFF55")):
-        if back:
-            pg.draw.rect(screen, clr_back, pg.Rect(rectangle[0], rectangle[1], rectangle[2], rectangle[3]))
-        if highlight:
-            bar_highlight = pg.Rect(rectangle[0], rectangle[1], rectangle[2] * (last_current / max_current), rectangle[3])
-            pg.draw.rect(screen, clr_highlight, bar_highlight)
-        new_w = rectangle[2] * (
-                current / max_current)  # The width of the bar is tied to the percentage loss of the current value compared to the max value
-        pg.draw.rect(screen, clr_main, pg.Rect(rectangle[0], rectangle[1], new_w, rectangle[3]))
-        draw_rect_outline(screen, clr_stroke, pg.Rect(rectangle[0] - stroke_size, rectangle[1] - stroke_size, rectangle[2] + stroke_size * 2,
-                                                      rectangle[3] + stroke_size * 2))
-
-    # @staticmethod
-    # def draw_bar_right(screen, og_rect, length, height, clr_main, clr_stroke, stroke_size=3, highlight=False, clr_highlight=pg.Color("#FFFF55")):
-    #     if highlight:
-    #         bar_highlight = pg.Rect(og_rect[0], og_rect[1], length, height)
-    #         pg.draw.rect(screen, clr_highlight, bar_highlight)
-    #     # bar_main = pg.Rect(og_rect[0], og_rect[1], length, height)
-    #     # pg.draw.rect(screen, clr_main, bar_main)
-    #     draw_rect_outline(screen, clr_stroke, pg.Rect(og_rect[0] - stroke_size, og_rect[1] - stroke_size, og_rect[2] + stroke_size * 2, og_rect[3] + stroke_size * 2))
 
     # ------------------------------------------------------------------------------------------------------------------
     @abstractmethod

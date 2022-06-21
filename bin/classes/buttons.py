@@ -135,7 +135,13 @@ class OptionsButton(object):
 
         pg.draw.rect(self.canvas, self.clr_outer, self.outer_rect)
         pg.draw.rect(self.canvas, self.clr_inner_off if not self.clicked else self.clr_inner_on, self.inner_rect)
-        draw_text_left(self.text, self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2, self.outer_rect.y + (self.outer_rect.height - 40) / 2)
+
+        if not self.clicked:
+            draw_text_left(self.text[0], self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2,
+                           self.outer_rect.y + (self.outer_rect.height - 40) / 2)
+        else:
+            draw_text_left(self.text[1], self.text_clr, self.text_font, self.canvas, self.outer_rect.x + self.outer_rect.w * 2,
+                           self.outer_rect.y + (self.outer_rect.height - 40) / 2)
 
 
 class SliderButton(object):
@@ -161,6 +167,15 @@ class SliderButton(object):
         self.inner_rect = pg.Rect(self.current_pos, button_y + self.stroke_size / 2, button_w - self.stroke_size, button_h - self.stroke_size)
         self.outer_rect = pg.Rect(max_pos, button_y, button_w, button_h)
         self.slider_rect = pg.Rect(min_pos, button_y + ((button_h - self.slider_size) / 2), max_pos - min_pos, self.slider_size)
+
+    def percent_to_x(self, percent):
+        return self.min_pos + (self.return_range() * percent)
+
+    def set_current_pos(self, percent):
+        self.current_pos = self.percent_to_x(percent) - (self.button_w / 2)
+
+    def return_range(self):
+        return self.max_pos - self.min_pos
 
     def check_hover(self):
         """This method is built to only fire once when the mouse hovers on top of the button"""

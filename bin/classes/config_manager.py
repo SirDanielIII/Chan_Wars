@@ -39,7 +39,7 @@ class Config(object):
         self.FPS = 165
         self.fullscreen = None
         self.skip_intro = None
-        self.faster_boot = None
+        self.fast_boot = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Other
         self.highest_level_beat = None
@@ -89,7 +89,7 @@ class Config(object):
             self.FPS = self.global_conf["settings"]["fps"]["value"]
             self.fullscreen = self.global_conf["settings"]["fullscreen"]
             self.skip_intro = self.global_conf["settings"]["skip_intro"]
-            self.faster_boot = self.global_conf["settings"]["faster_boot"]
+            self.fast_boot = self.global_conf["settings"]["fast_boot"]
             self.boss_face_size = self.global_conf["other"]["boss_face_size"]
             self.chan_card_size = self.global_conf["other"]["chan_card_size"]
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
@@ -416,7 +416,6 @@ class Config(object):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
         self.img_ui["buff"] = self.load_images_dict(os.getcwd() + "/resources/ui/buffs", (30, 30), True, "", False)
         self.img_ui["debuff"] = self.load_images_dict(os.getcwd() + "/resources/ui/debuffs", (30, 30), True, "", False)
-        self.img_ui["block"] = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/block.png").convert(), (40, 40))
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
