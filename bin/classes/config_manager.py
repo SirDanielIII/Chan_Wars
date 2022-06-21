@@ -29,6 +29,7 @@ class Config(object):
         self.f_intro = None
         self.f_regular = None
         self.f_regular_small = None
+        self.f_stats = None
         self.f_block = None
         self.f_regular_big = None
         # ----------------------------------------------------------------------------------------------------------------------------
@@ -405,7 +406,7 @@ class Config(object):
 
     def load_img_enemies(self):
         self.img_enemies = {level: {} for level in range(1, 3)}
-        self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", (100, 100), True, "_chan")
+        self.img_enemies = self.load_images_dict(os.getcwd() + "/resources/chan_enemies/", self.boss_face_size, True, "_chan")
 
     def load_img_end_screens(self):
         self.img_end_screens = (pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/lose_screen.png").convert(), (self.width, self.height)),
@@ -418,11 +419,11 @@ class Config(object):
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
-        self.f_block = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 45)
-        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
         self.f_boss_text = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 80)
-        self.f_status = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 40)
-        self.f_intro = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 35)
+        self.f_hp_bar_name = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 50)
+        self.f_status = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 45)
+        self.f_intro = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 40)
+        self.f_stats = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 35)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
         self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)

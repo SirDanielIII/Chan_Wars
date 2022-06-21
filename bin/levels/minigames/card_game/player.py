@@ -51,7 +51,7 @@ class Player:
         self.columns = 0
         self.image_dict = {}
         self.damage = 0
-        self.margins = (20, 30)
+        self.margins = (20, 20)
         self.block = 0
         self.health = 0
         self.energy = 0
@@ -93,28 +93,28 @@ class Player:
         self.played_cards = [Card(images[cards[floor(a / 2)].split()[-1]], position, self.size, margins, o_set, cards[floor(a / 2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_card_screen(self, effects_font, intro_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
+    def draw_card_screen(self, effects_font, intro_font, stats_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
                 card.choose(m_pos, choose_boolean)
         for card in self.played_cards:
             card.draw(self.image_dict["card_back"], self.screen, pos_mod)
-        self.draw_ui(ui_images, pos_mod, effects_font, intro_font)
+        self.draw_ui(ui_images, intro_font, stats_font, effects_font, pos_mod)
 
-    def draw_ui(self, ui_images, pos_mod, effects_font, intro_font):
+    def draw_ui(self, ui_images, intro_font, stats_font, effects_font, pos_mod):
         self.ui["surface"].fill((224, 255, 255, 200))
         self.screen.blit(self.ui["surface"], (self.ui["rect"].x, self.ui["rect"].y))
         pg.draw.rect(self.screen, cyan, self.ui["rect"], 5)
         # ------------------------------------------------------------------------------------------------------------------
         # Energy
-        for a in range(self.metadata["energy"] + self.buff_bar["energized"]):
+        for a in range(self.metadata["energy"]):
             if a < self.energy:
                 x = self.ui["rect"].width / 2 - ui_images["energy_full"].get_rect().width / 2
-                self.screen.blit(ui_images["energy_full"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
+                self.screen.blit(ui_images["energy_full"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10))
             else:
                 x = self.ui["rect"].width / 2 - ui_images["energy_empty"].get_rect().width / 2
-                self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10 + pos_mod))
+                self.screen.blit(ui_images["energy_empty"], (self.ui["rect"].x + x + (a - (self.metadata["energy"] - 1) / 2) * 75, self.ui["rect"].y + 10))
         # ------------------------------------------------------------------------------------------------------------------
         # Status Effects
         self.debuff_bar = {"fear": 1, "weakness": 1, "vulnerable": 1, "disappointment": 1, "wounded": 1, "marked": 1}
@@ -129,21 +129,21 @@ class Player:
             draw_text_right(str(b[1]), black, effects_font, self.screen, i + size[0] + 10, j + size[1] + 10)
         # ------------------------------------------------------------------------------------------------------------------
         # Block
-        self.screen.blit(ui_images["block"], (self.ui["rect"].x + 20, 275))
-        draw_text_left(str(self.block) + " Block", black, effects_font, self.screen, self.ui["rect"].x + 65, 280)
+        self.screen.blit(ui_images["block"], (self.ui["rect"].x + 20, 270))
+        draw_text_left(str(self.block) + " Block", black, effects_font, self.screen, self.ui["rect"].x + 65, 270)
         # ------------------------------------------------------------------------------------------------------------------
         # Card Overview
         for a, card in enumerate(self.chosen_cards):
-            self.screen.blit(pg.transform.smoothscale(self.image_dict[card], (150, 225)).convert_alpha(), (self.ui["rect"].x + 20, a * 250 + 330))
-            draw_text_left(card[0].upper() + card[1:-5] + " " + card[-4].upper() + card[-3:], black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330)
-            draw_text_left("Damage: " + str(self.cards[card]["damage"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + self.intro_size)
-            draw_text_left("Block: " + str(self.cards[card]["block"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 2 * self.intro_size)
-            draw_text_left("Heal: " + str(self.cards[card]["heal"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 3 * self.intro_size)
-            draw_text_left("Buff: " + str(self.cards[card]["buff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 4 * self.intro_size)
-            draw_text_left("Debuff: " + str(self.cards[card]["debuff"]), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 5 * self.intro_size)
-            draw_text_left("Upgrades: ", black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + 6 * self.intro_size)
+            self.screen.blit(pg.transform.smoothscale(self.image_dict[card], (150, 225)).convert_alpha(), (self.ui["rect"].x + 20, a * 250 + 325))
+            draw_text_left(card[0].upper() + card[1:-5] + " " + card[-4].upper() + card[-3:], black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325)
+            draw_text_left("- Damage: " + str(self.cards[card]["damage"]), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 2 * self.intro_size)
+            draw_text_left("- Block: " + str(self.cards[card]["block"]), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 3 * self.intro_size)
+            draw_text_left("- Heal: " + str(self.cards[card]["heal"]), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 4 * self.intro_size)
+            draw_text_left("- Buff: " + str(self.cards[card]["buff"]), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 5 * self.intro_size)
+            draw_text_left("- Debuff: " + str(self.cards[card]["debuff"]), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 6 * self.intro_size)
+            draw_text_left("- Upgrades: ", black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + 7 * self.intro_size)
             for m, n in enumerate(self.cards[card]["upgrades"].keys()):
-                draw_text_left(str(n), black, intro_font, self.screen, self.ui["rect"].x + 180, a * 250 + 330 + (m + 7) * self.intro_size)
+                draw_text_left(" - " + str(n), black, stats_font, self.screen, self.ui["rect"].x + 180, a * 250 + 325 + (m + 8) * self.intro_size)
 
     def complete(self):
         count = 0
