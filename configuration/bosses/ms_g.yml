@@ -107,7 +107,7 @@ phrases:
       shake:
         - 2
         - 2
-      text: You deserve to go to Siberia!v
+      text: You deserve to go to Siberia!
       wait: 1.0
   boss_siberia:
     clear: true

@@ -55,7 +55,7 @@ class BossMrPhone(Level):
         self.level = 3
         self.turn_counter = None
         self.completed = True
-        self.battle = "boss"
+        self.battle = "enemy"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class BossMrPhone(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "boss_intro"
+        self.event = "enemy_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer()}
@@ -140,6 +140,8 @@ class BossMrPhone(Level):
         self.completed = True
         self.updated = True
         self.acted = True
+        for timer in self.timer_dict:
+            self.timer_dict[timer].time_reset()
 
     def draw_bars(self, dt):  # Draw Health bars
         # ------------------------------------------------------------------------------------------------------------------

@@ -279,7 +279,7 @@ class Boot(Level):
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 self.transition_speed = 3
-                self.next_level = 13
+                self.next_level = 12
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
