@@ -1,56 +1,184 @@
 hp: 100
 moves:
-  basic_1:
-    block: 0
-    buff: None
-    damage: 15
-    heal: 0
-    phrases:
-    - For Sean!
-    - "I'll only give you 100% if you\xE2\u20AC\u2122re one of my favourite students."
-    debuff:
-      vulnerable: 1
-  basic_2:
-    block: 0
-    buff: None
-    damage: 15
-    heal: 0
-    phrases:
-    - Don't ask me, use your brain.
-    - I have WELHpon *pulls out a meter stick*
-    debuff:
-      weakness: 2
-  basic_3:
-    block: 20
-    buff: None
-    damage: 0
-    heal: 0
-    phrases:
-    - Do it on repl.it!!!
-    - One of them is a woman, the other has an Indian accent if you're into it.
-    debuff: None
+  basic:
+    0:
+      block: 0
+      buff: None
+      damage: 15
+      heal: 0
+      debuff:
+        vulnerable: 1
+    1:
+      block: 0
+      buff: None
+      damage: 15
+      heal: 0
+      debuff:
+        weakness: 2
+    2:
+      block: 20
+      buff: None
+      damage: 0
+      heal: 0
+      debuff: None
   siberia:
     block: 0
     buff: None
     damage: 0
     heal: 0
-    phrases:
-    - You!!! How did you escape Siberia!?
     debuff: None
   special:
     block: 0
     buff: None
     damage: 0
     heal: 0
-    phrases:
-    - You! Go to Siberia!
-    - You deserve to go to Siberia!
     debuff: None
 name: Ms. G
 phrases:
-  death:
-  - why must you use... list comphrehension... *dies*
-  opening:
-  - Hello Sean!
-  - How are you doing?
-  - Wait, you're not Sean!
+  boss_basic:
+    0:
+      clear: true
+      delay: 0.07
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.0
+      shake:
+        - 2
+        - 2
+      text: For Sean!
+      wait: 1.0
+    1:
+      clear: true
+      delay: 0.07
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.0
+      shake:
+        - 2
+        - 2
+      text: Don't ask me, use your brain.
+      wait: 1.0
+    2:
+      clear: true
+      delay: 0.07
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.0
+      shake:
+        - 2
+        - 2
+      text: I have WELHpon *pulls out a meter stick*
+      wait: 1.0
+    3:
+      clear: true
+      delay: 0.07
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.0
+      shake:
+        - 2
+        - 2
+      text: Do it on repl.it!!!
+      wait: 1.0
+  boss_special:
+    0:
+      clear: true
+      delay: 0.06
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.3
+      shake:
+        - 2
+        - 2
+      text: You! Go to Siberia!
+      wait: 1.0
+    1:
+      clear: true
+      delay: 0.05
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.3
+      shake:
+        - 2
+        - 2
+      text: You deserve to go to Siberia!v
+      wait: 1.0
+  boss_siberia:
+    clear: true
+    delay: 0.06
+    fade_in: true
+    fade_out: true
+    line: 1
+    pause: 1.3
+    shake:
+      - 2
+      - 2
+    text: You!!! How did you escape Siberia!?
+    wait: 1.0
+  boss_death:
+    clear: false
+    delay: 0.05
+    fade_in: true
+    fade_out: false
+    line: 1
+    pause: 1.0
+    shake:
+      - 3
+      - 3
+    text: why must you use... list comphrehension... *dies*
+    wait: 0
+  boss_player_death:
+    clear: false
+    delay: 0.05
+    fade_in: true
+    fade_out: false
+    line: 1
+    pause: 1.0
+    shake:
+      - 3
+      - 3
+    text: Your only flaw was not using list comprehension.
+    wait: 0
+  boss_intro:
+    0:
+      clear: false
+      delay: 0.06
+      fade_in: true
+      fade_out: false
+      line: 1
+      pause: 0.9
+      shake:
+        - 0
+        - 0
+      text: Hello Sean!
+      wait: 0
+    1:
+      clear: true
+      delay: 0.09
+      fade_in: false
+      fade_out: true
+      line: 2
+      pause: 1.3
+      shake:
+        - 0
+        - 0
+      text: How are you doing?
+      wait: 0.5
+    2:
+      clear: true
+      delay: 0.07
+      fade_in: true
+      fade_out: true
+      line: 1
+      pause: 1.5
+      shake:
+        - 15
+        - 20
+      text: Wait, you're not Sean!
+      wait: 1.0
