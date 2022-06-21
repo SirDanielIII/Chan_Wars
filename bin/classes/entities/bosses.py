@@ -99,12 +99,12 @@ class DevilChan(Boss):
 class MsG(Boss):
     def __init__(self, config):
         super().__init__()
-        self.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.metadata = config
         self.special = 0
         self.health = None
         self.debuff_bar = {"weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
         self.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "armor": 0}
+        self.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.moves = None
         self.block = 0
         self.phrases = None
@@ -185,6 +185,7 @@ class MrPhone(Boss):
         self.health = None
         self.debuff_bar = {"weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
         self.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "armor": 0}
+        self.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.moves = None
         self.block = 0
         self.phrases = None
@@ -241,6 +242,7 @@ class MrPhone(Boss):
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
         damage += self.debuff_bar["wounded"]
+        self.damaged = False
         if damage:
             self.damaged = True
         self.health -= damage
