@@ -27,12 +27,6 @@ moves:
     damage: 0
     heal: 0
     debuff: None
-  special:
-    block: 0
-    buff: None
-    damage: 0
-    heal: 0
-    debuff: None
 name: Ms. G
 phrases:
   boss_basic:
