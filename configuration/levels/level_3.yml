@@ -460,6 +460,49 @@ player:
           heal: 0
           debuff:
             weakness: 2
+    snake_chan:
+      block: 0
+      buff:
+        weakness: 2
+      damage: 0
+      heal: 5
+      debuff:
+        wounded: 10
+      upgrades:
+        sly:
+          block: 10
+          buff: None
+          damage: 10
+          heal: 0
+          debuff: None
+    bark_chan:
+      block: 15
+      buff:
+        armor: 5
+      damage: 0
+      heal: 0
+      debuff: None
+      upgrades:
+        natural:
+          block: -5
+          buff: None
+          damage: 0
+          heal: 20
+          debuff: None
+    uncanny_chan:
+      block: 0
+      buff:
+        clairvoyant: 2
+      damage: 0
+      heal: 0
+      debuff: None
+      upgrades:
+        natural:
+          block: -5
+          buff: None
+          damage: 0
+          heal: 20
+          debuff: None
   columns: 7
   energy: 5
   hp: 69
