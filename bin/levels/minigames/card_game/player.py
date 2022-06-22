@@ -35,10 +35,14 @@ class Card(object):
         if choose_boolean:
             if self.collision.collidepoint(m_pos):
                 self.chosen = 1
-                audio.dj(None, None, None, 800, False, 0, click_sound)
+                audio.dj(None, None, None, 800, False, 3, click_sound)
 
     def draw(self, fear_symbol, default, screen, pos_mod):
-        if self.chosen or self.clairvoyant:
+        if self.chosen:
+            screen.blit(self.image, (self.position[0], self.position[1] + pos_mod))
+            if self.clairvoyant:
+                pg.draw.rect(screen, cw_gold, self.collision, 3)
+        elif self.clairvoyant:
             screen.blit(self.image, (self.position[0], self.position[1] + pos_mod))
         else:
             screen.blit(default, (self.position[0], self.position[1] + pos_mod))
@@ -55,7 +59,9 @@ class Player:
         self.columns = 0
         self.image_dict = {}
         self.damage = 0
+        self.sounds = None
         self.margins = (20, 20)
+        self.audio = None
         self.block = 0
         self.health = 0
         self.energy = 0
@@ -82,6 +88,7 @@ class Player:
 
     def generate_pairs(self, size, margins, X, Y, deck=None):
         # ------------------------------------------------------------------------------------------------------------------
+        self.audio.dj(None, None, None, 800, False, 4, self.sounds["card_reset"])
         if not self.deck:
             self.deck = deck
         self.size = size
@@ -97,11 +104,11 @@ class Player:
         self.played_cards = [Card(images[cards[floor(a / 2)].split()[-1]], position, self.size, margins, o_set, cards[floor(a / 2)]) for a, position in enumerate(pos_list)]
         return self.played_cards
 
-    def draw_card_screen(self, effects_font, intro_font, stats_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean, audio, click_sound):
+    def draw_card_screen(self, effects_font, intro_font, stats_font, ui_images, m_pos, chosen_cards, background, pos_mod, choose_boolean):
         self.screen.blit(background, (0, pos_mod))
         if chosen_cards < 2:
             for card in self.played_cards:
-                card.choose(m_pos, choose_boolean, audio, click_sound)
+                card.choose(m_pos, choose_boolean, self.audio, self.sounds["card_reveal"])
         for card in self.played_cards:
             card.draw(ui_images["debuff"]["fear"], self.image_dict["card_back"], self.screen, pos_mod)
         self.draw_ui(ui_images, intro_font, stats_font, effects_font, pos_mod)
@@ -200,12 +207,14 @@ class Player:
                     self.attack["heal"] += self.attack["damage"]
                 self.block += self.attack["block"] - self.block
                 self.acted = True
-                return 2, self.attack["damage"], self.attack["debuff"]
+                self.audio.dj(None, None, None, 800, False, 9, self.sounds["match_yes"])
+                return 2
             else:
                 count += number[0]
         if count == 2:
             self.acted = True
-        return count, 0, "None"
+            self.audio.dj(None, None, None, 800, False, 9, self.sounds["match_no"])
+        return count
 
     def reset(self):
         remove_list = []
@@ -215,6 +224,7 @@ class Player:
             a.chosen = 0
         for index in remove_list[::-1]:
             self.played_cards.pop(index)
+        self.audio.dj(None, None, None, 800, False, 5, self.sounds["card_conceal"])
         self.acted = False
 
     def update(self, damage, debuff):
