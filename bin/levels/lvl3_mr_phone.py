@@ -1,9 +1,10 @@
 import math
 import random
+import sys
 import time
 
 import bin.levels.minigames.card_game.player as card_pair
-from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
+from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image, display_fps
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.entities.bosses import MrPhone
 from bin.classes.entities.enemy import Enemy
@@ -96,11 +97,19 @@ class BossMrPhone(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
+        if not self.config.skip_enemies:
+            self.battle = "enemy"
+            self.event = "enemy_intro"
+        else:
+            self.battle = "boss"
+            self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
         for timer in self.timer_dict:
             self.timer_dict[timer].time_reset()
+        self.audio.dj(None, 0, ["music", 0], 1000, False, None, None)
+        self.audio.dj(None, 0, ["music", 1], 1000, False, None, None)
 
     def initialize_player(self):    # Run once at the start of the level. Player attributes are not reset between every battle.
         # ------------------------------------------------------------------------------------------------------------------
@@ -205,7 +214,8 @@ class BossMrPhone(Level):
                         self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match, self.config.img_levels["Card_Game"],
+            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match,
+                                         self.config.img_levels["card_game"],
                                          0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # Draws the cards and creates matches between clicked cards.
 
@@ -309,7 +319,6 @@ class BossMrPhone(Level):
         # ------------------------------------------------------------------------------------------------------------------
         if self.game_transition_in:
             if not self.timer_dict["transition"].activate_timer:
-                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
                 self.timer_dict["transition"].time_start()
             if self.card_canvas_y > 1:
                 self.card_canvas_y = move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
@@ -318,11 +327,12 @@ class BossMrPhone(Level):
                 self.game_transition_in = False
                 self.card_game = True
                 self.timer_dict["transition"].time_reset()
+            if self.timer_dict["transition"].seconds > 0.35:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"], "")
         # ------------------------------------------------------------------------------------------------------------------
         # Transition Out
         if self.game_transition_out:
             if not self.timer_dict["transition"].activate_timer:
-                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
                 self.timer_dict["transition"].time_start()
             if self.card_canvas_y < self.height - 1:
                 self.card_canvas_y = move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)
@@ -334,6 +344,8 @@ class BossMrPhone(Level):
                 self.updated = False
                 self.completed = False
                 self.timer_dict["transition"].time_reset()
+            if self.timer_dict["transition"].seconds > 0.35:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"], "")
 
     def typewriter_render(self, messages, dt, clear, wait, fade_in, fade_out):
         if self.typ_update:  # Update these values once per message update
@@ -356,7 +368,7 @@ class BossMrPhone(Level):
                                            messages.peek()["delay"],
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
                                            messages.peek()["shake"],
-                                           messages.peek()["pause"], 0)
+                                           messages.peek()["pause"], 5, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_3["blip"])
                 case 2:  # Line 2
                     self.typ_l2.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
                     # Render first line
@@ -365,14 +377,14 @@ class BossMrPhone(Level):
                                            0,
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
                                            self.typ_last_shake,
-                                           0, 0)
+                                           0, 5, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_3["blip"])
                     # # Render second line
                     self.typ_finished = \
                         self.typ_l2.render(self.text_canvas,
                                            messages.peek()["delay"],
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
                                            messages.peek()["shake"],
-                                           messages.peek()["pause"], 0)
+                                           messages.peek()["pause"], 6, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_3["blip"])
         # ----------------------------------------------------------------------------------------------------------
         if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
             self.typ_last_shake = messages.peek()["shake"]  # Store last shake variable for the first line when blitting the second line
@@ -418,6 +430,12 @@ class BossMrPhone(Level):
         time_elapsed = Timer()
         time_elapsed.time_start()
         while True:
+            # ----------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[2].get_busy() and self.audio.enable_music and "enemy" in self.event:
+                self.audio.dj(self.config.audio_lvl_3["enemy_phase"], 2, ["music", 3], 750, True, None, None)
+            # ----------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[3].get_busy() and self.audio.enable_music and "boss" in self.event:
+                self.audio.dj(self.config.audio_lvl_3["boss_phase"], 3, ["music", 2], 750, True, None, None)
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -428,7 +446,8 @@ class BossMrPhone(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(self.config.global_conf)
+                    pg.quit()
+                    sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -459,16 +478,15 @@ class BossMrPhone(Level):
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
-                            self.boss_face = self.boss_face_dict["hit"]
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
                         elif self.player.attack:
-                            self.audio.dj(None, None, None, 800, False, 8, self.config.audio_card_game["attack_full_block"])
+                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
                         elif self.player.attack:
-                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_cound_lst(self.config.audio_card_game["attack_full_block"]))
+                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -478,10 +496,8 @@ class BossMrPhone(Level):
                         phrase = self.boss.act(self.turn_counter)
                         if "basic" in phrase:
                             self.event = "boss_basic"
-                            self.boss_face = self.boss_face_dict["basic_" + str(self.turn_counter % 2 + 1)]
                         elif "special" in phrase:
                             self.event = "boss_special"
-                            self.boss_face = self.boss_face_dict["special"]
                     elif self.battle == "enemy":
                         self.enemy.act(self.turn_counter)
                         self.event = "enemy_basic"
@@ -493,7 +509,7 @@ class BossMrPhone(Level):
                         self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["enemy_attack"])
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
                         elif self.boss.move["damage"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.boss.move["debuff"]:
@@ -503,7 +519,7 @@ class BossMrPhone(Level):
                         self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["enemy_attack"])
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
                         elif self.enemy.attack["damage"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.enemy.attack["debuff"]:
@@ -513,7 +529,6 @@ class BossMrPhone(Level):
                     self.turn_counter += 1
                     self.timer_dict["action"].time_reset()
                     self.completed = True
-                    self.boss_face = self.boss_face_dict["normal"]
                 # ------------------------------------------------------------------------------------------------------------------
                 self.draw_bars(dt)  # Draw Health Bars (See Method Above)
                 if self.battle == "boss":
@@ -526,19 +541,24 @@ class BossMrPhone(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
-                    self.next_level = 2
-                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
-                    self.audio.dj(None, None, None, 800, False, 1, self.config.audio_interact["fade"])
+                    self.next_level = 3
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["click"])
+                    self.audio.dj(None, None, None, 800, False, 3, self.config.audio_interact["fade"])
                 if self.back_button.check_hover():
                     self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["highlight"])
                     self.next_level = 2
                 if self.transition_out("game", self.game_canvas, dt):
+                    self.audio.dj(None, 0, ["music", 2], 1000, False, None, None)
+                    self.audio.dj(None, 0, ["music", 3], 1000, False, None, None)
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
                 if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
-                    return 8 if self.player.health <= 0 else 9
+                    self.audio.dj(None, 0, ["music", 2], 1000, False, None, None)
+                    self.audio.dj(None, 0, ["music", 3], 1000, False, None, None)
+                    self.fade_out = True
+                    self.next_level = 8 if self.player.health <= 0 else 9
                 elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
                     enemy_count += 1
                     if enemy_count != 3:
@@ -573,4 +593,5 @@ class BossMrPhone(Level):
             self.blit_screens([[self.card_canvas, (0, self.card_canvas_y)]])
             self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
+            display_fps(self.config.fps_show, self.surface, self.clock, self.config.f_fps, self.width - 130, 15, cw_tan)
             pg.display.update()

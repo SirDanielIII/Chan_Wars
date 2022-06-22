@@ -1,9 +1,10 @@
 import math
 import random
+import sys
 import time
 
 import bin.levels.minigames.card_game.player as card_pair
-from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image
+from bin.blit_tools import draw_text_left, draw_text_right, draw_rect_outline, center_blit_image, display_fps
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.entities.bosses import MsG
 from bin.classes.entities.enemy import Enemy
@@ -55,7 +56,7 @@ class BossMsG(Level):
         self.level = 2
         self.turn_counter = None
         self.completed = True
-        self.battle = "enemy"
+        self.battle = "boss"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -74,10 +75,10 @@ class BossMsG(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "enemy_intro"
+        self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
-        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer()}
+        self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer(), "intro": Timer()}
 
     def reload(self):  # Sets generic values here. Run every time a new fight is initiated.
         # ------------------------------------------------------------------------------------------------------------------
@@ -96,13 +97,21 @@ class BossMsG(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
+        if not self.config.skip_enemies:
+            self.battle = "enemy"
+            self.event = "enemy_intro"
+        else:
+            self.battle = "boss"
+            self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
         for timer in self.timer_dict:
             self.timer_dict[timer].time_reset()
+        self.audio.dj(None, 0, ["music", 0], 1000, False, None, None)
+        self.audio.dj(None, 0, ["music", 1], 1000, False, None, None)
 
-    def initialize_player(self):    # Run once at the start of the level. Player attributes are not reset between every battle.
+    def initialize_player(self):  # Run once at the start of the level. Player attributes are not reset between every battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
         self.player.metadata = self.config.level_confs[self.level]["player"]
@@ -112,7 +121,7 @@ class BossMsG(Level):
                                        cw_yellow)
         self.size = self.config.chan_card_size
 
-    def initialize_boss(self):    # Run once at the start of the level.
+    def initialize_boss(self):  # Run once at the start of the level.
         # ------------------------------------------------------------------------------------------------------------------
         # Boss Attributes Initialization
         self.boss.metadata = self.config.boss_confs[self.boss_name]
@@ -121,7 +130,7 @@ class BossMsG(Level):
         self.boss_face_dict = self.config.img_bosses[self.level]
         self.boss_face = self.boss_face_dict["normal"]
 
-    def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
+    def initialize_enemy(self):  # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
         self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
@@ -183,13 +192,13 @@ class BossMsG(Level):
 
     def run_card_game(self, click):
         mouse_pos = (0, 0)
-        if self.card_canvas_y != self.height:   # Makes sure that the card game is only run while teh screen is up.
-            if not self.player.played_cards:    # Generates a new set of cards if no cards already exist.
+        if self.card_canvas_y != self.height:  # Makes sure that the card game is only run while teh screen is up.
+            if not self.player.played_cards:  # Generates a new set of cards if no cards already exist.
                 self.player.played_cards = self.player.generate_pairs(self.size, self.margins, self.width, self.height)
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
-                if self.card_match[0] != 2:     # If a match hasn't been made, allow teh player to continue trying to match.
+                if self.card_match[0] != 2:  # If a match hasn't been made, allow teh player to continue trying to match.
                     self.card_match = self.player.complete()
                 # ------------------------------------------------------------------------------------------------------------------
                 # Completes the card matching process
@@ -203,11 +212,12 @@ class BossMsG(Level):
                         self.card_match = self.player.complete()
                 if click:
                     mouse_pos = tuple(pg.mouse.get_pos())
-            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match[0], self.config.img_levels["Card_Game"],
-                                         0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out, self.audio, self.config.audio_interact["click"])
+            self.player.draw_card_screen(self.config.f_status, self.config.f_intro, self.config.f_stats, self.config.img_ui, mouse_pos, self.card_match,
+                                         self.config.img_levels["card_game"],
+                                         0, self.player.energy and not self.timer_dict["card"].seconds > 500 and not self.game_transition_in and not self.game_transition_out)
             # Draws the cards and creates matches between clicked cards.
 
-    def trigger_in(self):   # Called to bring the card game back in.
+    def trigger_in(self):  # Called to bring the card game back in.
         if not self.card_game:
             self.game_transition_in = True
             self.game_transition_out = False
@@ -226,9 +236,10 @@ class BossMsG(Level):
             # ------------------------------------------------------------------------------------------------------------------
             # Boss events
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
+                self.timer_dict["intro"].time_start()
                 self.typewriter_queue("boss_intro")
                 self.intro(1.0, dt)
-            case "boss_siberia":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
+            case "boss_siberia":  # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_siberia")
                 self.dialogue(1.0, dt)
             case "boss_basic":  # Event happens when the boss uses its basic move. Basic attack dialogue is initiated.
@@ -237,18 +248,18 @@ class BossMsG(Level):
             case "boss_death":  # Event happens when the boss is defeated. Boss death dialogue is initiated.
                 self.typewriter_queue("boss_death")
                 self.dialogue(1.0, dt)
-            case "boss_player_death":   # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
+            case "boss_player_death":  # Event happens when the player dies while fighting the boss. Boss' winning dialogue is initiated.
                 self.typewriter_queue("boss_player_death")
                 self.dialogue(1.0, dt)
             # ------------------------------------------------------------------------------------------------------------------
             # Enemy events
-            case "enemy_intro":     # Event happens when the enemy fight is initiated. Introduction dialogue is initiated.
+            case "enemy_intro":  # Event happens when the enemy fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("enemy_intro")
                 self.dialogue(1.0, dt)
-            case "enemy_basic":     # Event happens when the enemy uses its basic move. Basic attack dialogue is initiated.
+            case "enemy_basic":  # Event happens when the enemy uses its basic move. Basic attack dialogue is initiated.
                 self.typewriter_queue("enemy_basic")
                 self.dialogue(1.0, dt)
-            case "enemy_death":     # Event happens when the enemy is defeated. Enemy death dialogue is initiated.
+            case "enemy_death":  # Event happens when the enemy is defeated. Enemy death dialogue is initiated.
                 self.typewriter_queue("enemy_death")
                 self.dialogue(1.0, dt)
             case "enemy_player_death":  # Event happens when the player dies while fighting an enemy. Enemy winning dialogue is initiated.
@@ -257,8 +268,10 @@ class BossMsG(Level):
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
 
     def intro(self, delay, dt):
-        self.audio.dj(None, None, None, 800, False, 6, self.config.audio_level_2["to_siberia"])
-        pass
+        if self.timer_dict["intro"].seconds < 0.5:
+            if not self.audio.sfx_channels[6].get_busy():
+                self.audio.dj(None, None, None, 800, False, 6, self.config.audio_lvl_2["to_siberia"])
+        print(self.timer_dict["intro"].seconds)
 
     def typewriter_queue(self, e, quote_type=None):
         if self.typ_queue_update:  # Only runs once
@@ -267,28 +280,28 @@ class BossMsG(Level):
             # ------------------------------------------------------------------------------------------------------------------
             # Dialogue for boss events
             if "boss" in e:
-                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
+                if quote_type == "multiple":  # If there are multiple lines, queues all of them in order.
                     for key in self.boss.phrases[e]:
                         self.typ_queue.enqueue(self.boss.phrases[e][key])
-                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
+                elif quote_type == "random":  # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.boss.phrases[e][random.randint(0, len(self.boss.phrases[e]) - 1)])
-                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
+                else:  # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.boss.phrases[e])
             # ------------------------------------------------------------------------------------------------------------------
             # Dialogue for enemy events
             if "enemy" in e:
-                if quote_type == "multiple":    # If there are multiple lines, queues all of them in order.
+                if quote_type == "multiple":  # If there are multiple lines, queues all of them in order.
                     for key in self.enemy.phrases[e]:
                         self.typ_queue.enqueue(self.enemy.phrases[e][key])  # Queue all messages in order
-                elif quote_type == "random":    # If there are several versions of a line, and one is chosen randomly, queues a random line.
+                elif quote_type == "random":  # If there are several versions of a line, and one is chosen randomly, queues a random line.
                     self.typ_queue.enqueue(self.enemy.phrases[e][random.randint(0, len(self.enemy.phrases[e]) - 1)])
-                else:   # If there is only one version of the dialogue, and it is only one line, queues the line
+                else:  # If there is only one version of the dialogue, and it is only one line, queues the line
                     self.typ_queue.enqueue(self.enemy.phrases[e])
         # print(self.typ_queue.items)
 
     def dialogue(self, delay, dt):
         seconds = self.timer_dict["dialogue"].seconds
-        if seconds > delay:     # Implements delay before the message is blit onto the screen.
+        if seconds > delay:  # Implements delay before the message is blit onto the screen.
             if not self.typ_queue.is_empty():
                 clear = self.typ_queue.peek()["clear"]
                 wait = self.typ_queue.peek()["wait"]
@@ -319,6 +332,8 @@ class BossMsG(Level):
                 self.game_transition_in = False
                 self.card_game = True
                 self.timer_dict["transition"].time_reset()
+            if self.timer_dict["transition"].seconds > 0.35:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"], "")
         # ------------------------------------------------------------------------------------------------------------------
         # Transition Out
         if self.game_transition_out:
@@ -334,6 +349,8 @@ class BossMsG(Level):
                 self.updated = False
                 self.completed = False
                 self.timer_dict["transition"].time_reset()
+            if self.timer_dict["transition"].seconds > 0.35:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"], "")
 
     def typewriter_render(self, messages, dt, clear, wait, fade_in, fade_out):
         if self.typ_update:  # Update these values once per message update
@@ -356,7 +373,7 @@ class BossMsG(Level):
                                            messages.peek()["delay"],
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
                                            messages.peek()["shake"],
-                                           messages.peek()["pause"], 0)
+                                           messages.peek()["pause"], 5, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_2["blip"])
                 case 2:  # Line 2
                     self.typ_l2.queue_text(messages.peek()["text"])  # Method has logic inside it to only update once in a loop
                     # Render first line
@@ -364,15 +381,14 @@ class BossMsG(Level):
                         self.typ_l1.render(self.text_canvas,
                                            0,
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y1,
-                                           self.typ_last_shake,
-                                           0, 0)
+                                           self.typ_last_shake, 0, 5, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_2["blip"])
                     # # Render second line
                     self.typ_finished = \
                         self.typ_l2.render(self.text_canvas,
                                            messages.peek()["delay"],
                                            self.config.f_boss_text, white, self.typ_box_align_x, self.typ_box_align_y2,
                                            messages.peek()["shake"],
-                                           messages.peek()["pause"], 0)
+                                           messages.peek()["pause"], 6, self.config.audio_card_game["blip"] if "enemy" in self.event else self.config.audio_lvl_2["blip"])
         # ----------------------------------------------------------------------------------------------------------
         if self.typ_finished:  # This occurs after the typewriter has finished blitting and completed its pause
             self.typ_last_shake = messages.peek()["shake"]  # Store last shake variable for the first line when blitting the second line
@@ -418,6 +434,12 @@ class BossMsG(Level):
         time_elapsed = Timer()
         time_elapsed.time_start()
         while True:
+            # ----------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[2].get_busy() and self.audio.enable_music and "enemy" in self.event:
+                self.audio.dj(self.config.audio_lvl_2["enemy_phase"], 2, ["music", 3], 750, True, None, None)
+            # ----------------------------------------------------------------------------------------------------------
+            if not self.audio.music_channels[3].get_busy() and self.audio.enable_music and "boss" in self.event:
+                self.audio.dj(self.config.audio_lvl_2["boss_phase"], 3, ["music", 2], 750, True, None, None)
             # Framerate Independence
             dt = time.time() - self.last_time
             dt *= 60  # Delta time - 60fps physics
@@ -428,7 +450,8 @@ class BossMsG(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(self.config.global_conf)
+                    pg.quit()
+                    sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -455,15 +478,20 @@ class BossMsG(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.timer_dict["update"].seconds > 1:
                     # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
+                    self.audio.dj(None, None, None, 800, False, 8, self.config.audio_card_game["player_attack"])
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
                             self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                             self.boss_face = self.boss_face_dict["hit"]
+                        elif self.player.attack:
+                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
+                        elif self.player.attack:
+                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -493,7 +521,7 @@ class BossMsG(Level):
                     elif self.battle == "enemy":
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["hit"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
@@ -512,20 +540,25 @@ class BossMsG(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 if self.back_button.run(mx, my, cw_light_blue, self.click):
                     self.fade_out = True
-                    self.next_level = 2
-                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
-                    self.audio.dj(None, None, None, 800, False, 1, self.config.audio_interact["fade"])
+                    self.next_level = 3
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["click"])
+                    self.audio.dj(None, None, None, 800, False, 3, self.config.audio_interact["fade"])
                 if self.back_button.check_hover():
                     self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["highlight"])
                     self.next_level = 2
                 if self.transition_out("game", self.game_canvas, dt):
+                    self.audio.dj(None, 0, ["music", 2], 1000, False, None, None)
+                    self.audio.dj(None, 0, ["music", 3], 1000, False, None, None)
                     self.restore()
                     return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
                 if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
-                    return 8 if self.player.health <= 0 else 9
-                elif "death" in self.event and "enemy" in self.event:   # Resets the battle state and brings up a new enemy if an enemy dies
+                    self.audio.dj(None, 0, ["music", 2], 1000, False, None, None)
+                    self.audio.dj(None, 0, ["music", 3], 1000, False, None, None)
+                    self.fade_out = True
+                    self.next_level = 8 if self.player.health <= 0 else 9
+                elif "death" in self.event and "enemy" in self.event:  # Resets the battle state and brings up a new enemy if an enemy dies
                     enemy_count += 1
                     if enemy_count != 3:
                         self.battle_reset()
@@ -558,4 +591,5 @@ class BossMsG(Level):
             self.blit_screens([[self.card_canvas, (0, self.card_canvas_y)]])
             self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
+            display_fps(self.config.fps_show, self.surface, self.clock, self.config.f_fps, self.width - 130, 15, cw_tan)
             pg.display.update()

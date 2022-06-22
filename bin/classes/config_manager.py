@@ -1,5 +1,4 @@
 import os
-import sys
 
 import pygame as pg
 import yaml  # https://zetcode.com/python/yaml/
@@ -32,6 +31,7 @@ class Config(object):
         self.f_stats = None
         self.f_block = None
         self.f_regular_big = None
+        self.f_fps = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Settings
         # NOTE - AUDIO SETTINGS ARE LOCATED IN THE AUDIO CLASS & LOADED DURING BOOT
@@ -40,6 +40,7 @@ class Config(object):
         self.fullscreen = None
         self.skip_intro = None
         self.fast_boot = None
+        self.skip_enemies = None
         # ----------------------------------------------------------------------------------------------------------------------------
         # Other
         self.highest_level_beat = None
@@ -66,12 +67,10 @@ class Config(object):
         self.bosses = ["devil_chan", "ms_g", "mr_phone"]
 
     @staticmethod
-    def shutdown(new_dict):
+    def save_settings(new_dict):
         if new_dict is not None:
             with open(os.getcwd() + "/configuration/config.yml", "w") as f:
                 yaml.dump(new_dict, f, sort_keys=False)
-        pg.quit()
-        sys.exit()
 
     def load_global_conf(self):
         if not os.path.exists(os.getcwd() + "/configuration/config.yml"):
@@ -94,6 +93,7 @@ class Config(object):
             self.chan_card_size = self.global_conf["other"]["chan_card_size"]
             self.highest_level_beat = self.global_conf["other"]["highest_level_beat"]
             self.last_level = self.global_conf["other"]["last_level"]
+            self.skip_enemies = self.global_conf["settings"]["skip_enemies"]
 
     def load_level_confs(self):  # Run this after load_global_config() - Create files if they don't exist, and read from them
         for i in range(1, self.levels + 1):
@@ -391,10 +391,10 @@ class Config(object):
     def load_img_backgrounds(self):
         self.img_levels = {
             1: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_1/background.png").convert(), (self.width, self.height)),
-            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.jpg").convert(), (self.width, self.height)),
+            2: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/background.png").convert(), (self.width, self.height)),
             3: pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_3/background.jpg").convert(), (self.width, self.height)),
             "siberia": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (self.width, self.height)),
-            "Card_Game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/level_2/siberia.jpg").convert(), (self.width, self.height))
+            "card_game": pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/menus/bliss.png").convert(), (self.width, self.height))
         }
 
     def load_img_bosses(self):
@@ -429,6 +429,7 @@ class Config(object):
         self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 75)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
+        self.f_fps = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 30)
 
     def load_audio_menu(self):
         self.audio_menus = self.load_audio_dict(os.getcwd() + "/resources/audio/")

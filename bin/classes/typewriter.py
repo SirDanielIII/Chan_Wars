@@ -52,7 +52,7 @@ class Typewriter(Timer):  # Implementation of Queue data type / structure
     def unlock(self):
         self.update_text_lock = False
 
-    def render(self, screen, delay, font, clr, x, y, shake, pause, boop_type):
+    def render(self, screen, delay, font, clr, x, y, shake, pause, channel, blip):
         self.blit_final = font.render(self.str_to_blit, True, clr)
         screen.blit(self.blit_final, (x + uniform(0, shake[0]), y + uniform(0, shake[1])))
         # Typewriter Effect
@@ -61,14 +61,8 @@ class Typewriter(Timer):  # Implementation of Queue data type / structure
                 letter = self.dequeue()
                 self.str_to_blit += letter
                 if letter != " ":
-                    # if boop_type == 0:  # Normal boop sound
-                    #     if not pg.mixer.Channel(4).get_busy():
-                    #         self.audio.channel4.play(self.boop)
-                    # if boop_type == 1:  # Variations of the boop sound
-                    #     if not pg.mixer.Channel(4).get_busy():
-                    #         idx = random.randint(0, len(os.listdir(self.boops_directory)))
-                    #         self.audio.channel4.play(self.boops[idx])
-                    pass
+                    if not pg.mixer.Channel(channel).get_busy():
+                        pg.mixer.Channel(channel).play(blip)
             except IndexError:
                 pass
             self.seconds = 0  # Reset timer

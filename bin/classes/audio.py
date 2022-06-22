@@ -13,8 +13,8 @@ class Audio(object):
         This ensures any audio playback isn't heavily delayed, and sets 20 audio channels for you to use
         """
         # Channels
-        self.music_channels = [pg.mixer.Channel(i) for i in range(2)]  # Channels from 0 to 2
-        self.sfx_channels = [pg.mixer.Channel(i) for i in range(2, 20)]  # Channels from 2 to 18
+        self.music_channels = [pg.mixer.Channel(i) for i in range(4)]  # Channels from 0 to 3
+        self.sfx_channels = [pg.mixer.Channel(i) for i in range(4, 21)]  # Channels from 4 to 20
         # Toggles
         self.enable_music = True
         self.enable_sfx = True

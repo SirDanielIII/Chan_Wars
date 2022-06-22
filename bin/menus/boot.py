@@ -1,5 +1,6 @@
 import os
 import random
+import sys
 import time
 
 from pygame import gfxdraw
@@ -86,7 +87,8 @@ class Boot(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(None)
+                    pg.quit()
+                    sys.exit()
                 if event.type == milliseconds:  # Timers
                     self.task_timer.stopwatch()
             # ------------------------------------------------------------------------------------------------------------------
@@ -279,7 +281,6 @@ class Boot(Level):
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
                 self.transition_speed = 3
-                self.next_level = 11
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             self.blit_screens()
