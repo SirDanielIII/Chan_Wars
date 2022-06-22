@@ -1,7 +1,8 @@
 import math
+import sys
 import time
 
-from bin.blit_tools import draw_text_left
+from bin.blit_tools import draw_text_left, display_fps
 from bin.classes.buttons import ButtonTriangle, SliderButton
 from bin.classes.buttons import OptionsButton
 from bin.classes.level import Level
@@ -33,13 +34,14 @@ class Options(Level):
         self.music_volume = None
 
     def defaults_from_conf(self):
-        self.buttons_fps[self.config.FPS].clicked = True  # Load default FPS value
-        self.buttons_settings["SHOW_FPS"].clicked = self.config.fps_show  # Load default FPS value
-        self.buttons_settings["FULLSCREEN"].clicked = self.config.fullscreen  # Load default FPS value
-        self.buttons_settings["SKIP_INTRO"].clicked = self.config.skip_intro  # Load default FPS value
-        self.buttons_settings["FAST_BOOT"].clicked = self.config.fast_boot  # Load default FPS value
-        self.buttons_music["MUSIC"].clicked = self.audio.enable_music  # Load default FPS value
-        self.buttons_music["SFX"].clicked = self.audio.enable_sfx  # Load default FPS value
+        self.buttons_fps[self.config.FPS].clicked = True
+        self.buttons_settings["SHOW_FPS"].clicked = self.config.fps_show
+        self.buttons_settings["FULLSCREEN"].clicked = self.config.fullscreen
+        self.buttons_settings["SKIP_INTRO"].clicked = self.config.skip_intro
+        self.buttons_settings["FAST_BOOT"].clicked = self.config.fast_boot
+        self.buttons_settings["SKIP_ENEMIES"].clicked = self.config.skip_enemies
+        self.buttons_music["MUSIC"].clicked = self.audio.enable_music
+        self.buttons_music["SFX"].clicked = self.audio.enable_sfx
         for i in self.buttons_music:
             self.lock_slider(not self.buttons_music[i].clicked, self.volume_sliders, i)
         self.volume_sliders["MUSIC"].set_current_pos(self.audio.vol_music)
@@ -56,28 +58,30 @@ class Options(Level):
                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["60 FPS", "60 FPS"], self.f_regular_small, white),
             75: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["75 FPS", "75 FPS"], self.f_regular_small, white),
-            144: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
-                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["144 FPS", "144 FPS"], self.f_regular_small, white),
+            120: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
+                               cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["120 FPS", "120 FPS"], self.f_regular_small, white),
             165: OptionsButton(self.game_canvas, self.align_01_x, self.align_y + self.button_size * 8, self.button_size, self.button_size, self.stroke_size,
                                cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["165 FPS", "165 FPS"], self.f_regular_small, white)
         }
 
         self.buttons_settings = {
             "SHOW_FPS": OptionsButton(self.game_canvas, self.align_02_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                                      cw_tan, cw_gold, cw_dark_grey, cw_red, ["Show FPS (Disabled)", "Show FPS (Enabled)"], self.f_regular_small, white),
+                                      cw_tan, cw_gold, cw_dark_grey, cw_dark_green, ["Show FPS (Disabled)", "Show FPS (Enabled)"], self.f_regular_small, white),
             "FULLSCREEN": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 2, self.button_size, self.button_size, self.stroke_size,
                                         cw_tan, cw_gold, cw_dark_grey, cw_dark_red, ["Fullscreen (Disabled)", "Fullscreen (Enabled)"], self.f_regular_small, white),
             "SKIP_INTRO": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
                                         cw_tan, cw_gold, cw_dark_grey, cw_light_blue, ["Skip Intro (Disabled)", "Skip Intro (Enabled)"], self.f_regular_small, white),
             "FAST_BOOT": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 6, self.button_size, self.button_size, self.stroke_size,
-                                       cw_tan, cw_gold, cw_dark_grey, cw_light_blue, ["Fast Boot (Disabled)", "Fast Boot (Enabled)"], self.f_regular_small, white)
+                                       cw_tan, cw_gold, cw_dark_grey, cw_light_blue, ["Fast Boot (Disabled)", "Fast Boot (Enabled)"], self.f_regular_small, white),
+            "SKIP_ENEMIES": OptionsButton(self.game_canvas, self.align_02_x, self.align_y + self.button_size * 8, self.button_size, self.button_size, self.stroke_size,
+                                          cw_tan, cw_gold, cw_dark_grey, cw_dark_purple, ["Skip Enemies (Disabled)", "Skip Enemies (Enabled)"], self.f_regular_small, white)
         }
 
         self.buttons_music = {
             "MUSIC": OptionsButton(self.game_canvas, self.align_03_x, self.align_y, self.button_size, self.button_size, self.stroke_size,
-                                   cw_tan, cw_gold, cw_dark_grey, cw_blue, ["Music (Disabled)", "Music"], self.f_regular_small, white),
+                                   cw_tan, cw_gold, cw_dark_grey, cw_pink, ["Music (Disabled)", "Music"], self.f_regular_small, white),
             "SFX": OptionsButton(self.game_canvas, self.align_03_x, self.align_y + self.button_size * 4, self.button_size, self.button_size, self.stroke_size,
-                                 cw_tan, cw_gold, cw_dark_grey, cw_blue, ["SFX (Disabled)", "SFX"], self.f_regular_small, white)
+                                 cw_tan, cw_gold, cw_dark_grey, cw_pink, ["SFX (Disabled)", "SFX"], self.f_regular_small, white)
         }
         self.volume_sliders = {
             "MUSIC": SliderButton(self.game_canvas, self.align_03_x + self.button_size * 8,
@@ -108,7 +112,7 @@ class Options(Level):
                     case 75:
                         self.config.FPS = self.config.global_conf["settings"]["fps"]["value"] = i
                         self.turn_off_other_buttons(self.buttons_fps, i)
-                    case 144:
+                    case 120:
                         self.config.FPS = self.config.global_conf["settings"]["fps"]["value"] = i
                         self.turn_off_other_buttons(self.buttons_fps, i)
                     case 165:
@@ -134,6 +138,8 @@ class Options(Level):
                         self.config.skip_intro = self.config.global_conf["settings"]["skip_intro"] = self.buttons_settings[i].clicked
                     case "FAST_BOOT":
                         self.config.fast_boot = self.config.global_conf["settings"]["fast_boot"] = self.buttons_settings[i].clicked
+                    case "SKIP_ENEMIES":
+                        self.config.skip_enemies = self.config.global_conf["settings"]["skip_enemies"] = self.buttons_settings[i].clicked
                 if self.buttons_settings[i].clicked:
                     self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["enable"])
                 else:
@@ -197,7 +203,9 @@ class Options(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(self.config.global_conf)
+                    self.config.save_settings(self.config.global_conf)
+                    pg.quit()
+                    sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -215,6 +223,7 @@ class Options(Level):
             # --------------------------------------------------------------------------------------------------------------
             if self.transition_out("game", self.game_canvas, dt):
                 self.restore()
+                self.config.save_settings(self.config.global_conf)
                 return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             # Video Settings Text Blitting
@@ -237,4 +246,5 @@ class Options(Level):
             self.blit_screens()
             self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
+            display_fps(self.config.fps_show, self.surface, self.clock, self.config.f_fps, self.width - 130, 15, cw_tan)
             pg.display.update()

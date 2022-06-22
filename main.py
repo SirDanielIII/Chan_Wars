@@ -14,7 +14,7 @@ from bin.levels.lvl3_mr_phone import BossMrPhone
 from bin.levels.lvl2_boss_ms_g import BossMsG
 from bin.menus.boot import Boot
 from bin.menus.credits import Credits
-from bin.menus.death_screen import Death
+from bin.menus.end_screen import Death
 from bin.menus.game_menu import GameMenu
 from bin.menus.how_to_play import HowToPlay
 from bin.menus.logo import Logo
@@ -23,7 +23,7 @@ from bin.menus.options import Options
 
 pg.init()
 pg.mixer.pre_init(48000, -16, 2, 256)
-pg.mixer.set_num_channels(20)
+pg.mixer.set_num_channels(24)
 
 
 class Main(object):
@@ -92,15 +92,16 @@ class Main(object):
                 case 7:  # Quit
                     pg.quit()
                     sys.exit()
-                case 8:  # Win Game State
+                case 8:  # Lose Game State
+                    self.audio.dj(None, None, None, 800, False, 10, self.config.audio_completion["lose"])
                     self.end_screen.set_background(8 - self.lvl)
                     self.lvl = self.end_screen.run()
-                case 9:  # Lose Game State
+                case 9:  # Win Game State
+                    self.audio.dj(None, None, None, 800, False, 10, self.config.audio_completion["win"])
                     self.end_screen.set_background(8 - self.lvl)
                     self.lvl = self.end_screen.run()
                 case 10:  # Game Over
                     pg.quit()
-                    sys.exit()
                 case 11:  # Devil Chan Boss
                     self.lvl = self.lvl_devil_chan.run()
                 case 12:  # Ms.G Boss
@@ -117,3 +118,4 @@ main = Main()
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     main.handler()
+

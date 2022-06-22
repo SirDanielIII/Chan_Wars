@@ -1,8 +1,6 @@
 # Daniel Zhuo
 # Module - Button
 
-from pygame import gfxdraw
-
 from bin.blit_tools import draw_text_center, draw_text_left
 from bin.colours import *
 
@@ -272,8 +270,6 @@ class ButtonTriangle(object):
         """
         # Draw Triangle
         button = pg.draw.polygon(self.canvas, self.clr, [[self.tri_x1, self.tri_y1], [self.tri_x2, self.tri_y2], [self.tri_x3, self.tri_y3]])
-        # # Draw Anti-Aliased Triangle
-        gfxdraw.aatrigon(self.canvas, self.tri_x1, self.tri_y1, self.tri_x2, self.tri_y2, self.tri_x3, self.tri_y3, self.clr)  # Antialiasing
 
         # Check for mouse hover
         if button.collidepoint((mx, my)):

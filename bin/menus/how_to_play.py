@@ -1,5 +1,7 @@
+import sys
 import time
 
+from bin.blit_tools import display_fps
 from bin.classes.buttons import ButtonTriangle
 from bin.classes.level import Level
 from bin.colours import *
@@ -31,7 +33,8 @@ class HowToPlay(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(self.config.global_conf)
+                    pg.quit()
+                    sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -61,4 +64,5 @@ class HowToPlay(Level):
             self.blit_screens()
             self.clock.tick(self.config.FPS)
             self.audio.audio_mixer()
+            display_fps(self.config.fps_show, self.surface, self.clock, self.config.f_fps, self.width - 130, 15, cw_tan)
             pg.display.update()

@@ -116,11 +116,11 @@ def display_fps(enable, screen, clock, font, x, y, colour):
         x:int:
             X coordinate of the font
         y:int:
-            Y coordinate of the font
+            Y coordinate of the font surface
         font:pygame.font.SysFont("string", int)
             Specify which font to use
         colour:tuple
-            Pretty self explanatory
+            Pretty self-explanatory
     """
     if enable:
         fps = str(int(clock.get_fps()))  # Retrieves FPS Value

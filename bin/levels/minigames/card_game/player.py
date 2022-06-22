@@ -1,7 +1,5 @@
 from math import floor
 
-import pygame as pg
-
 from bin.blit_tools import *
 from bin.colours import *
 

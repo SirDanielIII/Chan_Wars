@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from bin.blit_tools import center_blit_image
@@ -39,7 +40,8 @@ class Logo(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(None)
+                    pg.quit()
+                    sys.exit()
             # ------------------------------------------------------------------------------------------------------------------
             self.fill_screens(pg.Color("#171717"))
             center_blit_image(self.game_canvas, dev_logo, self.width / 2, self.height / 2)

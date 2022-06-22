@@ -27,6 +27,9 @@ cw_dark_grey = pg.Color("#222222")
 cw_red = pg.Color("#FF5555")
 cw_dark_red = pg.Color("#AA0000")
 cw_yellow = pg.Color("#FFFF55")
+cw_light_purple = pg.Color("#f002f0")
+cw_dark_purple = pg.Color("#bd01bd")
+cw_pink = pg.Color("#ff55ad")
 
 # Basic Colours
 Black = (0, 0, 0)
