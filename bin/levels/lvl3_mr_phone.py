@@ -477,6 +477,7 @@ class BossMrPhone(Level):
                     # Updates the state of the opponent. self.battle determines whether the boss or enemy is being fought
                     self.audio.dj(None, None, None, 800, False, 8, self.config.audio_card_game["player_attack"])
                     if self.battle == "boss":
+                        print(self.player.attack["damage"])
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
