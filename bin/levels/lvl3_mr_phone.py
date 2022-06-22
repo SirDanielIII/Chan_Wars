@@ -143,6 +143,7 @@ class BossMrPhone(Level):
 
     def battle_reset(self):
         self.player.played_cards = None
+        self.boss.special = 0
         self.player.debuff_bar = {"fear": 0, "weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
         self.player.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
@@ -496,10 +497,12 @@ class BossMrPhone(Level):
                     # Makes the opponent act.
                     if self.battle == "boss":
                         phrase = self.boss.act(self.turn_counter)
+
                         if "basic" in phrase:
                             self.event = "boss_basic"
                         elif "special" in phrase:
                             self.event = "boss_special"
+                            print(2)
                     elif self.battle == "enemy":
                         self.enemy.act(self.turn_counter)
                         self.event = "enemy_basic"
@@ -513,6 +516,7 @@ class BossMrPhone(Level):
                         if self.boss.move["damage"] > self.player.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
                         elif self.boss.move["damage"] != 0:
+                            print(1)
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.boss.move["debuff"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])
