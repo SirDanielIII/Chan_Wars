@@ -18,7 +18,7 @@ moves:
   special:
     block: 0
     buff: None
-    damage: 999
+    damage: 999999
     heal: 0
     debuff: None
 name: Mr. Phone

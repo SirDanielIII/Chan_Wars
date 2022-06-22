@@ -1,16 +1,16 @@
 settings:
   audio:
-    enable_music: true
+    enable_music: false
     enable_sfx: true
-    vol_music: 0.6
+    vol_music: 0.593
     vol_sfx: 1.0
   fps:
     show: true
     value: 165
-  fullscreen: true
+  fullscreen: false
   skip_intro: true
   fast_boot: true
-  skip_enemies: true
+  skip_enemies: false
 other:
   chan_card_size:
   - 110

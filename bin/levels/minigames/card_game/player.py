@@ -45,7 +45,7 @@ class Card(object):
         else:
             screen.blit(default, (self.position[0], self.position[1] + pos_mod))
             if self.scared:
-                screen.blit(pg.transform.smoothscale(fear_symbol, (100, 100)), (self.position[0] + self.size[0] / 2 - 50, self.position[1] + pos_mod + self.size[1] / 2 - 50))
+                screen.blit(pg.transform.scale(fear_symbol, (100, 100)), (self.position[0] + self.size[0] / 2 - 50, self.position[1] + pos_mod + self.size[1] / 2 - 50))
 
 
 class Player:

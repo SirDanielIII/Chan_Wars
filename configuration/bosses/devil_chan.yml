@@ -1,34 +1,34 @@
-hp: 100
+hp: 120
 moves:
   basic:
     0:
-      block: 0
+      block: 5
       buff: None
-      damage: 15
+      damage: 25
       heal: 0
       debuff: None
     1:
-      block: 0
+      block: 10
       buff:
-        armor: 10
-      damage: 10
+        armor: 15
+      damage: 20
       heal: 0
       debuff:
         weakness: 2
     2:
-      block: 15
+      block: 30
       buff:
         power: 1
-      damage: 0
-      heal: 0
+      damage: 10
+      heal: 10
       debuff:
         vulnerable: 1
   special:
-    block: 0
+    block: 15
     buff:
       lifesteal: 2
-    damage: 10
-    heal: 20
+    damage: 40
+    heal: 25
     debuff: None
 name: Devil Chan
 phrases:

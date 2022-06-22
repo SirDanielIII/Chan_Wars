@@ -1,5 +1,6 @@
 import math
 import random
+import sys
 import time
 
 import bin.levels.minigames.card_game.player as card_pair
@@ -132,7 +133,7 @@ class BossDevilChan(Level):
     def initialize_enemy(self):  # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
-        self.enemy_name = "goblin"  # random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
+        self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
         self.enemy.metadata = self.config.level_confs[self.level]["enemies"][self.enemy_name]
         self.enemy.initialize(self.enemy_name, self.config.level_confs[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
@@ -445,7 +446,8 @@ class BossDevilChan(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.save_settings(self.config.global_conf)
+                    pg.quit()
+                    sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True

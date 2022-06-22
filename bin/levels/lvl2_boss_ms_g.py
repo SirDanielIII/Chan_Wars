@@ -97,12 +97,12 @@ class BossMsG(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
-        # if not self.config.skip_enemies:
-        #     self.battle = "enemy"
-        #     self.event = "enemy_intro"
-        # else:
-        #     self.battle = "boss"
-        #     self.event = "boss_intro"
+        if not self.config.skip_enemies:
+            self.battle = "enemy"
+            self.event = "enemy_intro"
+        else:
+            self.battle = "boss"
+            self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True
@@ -239,8 +239,9 @@ class BossMsG(Level):
             # Boss events
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.timer_dict["intro"].time_start()
-                self.typewriter_queue("boss_intro")
-                self.intro(1.0, dt)
+                self.typewriter_queue("boss_intro", "multiple")
+                self.dialogue(1.0, dt)
+                # self.intro(1.0, dt)
             case "boss_siberia":  # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_siberia")
                 self.dialogue(1.0, dt)

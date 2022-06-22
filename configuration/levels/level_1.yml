@@ -2,7 +2,7 @@ enemies:
   bat:
     attacks:
       resonate:
-        block: 0
+        block: 5
         buff: None
         damage: 0
         heal: 0
@@ -12,54 +12,54 @@ enemies:
       sonic_attack:
         block: 0
         buff: None
-        damage: 10
+        damage: 27
         heal: 0
         attack: Sonic Attack
         debuff: None
-    hp: 40
+    hp: 15
     name: Bat Chan
   big:
     attacks:
       big_smack:
-        block: 0
+        block: 15
         buff: None
-        damage: 15
-        heal: 0
+        damage: 30
+        heal: 5
         attack: Biggus Smackus
         debuff: None
-    hp: 75
+    hp: 69
     name: Big Chan
   dark:
     attacks:
       dark_curse:
-        block: 0
+        block: 10
         buff: None
-        damage: 0
-        heal: 0
+        damage: 15
+        heal: 5
         attack: Dark Curse
         debuff:
           vulnerable: 1
       dark_orb:
-        block: 0
+        block: 10
         buff: None
-        damage: 10
+        damage: 25
         heal: 0
         attack: Dark Orb
         debuff: None
       darkness:
-        block: 0
+        block: 20
         buff: None
-        damage: 0
-        heal: 0
+        damage: 5
+        heal: 15
         attack: Darkness
         debuff:
           weakness: 2
-    hp: 40
+    hp: 50
     name: Dark Chan
   zombie:
     attacks:
       bloated_breath:
-        block: 0
+        block: 3
         buff: None
         damage: 0
         heal: 0
@@ -69,15 +69,15 @@ enemies:
       corpse_explosion:
         block: 0
         buff: None
-        damage: 20
-        heal: -10
+        damage: 59
+        heal: -29
         attack: Corpse Explosion
         debuff: None
       drowned_glare:
-        block: 0
+        block: 4
         buff: None
         damage: 0
-        heal: 0
+        heal: -3
         attack: Drowned Glare
         debuff:
           fear: 1
@@ -86,23 +86,23 @@ enemies:
   scrambled:
     attacks:
       claw_strike:
-        block: 0
+        block: 10
         buff: None
-        damage: 10
+        damage: 23
         heal: 0
         attack: Claw Strike
         debuff: None
       fly_up:
-        block: 10
+        block: 20
         buff: None
         damage: 0
         heal: 0
         attack: Fly Up
         debuff: None
       swoop_in:
-        block: 0
+        block: 4
         buff: None
-        damage: 0
+        damage: 5
         heal: 0
         attack: Swoop In
         debuff:
@@ -112,28 +112,28 @@ enemies:
   goblin:
     attacks:
       evasive_maneuvers:
-        block: 10
+        block: 25
         buff: None
         damage: 0
         heal: 0
         attack: Evasive Maneuvers
         debuff: None
       hamstring:
-        block: 0
+        block: 10
         buff: None
-        damage: 0
+        damage: 20
         heal: 0
         attack: Hamstring
         debuff:
           weakness: 2
-      tiny_stab:
-        block: 0
+      poke:
+        block: 10
         buff: None
-        damage: 10
+        damage: 25
         heal: 0
-        attack: Tiny Stab
+        attack: Poke
         debuff: None
-    hp: 30
+    hp: 20
     name: Goblin Chan
   four:
     attacks:
@@ -141,7 +141,7 @@ enemies:
         block: 10
         buff: None
         damage: 0
-        heal: 0
+        heal: 10
         attack: Falsify News
         debuff:
           weakness: 2
@@ -150,31 +150,31 @@ enemies:
         buff:
           power: 2
         damage: 0
-        heal: 10
+        heal: 15
         attack: Rousing 34
         debuff: None
       dox_threats:
         block: 0
         buff: None
-        damage: 10
+        damage: 21
         heal: 0
         attack: Dox Threats
         debuff:
           fear: 2
-    hp: 30
+    hp: 20
     name: 4 Chan
   frying:
     attacks:
       burning_oil:
-        block: 0
+        block: 10
         buff: None
-        damage: 5
-        heal: 0
+        damage: 12
+        heal: 5
         attack: Burning Oil
         debuff:
           wounded: 5
       frying_shield:
-        block: 10
+        block: 20
         buff:
           armor: 5
         damage: 0
@@ -183,13 +183,13 @@ enemies:
         debuff:
           wounded: 3
       recuperate:
-        block: 0
+        block: 20
         buff: None
         damage: 0
-        heal: 0
+        heal: 15
         attack: Recuperate
         debuff: None
-    hp: 40
+    hp: 50
     name: Frying Chan
   phrases:
     enemy_intro:
@@ -239,15 +239,15 @@ enemies:
       shake:
         - 0
         - 0
-      text: You strike down --- with a mighty swing!!!
+      text: You clap --- with a mighty slash!!!
       wait: 1.0
 player:
   cards:
     air_chan:
-      block: 5
+      block: 10
       buff: None
       damage: 0
-      heal: 5
+      heal: 10
       debuff:
         weakness: 2
       upgrades:
@@ -259,10 +259,10 @@ player:
           heal: 10
           debuff: None
     angel_chan:
-      block: 0
+      block: 5
       buff: None
-      damage: 5
-      heal: 10
+      damage: 0
+      heal: 20
       debuff: None
       upgrades:
         bright:
@@ -275,8 +275,8 @@ player:
     avatar_chan:
       block: 5
       buff:
-        power: 1
-      damage: 5
+        power: 10
+      damage: 15
       heal: 5
       debuff:
         weakness: 1
@@ -292,8 +292,8 @@ player:
     earth_chan:
       block: 10
       buff:
-        armor: 3
-      damage: 0
+        armor: 5
+      damage: 12
       heal: 0
       debuff: None
       upgrades:
@@ -307,7 +307,7 @@ player:
     farquaad_chan:
       block: 0
       buff: None
-      damage: 10
+      damage: 20
       heal: 0
       debuff:
         marked: 3
@@ -324,7 +324,7 @@ player:
       block: 0
       buff:
         power: 2
-      damage: 10
+      damage: 16
       heal: 0
       debuff: None
       upgrades:
@@ -354,7 +354,7 @@ player:
           debuff:
             weakness: 1
     jesus_chan:
-      block: 0
+      block: 5
       buff:
         clairvoyant: 2
       damage: 0
@@ -369,7 +369,7 @@ player:
           heal: 5
           debuff: None
     oni_chan:
-      block: 0
+      block: 3
       buff:
         power: 2
       damage: 10
@@ -419,8 +419,8 @@ player:
       block: 0
       buff:
         energized: 1
-      damage: 15
-      heal: 0
+      damage: 25
+      heal: -25
       debuff: None
       upgrades:
         strange:
@@ -434,7 +434,7 @@ player:
       block: 10
       buff:
         lifesteal: 2
-      damage: 5
+      damage: 0
       heal: 0
       debuff: None
       upgrades:
@@ -450,7 +450,7 @@ player:
       buff:
         regeneration: 5
       damage: 0
-      heal: 10
+      heal: 15
       debuff: None
       upgrades:
         raging:
@@ -467,9 +467,9 @@ player:
   base_deck:
     - famous jackie_chan
     - famous jackie_chan
-    - famous jackie_chan
-    - famous jackie_chan
+    - angel_chan
+    - angel_chan
+    - angel_chan
     - oni_chan
-    - jesus_chan
     - farquaad_chan
     - sinister upsidedown_chan
