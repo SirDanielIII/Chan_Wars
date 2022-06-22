@@ -141,6 +141,7 @@ class BossDevilChan(Level):
 
     def battle_reset(self):
         self.player.played_cards = None
+        self.boss.special = 0
         self.player.debuff_bar = {"fear": 0, "weakness": 0, "vulnerable": 0, "disappointment": 0, "wounded": 0, "marked": 0}
         self.player.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}

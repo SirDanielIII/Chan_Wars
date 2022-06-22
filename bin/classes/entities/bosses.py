@@ -223,6 +223,7 @@ class MrPhone(Boss):
         return move_type
 
     def update(self, damage, debuff):
+        print(self.damaged, damage, 1)
         if self.debuff_bar["vulnerable"]:
             damage *= 1.25
         if self.debuff_bar["marked"] and damage:
@@ -231,16 +232,22 @@ class MrPhone(Boss):
             damage = 0
         else:
             damage -= self.block
+        print(self.damaged, damage, 2)
         self.block = 0
         self.block = self.move["block"]
         self.health += self.move["heal"]
         self.health += self.buff_bar["regeneration"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
+        print(self.damaged, damage, 3)
         damage += self.debuff_bar["wounded"]
+        print(self.damaged, damage, 4)
         self.damaged = False
+        print(self.damaged, damage, 5)
         if damage:
+            print(self.damaged, damage, 6)
             self.damaged = True
+        print(self.damaged, damage, 7)
         self.health -= damage
         if self.health < 0:
             self.health = 0
