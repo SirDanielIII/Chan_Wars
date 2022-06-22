@@ -438,8 +438,8 @@ class Config(object):
 
     def load_audio_card_game(self):
         self.audio_card_game = self.load_audio_dict(os.getcwd() + "/resources/audio/card_game/")
-        self.audio_card_game["attack_full_block"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/card_game/attack_full_block/")
-        self.audio_card_game["player_heal"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/card_game/player_heal/")
+        self.audio_card_game["attack_full_block"] = self.load_audio_set(os.getcwd() + "/resources/audio/card_game/attack_full_block/", "wav")
+        self.audio_card_game["player_heal"] = self.load_audio_set(os.getcwd() + "/resources/audio/card_game/player_heal/", "wav")
 
     def load_audio_interact(self):
         self.audio_interact = self.load_audio_dict(os.getcwd() + "/resources/audio/interact/")
@@ -452,22 +452,6 @@ class Config(object):
 
     def load_audio_lvl_3(self):
         self.audio_lvl_3 = self.load_audio_dict(os.getcwd() + "/resources/audio/level_3/")
-
-    @staticmethod
-    def load_audio_set(path_to_directory, extension):
-        """
-        Args:
-            path_to_directory:string:
-                Directory to audio files
-            extension:string:
-                File extension of audio files
-        """
-        audio_set = []
-        for filename in os.listdir(path_to_directory):
-            if filename.endswith(extension):
-                path = os.path.join(path_to_directory, filename)
-                audio_set.append(pg.mixer.Sound(path))
-        return audio_set
 
     @staticmethod
     def load_images(path_to_directory):
@@ -560,6 +544,22 @@ class Config(object):
                 path = os.path.join(path_to_directory, filename)
                 image_list.append(pg.transform.smoothscale(pg.image.load(path), size).convert())
         return image_list
+
+    @staticmethod
+    def load_audio_set(path_to_directory, extension):
+        """
+        Args:
+            path_to_directory:string:
+                Directory to audio files
+            extension:string:
+                File extension of audio files
+        """
+        audio_set = []
+        for filename in os.listdir(path_to_directory):
+            if filename.endswith(extension):
+                path = os.path.join(path_to_directory, filename)
+                audio_set.append(pg.mixer.Sound(path))
+        return audio_set
 
     @staticmethod
     def load_audio_dict(path_to_directory, exclude=""):

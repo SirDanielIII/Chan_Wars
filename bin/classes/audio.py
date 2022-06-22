@@ -1,3 +1,5 @@
+import random
+
 import pygame as pg
 
 
@@ -127,6 +129,10 @@ class Audio(object):
             self.vol_music = round(((pos - min_range) / bar_range), 3)
         elif vol_type == "SFX":
             self.vol_sfx = round(((pos - min_range) / bar_range), 3)
+
+    @staticmethod
+    def random_sound_lst(lst):
+        return lst[random.randint(0, len(lst) - 1)]
 
     @staticmethod
     def fade_out_mixer(time):
