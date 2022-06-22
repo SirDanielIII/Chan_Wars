@@ -308,8 +308,8 @@ class BossMrPhone(Level):
                 self.trigger_out()
         # ------------------------------------------------------------------------------------------------------------------
         if self.game_transition_in:
-            self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
             if not self.timer_dict["transition"].activate_timer:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
                 self.timer_dict["transition"].time_start()
             if self.card_canvas_y > 1:
                 self.card_canvas_y = move_pos(True, self.timer_dict["transition"].seconds, self.height, 25)
@@ -321,8 +321,8 @@ class BossMrPhone(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Transition Out
         if self.game_transition_out:
-            self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
             if not self.timer_dict["transition"].activate_timer:
+                self.audio.dj(None, None, None, 800, False, 11, self.config.audio_card_game["transition"])
                 self.timer_dict["transition"].time_start()
             if self.card_canvas_y < self.height - 1:
                 self.card_canvas_y = move_pos(False, self.timer_dict["transition"].seconds, self.height, 25)

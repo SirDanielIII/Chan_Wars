@@ -227,7 +227,7 @@ class BossMsG(Level):
             # Boss events
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("boss_intro")
-                self.dialogue(1.0, dt)
+                self.intro(1.0, dt)
             case "boss_siberia":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_siberia")
                 self.dialogue(1.0, dt)
@@ -255,6 +255,10 @@ class BossMsG(Level):
                 self.typewriter_queue("enemy_player_death", "multiple")
                 self.dialogue(1.0, dt)
         # print(f"Event: {self.event}\tMessage Line: {self.typ_msg}\tLength of Messages: {len(self.boss.phrases['intro'])}")
+
+    def intro(self, delay, dt):
+        self.audio.dj(None, None, None, 800, False, 6, self.config.audio_level_2["to_siberia"])
+        pass
 
     def typewriter_queue(self, e, quote_type=None):
         if self.typ_queue_update:  # Only runs once
@@ -469,12 +473,10 @@ class BossMsG(Level):
                         phrase = self.boss.act(self.turn_counter)
                         if "basic" in phrase:
                             self.event = "boss_basic"
-                        elif "special" in phrase:
-                            self.event = "boss_special"
-                            self.boss_face = self.boss_face_dict["special"]
                         elif "siberia" in phrase:
                             self.event = "boss_siberia"
                             self.boss_face = self.boss_face_dict["siberia"]
+                            self.audio.dj(None, None, None, 800, False, 6, self.config.audio_level_2["from_siberia"])
                     elif self.battle == "enemy":
                         self.enemy.act(self.turn_counter)
                         self.event = "enemy_basic"
