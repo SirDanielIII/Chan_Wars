@@ -166,7 +166,7 @@ class Player:
         for card_type, number in self.choices.items():
             if number[0] == 2 and not self.acted and not number[1]:
                 card = card_type.split(" ")
-                mod = 1
+                mod = random.randrange(9, 11) / 10
                 if self.debuff_bar["weakness"]:
                     mod *= 0.75
                 if self.buff_bar["power"]:

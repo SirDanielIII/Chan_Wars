@@ -34,7 +34,7 @@ class BossMsG(Level):
         self.hp_bar_player = None
         self.player = card_pair.Player(self.card_canvas, None)
         self.margins = (20, 30)
-        self.card_match = [0]
+        self.card_match = 0
         self.size = None
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes
@@ -56,7 +56,7 @@ class BossMsG(Level):
         self.level = 2
         self.turn_counter = None
         self.completed = True
-        self.battle = "boss"
+        self.battle = "enemy"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class BossMsG(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "boss_intro"
+        self.event = "enemy_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer(), "intro": Timer()}
@@ -115,6 +115,8 @@ class BossMsG(Level):
         # ------------------------------------------------------------------------------------------------------------------
         # Player Attributes Initialization
         self.player.metadata = self.config.level_confs[self.level]["player"]
+        self.player.audio = self.audio
+        self.player.sounds = self.config.audio_card_game
         self.player.initialize(self.config.img_cards)
         self.player.image_list = self.config.img_cards
         self.hp_bar_player = HealthBar(self.game_canvas, self.hp_player_rect, self.player.health, cw_green, white, 5, True, cw_dark_red, True,
@@ -198,11 +200,11 @@ class BossMsG(Level):
             self.card_canvas.fill((255, 255, 255))
             # ------------------------------------------------------------------------------------------------------------------
             if self.player.energy and not self.game_transition_in and not self.game_transition_out:
-                if self.card_match[0] != 2:  # If a match hasn't been made, allow teh player to continue trying to match.
+                if self.card_match != 2:  # If a match hasn't been made, allow teh player to continue trying to match.
                     self.card_match = self.player.complete()
                 # ------------------------------------------------------------------------------------------------------------------
                 # Completes the card matching process
-                if self.card_match[0] == 2:
+                if self.card_match == 2:
                     if not self.timer_dict["card"].activate_timer:
                         self.timer_dict["card"].time_start()
                     if self.timer_dict["card"].seconds > 0.25:  # Completes the match by reducing the player's energy
@@ -421,6 +423,7 @@ class BossMsG(Level):
         self.reload()
         self.initialize_player()
         self.initialize_enemy()
+        self.battle_reset()
         self.initialize_boss()
         enemy_count = 0
         self.timer_dict["dialogue"].time_start()
@@ -484,13 +487,13 @@ class BossMsG(Level):
                         if self.player.attack["damage"] > self.boss.block:
                             self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                             self.boss_face = self.boss_face_dict["hit"]
-                        elif self.player.attack:
+                        elif self.player.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.player.attack:
+                        elif self.player.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     self.updated = True
                     self.timer_dict["update"].time_reset()
@@ -512,16 +515,25 @@ class BossMsG(Level):
                 # ------------------------------------------------------------------------------------------------------------------
                 elif self.timer_dict["action"].seconds > 2 and "death" not in self.event:
                     # Completes the process, updates the player's state and puts the dialogue on screen.
-                    print("aiii")
                     if self.battle == "boss":
+                        self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["enemy_attack"])
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
+                        elif self.boss.move["damage"] != 0:
+                            self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
+                        if self.boss.move["debuff"]:
+                            self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     elif self.battle == "enemy":
+                        self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["enemy_attack"])
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
+                        elif self.enemy.attack["damage"] != 0:
+                            self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
+                        if self.enemy.attack["debuff"]:
+                            self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
