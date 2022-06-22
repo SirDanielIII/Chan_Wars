@@ -157,7 +157,7 @@ phrases:
       wait: 1.0
   boss_intro:
     0:
-      clear: false
+      clear: true
       delay: 0.06
       fade_in: true
       fade_out: false

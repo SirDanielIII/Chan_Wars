@@ -451,11 +451,11 @@ class BossDevilChan(Level):
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -477,12 +477,12 @@ class BossDevilChan(Level):
                     if self.battle == "boss":
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     elif self.battle == "enemy":
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
@@ -497,18 +497,6 @@ class BossDevilChan(Level):
                 # Textbox
                 pg.draw.rect(self.text_canvas, cw_dark_grey, pg.Rect(95, 650, self.width - 95 * 2, 175))
                 draw_rect_outline(self.text_canvas, white, pg.Rect(95, 650, self.width - 95 * 2, 175), 10)
-                # ------------------------------------------------------------------------------------------------------------------
-                if self.back_button.run(mx, my, cw_light_blue, self.click):
-                    self.fade_out = True
-                    self.next_level = 2
-                    self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
-                    self.audio.dj(None, None, None, 800, False, 1, self.config.audio_interact["fade"])
-                if self.back_button.check_hover():
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["highlight"])
-                    self.next_level = 2
-                if self.transition_out("game", self.game_canvas, dt):
-                    self.restore()
-                    return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if self.typ_queue.is_empty():
                 if "death" in self.event and "boss" in self.event or "player" in self.event:  # Finishes the level if the boss is killed.
@@ -523,21 +511,33 @@ class BossDevilChan(Level):
                         self.battle_reset()
                         self.battle = "boss"
                         self.event = "boss_intro"
-                        self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["introduce_boss"])
+                        self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["introduce_boss"])
                 if self.player.health <= 0 and self.battle == "boss":
                     self.event = "boss_player_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["player_death"])
                 elif self.boss.health <= 0 and self.battle == "boss":
                     self.event = "boss_death"
                 if self.player.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_player_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["player_death"])
                 elif self.enemy.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["enemy_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["enemy_death"])
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)
+            # ------------------------------------------------------------------------------------------------------------------
+            if self.back_button.run(mx, my, cw_light_blue, self.click):
+                self.fade_out = True
+                self.next_level = 3
+                self.audio.dj(None, None, None, 800, False, 0, self.config.audio_interact["click"])
+                self.audio.dj(None, None, None, 800, False, 1, self.config.audio_interact["fade"])
+            if self.back_button.check_hover():
+                self.audio.dj(None, None, None, 800, False, 2, self.config.audio_interact["highlight"])
+                self.next_level = 2
+            if self.transition_out("game", self.game_canvas, dt):
+                self.restore()
+                return self.next_level
             # ------------------------------------------------------------------------------------------------------------------
             if ((self.boss.health and self.battle == "boss") or (self.enemy.health and self.battle == "enemy")) and self.player.health:
                 self.run_card_game(self.click)

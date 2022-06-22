@@ -456,12 +456,12 @@ class BossMsG(Level):
                     if self.battle == "boss":
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                             self.boss_face = self.boss_face_dict["hit"]
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
-                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["hit"])
+                            self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["hit"])
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -488,12 +488,12 @@ class BossMsG(Level):
                     if self.battle == "boss":
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
                         self.boss.move = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     elif self.battle == "enemy":
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
-                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_game["attack"])
+                            self.audio.dj(None, None, None, 800, False, 1, self.config.audio_card_game["attack"])
                         self.enemy.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
                     self.turn_counter += 1
@@ -535,19 +535,19 @@ class BossMsG(Level):
                         self.battle_reset()
                         self.battle = "boss"
                         self.event = "boss_intro"
-                        self.audio.dj(None, None, None, 800, False, 3, self.config.audio_game["introduce_boss"])
+                        self.audio.dj(None, None, None, 800, False, 3, self.config.audio_card_game["introduce_boss"])
                 if self.player.health <= 0 and self.battle == "boss":
                     self.event = "boss_player_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["player_death"])
                 elif self.boss.health <= 0 and self.battle == "boss":
                     self.event = "boss_death"
                     self.boss_face = self.boss_face_dict["death"]
                 if self.player.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_player_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["player_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["player_death"])
                 elif self.enemy.health <= 0 and self.battle == "enemy":
                     self.event = "enemy_death"
-                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_game["enemy_death"])
+                    self.audio.dj(None, None, None, 800, False, 2, self.config.audio_card_game["enemy_death"])
             # ------------------------------------------------------------------------------------------------------------------
             if not self.fade_in:  # Run event logic after screen transition in and not during attack phase
                 self.event_handler(dt)

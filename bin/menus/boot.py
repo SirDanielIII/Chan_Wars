@@ -226,7 +226,7 @@ class Boot(Level):
                         self.task_text = "Loading Game SFX"
                         self.rect_width += self.rect_width_add * dt
                         if self.task_timer.seconds > self.task_timer_delay:
-                            self.config.load_audio_game()
+                            self.config.load_audio_card_game()
                             self.task_timer.time_reset()
                             self.task_num += 1
                     case 17:

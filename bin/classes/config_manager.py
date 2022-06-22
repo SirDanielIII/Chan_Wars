@@ -56,7 +56,7 @@ class Config(object):
         # Audio
         self.audio_menus = {}
         self.audio_completion = {}
-        self.audio_game = {}
+        self.audio_card_game = {}
         self.audio_interact = {}
         self.audio_lvl_1 = {}
         self.audio_lvl_2 = {}
@@ -416,7 +416,7 @@ class Config(object):
         self.img_ui = self.load_images_dict(os.getcwd() + "/resources/ui/", (75, 75), True)
         self.img_ui["buff"] = self.load_images_dict(os.getcwd() + "/resources/ui/buffs", (30, 30), True, "", False)
         self.img_ui["debuff"] = self.load_images_dict(os.getcwd() + "/resources/ui/debuffs", (30, 30), True, "", False)
-        self.img_ui["block"] = pg.transform.smoothscale(pg.image.load(os.getcwd() + "/resources/block.png").convert(), (45, 45))
+        self.img_ui["block"] = pg.transform.scale(pg.image.load(os.getcwd() + "/resources/ui/block.png").convert_alpha(), (45, 45))
 
     def load_fonts(self):
         self.f_hp_bar_hp = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 125)
@@ -425,23 +425,24 @@ class Config(object):
         self.f_status = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 45)
         self.f_intro = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 40)
         self.f_stats = pg.font.Font(os.getcwd() + "/resources/EXEPixelPerfect.ttf", 35)
+        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)
+        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 75)
         self.f_regular = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 50)
         self.f_regular_small = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 40)
-        self.f_regular_big = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 100)
-
-        self.f_options_title = pg.font.Font(os.getcwd() + "/resources/Herculanum_LT_Pro_Roman.TTF", 75)
 
     def load_audio_menu(self):
-        self.audio_menus = self.load_audio_dict(os.getcwd() + "/resources/audio/", "music")
+        self.audio_menus = self.load_audio_dict(os.getcwd() + "/resources/audio/")
 
     def load_audio_completion(self):
-        self.audio_completion = self.load_audio_dict(os.getcwd() + "/resources/audio/completion", "sfx")
+        self.audio_completion = self.load_audio_dict(os.getcwd() + "/resources/audio/completion/")
 
-    def load_audio_game(self):
-        self.audio_game = self.load_audio_dict(os.getcwd() + "/resources/audio/game", "sfx")
+    def load_audio_card_game(self):
+        self.audio_card_game = self.load_audio_dict(os.getcwd() + "/resources/audio/card_game/")
+        self.audio_card_game["attack_full_block"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/card_game/attack_full_block/")
+        self.audio_card_game["player_heal"] = pg.mixer.Sound(os.getcwd() + "/resources/audio/card_game/player_heal/")
 
     def load_audio_interact(self):
-        self.audio_interact = self.load_audio_dict(os.getcwd() + "/resources/audio/interact", "sfx")
+        self.audio_interact = self.load_audio_dict(os.getcwd() + "/resources/audio/interact/")
 
     def load_audio_lvl_1(self):
         self.audio_lvl_1 = self.load_audio_dict(os.getcwd() + "/resources/audio/level_1/")
