@@ -7,10 +7,10 @@ settings:
   fps:
     show: true
     value: 165
-  fullscreen: false
+  fullscreen: true
   skip_intro: true
   fast_boot: true
-  skip_enemies: false
+  skip_enemies: true
 other:
   chan_card_size:
   - 110

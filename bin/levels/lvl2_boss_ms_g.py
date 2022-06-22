@@ -56,7 +56,7 @@ class BossMsG(Level):
         self.level = 2
         self.turn_counter = None
         self.completed = True
-        self.battle = "enemy"
+        self.battle = "boss"
         self.updated = True
         self.acted = True
         # ------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class BossMsG(Level):
         self.typ_last_shake = [0, 0]
         # ------------------------------------------------------------------------------------------------------------------
         # Event Handler
-        self.event = "enemy_intro"
+        self.event = "attack"
         # ------------------------------------------------------------------------------------------------------------------
         # Timer Attributes
         self.timer_dict = {"action": Timer(), "card": Timer(), "dialogue": Timer(), "transition": Timer(), "update_delay": Timer(), "update": Timer(), "intro": Timer()}
@@ -97,12 +97,12 @@ class BossMsG(Level):
         self.typ_queue = Queue()
         self.typ_queue_update = True
         self.typ_last_shake = [0, 0]
-        if not self.config.skip_enemies:
-            self.battle = "enemy"
-            self.event = "enemy_intro"
-        else:
-            self.battle = "boss"
-            self.event = "boss_intro"
+        # if not self.config.skip_enemies:
+        #     self.battle = "enemy"
+        #     self.event = "enemy_intro"
+        # else:
+        #     self.battle = "boss"
+        #     self.event = "boss_intro"
         # ------------------------------------------------------------------------------------------------------------------
         # Game Attributes Initialization
         self.fade_in = True

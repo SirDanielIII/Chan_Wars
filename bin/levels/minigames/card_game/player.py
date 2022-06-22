@@ -166,7 +166,8 @@ class Player:
         for card_type, number in self.choices.items():
             if number[0] == 2 and not self.acted and not number[1]:
                 card = card_type.split(" ")
-                mod = random.randrange(9, 11) / 10
+                a = random.randint(0, 100)
+                mod = 2 if a > 85 else 0.5 if a < 10 else 1
                 if self.debuff_bar["weakness"]:
                     mod *= 0.75
                 if self.buff_bar["power"]:
@@ -224,6 +225,7 @@ class Player:
             self.played_cards.pop(index)
         self.audio.dj(None, None, None, 800, False, 5, self.sounds["card_conceal"])
         self.acted = False
+        return remove_list
 
     def update(self, damage, debuff):
         for a in self.played_cards:
