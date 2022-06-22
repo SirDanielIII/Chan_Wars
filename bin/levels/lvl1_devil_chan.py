@@ -414,6 +414,7 @@ class BossDevilChan(Level):
         self.reload()
         self.initialize_player()
         self.initialize_enemy()
+        self.battle_reset()
         self.initialize_boss()
         enemy_count = 0
         self.timer_dict["dialogue"].time_start()
@@ -444,7 +445,7 @@ class BossDevilChan(Level):
             for event in pg.event.get():
                 pressed = pg.key.get_pressed()  # Gathers the state of all keys pressed
                 if event.type == pg.QUIT or pressed[pg.K_ESCAPE]:
-                    self.config.shutdown(self.config.global_conf)
+                    self.config.save_settings(self.config.global_conf)
                 if event.type == pg.MOUSEBUTTONDOWN:  # When Mouse Button Clicked
                     if event.button == 1:  # Left Mouse Button
                         self.click = True
@@ -476,13 +477,13 @@ class BossDevilChan(Level):
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.player.attack:
+                        elif self.player.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.player.attack:
+                        elif self.player.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     self.updated = True
                     self.timer_dict["update"].time_reset()
@@ -507,7 +508,7 @@ class BossDevilChan(Level):
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.boss.move["damage"]:
+                        elif self.boss.move["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.boss.move["debuff"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])
@@ -517,7 +518,7 @@ class BossDevilChan(Level):
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.enemy.attack["damage"]:
+                        elif self.enemy.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.enemy.attack["debuff"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])

@@ -133,8 +133,64 @@ enemies:
         heal: 0
         attack: Tiny Stab
         debuff: None
-    hp: 3
+    hp: 30
     name: Goblin Chan
+  four:
+    attacks:
+      falsify_news:
+        block: 10
+        buff: None
+        damage: 0
+        heal: 0
+        attack: Falsify News
+        debuff:
+          weakness: 2
+      rousing_34:
+        block: 0
+        buff:
+          power: 2
+        damage: 0
+        heal: 10
+        attack: Rousing 34
+        debuff: None
+      dox_threats:
+        block: 0
+        buff: None
+        damage: 10
+        heal: 0
+        attack: Dox Threats
+        debuff:
+          fear: 2
+    hp: 30
+    name: 4 Chan
+  frying:
+    attacks:
+      burning_oil:
+        block: 0
+        buff: None
+        damage: 5
+        heal: 0
+        attack: Burning Oil
+        debuff:
+          wounded: 5
+      frying_shield:
+        block: 10
+        buff:
+          armor: 5
+        damage: 0
+        heal: 0
+        attack: Frying Shield
+        debuff:
+          wounded: 3
+      recuperate:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        attack: Recuperate
+        debuff: None
+    hp: 40
+    name: Frying Chan
   phrases:
     enemy_intro:
       clear: true
