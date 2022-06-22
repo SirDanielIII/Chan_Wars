@@ -49,7 +49,7 @@ class Enemy:
             self.attack["block"] += self.buff_bar["armor"]
         self.health += self.attack["heal"]
         self.phrases["enemy_basic"] = {"text": "{} used {}!!!".format(self.metadata["name"], attack["attack"]), "clear": True, "delay": 0.05,
-                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 1.2, "shake": [5, 5], "wait": 0.1}
+                                       "fade_in": True, "fade_out": True, "line": 1, "pause": 1.2, "shake": [0, 0], "wait": 0.1}
         print(self.attack["heal"], 2)
 
     def update(self, damage, debuff):

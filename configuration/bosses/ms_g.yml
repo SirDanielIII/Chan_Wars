@@ -38,8 +38,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-        - 2
-        - 2
+        - 15
+        - 15
       text: For Sean!
       wait: 1.0
     1:
@@ -50,8 +50,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-        - 2
-        - 2
+        - 0
+        - 0
       text: Don't ask me, use your brain.
       wait: 1.0
     2:
@@ -62,8 +62,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-        - 2
-        - 2
+        - 0
+        - 0
       text: I have WELHpon *pulls out a meter stick*
       wait: 1.0
     3:
@@ -74,8 +74,8 @@ phrases:
       line: 1
       pause: 1.0
       shake:
-        - 2
-        - 2
+        - 0
+        - 0
       text: Do it on repl.it!!!
       wait: 1.0
   boss_siberia:
@@ -86,8 +86,8 @@ phrases:
     line: 1
     pause: 1.3
     shake:
-      - 2
-      - 2
+      - 0
+      - 0
     text: You!!! How did you escape Siberia!?
     wait: 1.0
   boss_death:
@@ -98,8 +98,8 @@ phrases:
     line: 1
     pause: 1.0
     shake:
-      - 3
-      - 3
+      - 0
+      - 0
     text: why must you use... list comphrehension... *dies*
     wait: 0
   boss_player_death:
@@ -110,8 +110,8 @@ phrases:
     line: 1
     pause: 1.0
     shake:
-      - 3
-      - 3
+      - 0
+      - 0
     text: Your only flaw was not using list comprehension.
     wait: 0
   boss_intro:
@@ -147,7 +147,7 @@ phrases:
       line: 1
       pause: 1.5
       shake:
-        - 15
-        - 20
+        - 0
+        - 0
       text: Wait, you're not Sean!
       wait: 1.0

@@ -166,7 +166,7 @@ phrases:
       shake:
       - 0
       - 0
-      text: Angel Chan...
+      text: ANGEL CHAN...
       wait: 0
     1:
       clear: true
@@ -178,7 +178,7 @@ phrases:
       shake:
       - 5
       - 0
-      text: I loved you!
+      text: I LOVED YOU!
       wait: 0.5
     2:
       clear: true
@@ -190,7 +190,7 @@ phrases:
       shake:
       - 15
       - 20
-      text: How could you do this to me!?
+      text: HOW COULD YOU DO THIS TO ME!?
       wait: 1.0
   boss_special:
     0:
@@ -203,7 +203,7 @@ phrases:
       shake:
         - 2
         - 2
-      text: That's a neat little hack that I found!
+      text: THAT'S A NEAT LITTLE HACK THAT I FOUND!
       wait: 1.0
     1:
       clear: true
@@ -215,7 +215,7 @@ phrases:
       shake:
         - 2
         - 2
-      text: With this hack, I'll steal your health for myself.
+      text: WITH THIS HACK, I'LL TAKE YOUR HEALTH FOR MYSELF.
       wait: 1.0
     2:
       clear: true
@@ -227,7 +227,7 @@ phrases:
       shake:
         - 2
         - 2
-      text: I hope you're prepared for this.
+      text: I HOPE YOU'RE PREPARED FOR THIS!
       wait: 1.0
     3:
       clear: true
@@ -239,5 +239,5 @@ phrases:
       shake:
         - 2
         - 2
-      text: You know, I'm something of a scientist myself.
+      text: YOU KNOW, I'M SOMETHING OF A SCIENTIST MYSELF.
       wait: 1.0
