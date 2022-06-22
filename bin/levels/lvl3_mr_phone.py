@@ -136,6 +136,7 @@ class BossMrPhone(Level):
         self.player.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.player.chosen_cards = []
+        self.player.energy = self.player.metadata["energy"]
         self.turn_counter = 0
         self.completed = True
         self.updated = True
