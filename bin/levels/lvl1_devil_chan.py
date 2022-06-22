@@ -124,7 +124,7 @@ class BossDevilChan(Level):
     def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
-        self.enemy_name = "goblin"      # random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
+        self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
         self.enemy.metadata = self.config.level_confs[self.level]["enemies"][self.enemy_name]
         self.enemy.initialize(self.enemy_name, self.config.level_confs[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
@@ -458,14 +458,14 @@ class BossDevilChan(Level):
                         self.boss.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.boss.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.player.attack:
+                        elif self.player.attack != 0:
                             self.audio.dj(None, None, None, 800, False, 8, self.config.audio_card_game["attack_full_block"])
                     elif self.battle == "enemy":
                         self.enemy.update(self.player.attack["damage"], self.player.attack["debuff"])
                         if self.player.attack["damage"] > self.enemy.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.player.attack:
-                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_cound_lst(self.config.audio_card_game["attack_full_block"]))
+                        elif self.player.attack != 0:
+                            self.audio.dj(None, None, None, 800, False, 8, self.audio.random_sound_lst(self.config.audio_card_game["attack_full_block"]))
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
@@ -489,7 +489,7 @@ class BossDevilChan(Level):
                         self.player.update(self.boss.move["damage"], self.boss.move["debuff"])
                         if self.boss.move["damage"] > self.player.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.boss.move["damage"]:
+                        elif self.boss.move["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.boss.move["debuff"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])
@@ -499,7 +499,7 @@ class BossDevilChan(Level):
                         self.player.update(self.enemy.attack["damage"], self.enemy.attack["debuff"])
                         if self.enemy.attack["damage"] > self.player.block:
                             self.audio.dj(None, None, None, 800, False, 10, self.config.audio_card_game["hit"])
-                        elif self.enemy.attack["damage"]:
+                        elif self.enemy.attack["damage"] != 0:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["attack_full_block"])
                         if self.enemy.attack["debuff"]:
                             self.audio.dj(None, None, None, 800, False, 6, self.config.audio_card_game["debuff"])

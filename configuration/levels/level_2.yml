@@ -135,6 +135,62 @@ enemies:
         debuff: None
     hp: 35
     name: Goblin Chan
+  four:
+    attacks:
+      falsify_news:
+        block: 15
+        buff: None
+        damage: 0
+        heal: 0
+        attack: Falsify News
+        debuff:
+          weakness: 2
+      rousing_34:
+        block: 0
+        buff:
+          power: 2
+        damage: 0
+        heal: 20
+        attack: Rousing 34
+        debuff: None
+      dox_threats:
+        block: 0
+        buff: None
+        damage: 15
+        heal: 0
+        attack: Dox Threats
+        debuff:
+          fear: 3
+    hp: 40
+    name: 4 Chan
+  frying:
+    attacks:
+      burning_oil:
+        block: 0
+        buff: None
+        damage: 10
+        heal: 0
+        attack: Burning Oil
+        debuff:
+          wounded: 5
+      frying_shield:
+        block: 10
+        buff:
+          armor: 8
+        damage: 0
+        heal: 0
+        attack: Frying Shield
+        debuff:
+          wounded: 5
+      recuperate:
+        block: 0
+        buff: None
+        damage: 0
+        heal: 0
+        attack: Recuperate
+        debuff: None
+    hp: 50
+    name: Frying Chan
   phrases:
     enemy_intro:
       clear: true
