@@ -133,7 +133,7 @@ enemies:
         heal: 0
         attack: Tiny Stab
         debuff: None
-    hp: 3
+    hp: 35
     name: Goblin Chan
   phrases:
     enemy_intro:

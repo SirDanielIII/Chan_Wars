@@ -113,7 +113,6 @@ class MsG(Boss):
     def initialize(self):
         print(self.metadata["moves"])
         self.moves = {b: self.metadata["moves"][b] for b in self.metadata["moves"] if "basic" in b}
-        self.moves["special"] = self.metadata["moves"]["special"]
         self.moves["siberia"] = self.metadata["moves"]["siberia"]
         self.phrases = self.metadata["phrases"]
         self.health = self.metadata["hp"]
@@ -121,11 +120,7 @@ class MsG(Boss):
     def act(self, turn_counter):
         move_type = "basic"
         move = self.moves[move_type][(turn_counter % (len(self.moves["basic"]) - 1))]
-        if turn_counter == 0:
-            move_type = "special"
-            move = self.moves["special"]
-            self.siberia = True
-        elif self.health <= self.metadata["hp"] // 2 and self.siberia:
+        if self.health <= self.metadata["hp"] // 2 and self.siberia:
             move_type = "siberia"
             move = self.moves["siberia"]
             self.siberia = False

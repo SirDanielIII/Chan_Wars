@@ -228,9 +228,6 @@ class BossMsG(Level):
             case "boss_intro":  # Event happens when the boss fight is initiated. Introduction dialogue is initiated.
                 self.typewriter_queue("boss_intro")
                 self.dialogue(1.0, dt)
-            case "boss_special":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
-                self.typewriter_queue("boss_special", "random")
-                self.dialogue(1.0, dt)
             case "boss_siberia":    # Event happens when the boss uses its special move. Special attack dialogue is initiated.
                 self.typewriter_queue("boss_siberia")
                 self.dialogue(1.0, dt)
@@ -466,7 +463,7 @@ class BossMsG(Level):
                     self.updated = True
                     self.timer_dict["update"].time_reset()
                 # ------------------------------------------------------------------------------------------------------------------
-                if self.timer_dict["action"].seconds > 2 and not self.acted and "death" not in self.event:
+                if self.timer_dict["action"].seconds > 1.5 and not self.acted and "death" not in self.event:
                     # Makes the opponent act.
                     if self.battle == "boss":
                         phrase = self.boss.act(self.turn_counter)
@@ -483,7 +480,7 @@ class BossMsG(Level):
                         self.event = "enemy_basic"
                     self.acted = True
                 # ------------------------------------------------------------------------------------------------------------------
-                elif self.timer_dict["action"].seconds > 3 and "death" not in self.event:
+                elif self.timer_dict["action"].seconds > 2 and "death" not in self.event:
                     # Completes the process, updates the player's state and puts the dialogue on screen.
                     print("aiii")
                     if self.battle == "boss":
