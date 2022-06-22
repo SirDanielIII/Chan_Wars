@@ -137,6 +137,7 @@ class BossMsG(Level):
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.player.chosen_cards = []
         self.turn_counter = 0
+        self.player.energy = self.player.metadata["energy"]
         self.completed = True
         self.updated = True
         self.acted = True

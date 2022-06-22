@@ -112,7 +112,7 @@ class BossDevilChan(Level):
         self.size = self.config.chan_card_size
 
     def initialize_boss(self):    # Run once at the start of the level.
-        # ------------------------------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------------------------------aal
         # Boss Attributes Initialization
         self.boss.metadata = self.config.boss_confs[self.boss_name]
         self.boss.initialize()
@@ -122,7 +122,7 @@ class BossDevilChan(Level):
     def initialize_enemy(self):    # Run once at the start of the level. This method is run again for every enemy battle.
         # ------------------------------------------------------------------------------------------------------------------
         # Enemy Attributes Initialization
-        self.enemy_name = random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
+        self.enemy_name = "goblin"      # random.choice(list(self.config.level_confs[self.level]["enemies"].keys())[:-1])
         self.enemy.metadata = self.config.level_confs[self.level]["enemies"][self.enemy_name]
         self.enemy.initialize(self.enemy_name, self.config.level_confs[self.level]["enemies"]["phrases"])
         self.hp_bar_enemy = HealthBar(self.game_canvas, self.hp_enemy_rect, self.enemy.health, cw_green, white, 5, True, cw_dark_red, True, cw_yellow)
@@ -134,6 +134,7 @@ class BossDevilChan(Level):
         self.player.buff_bar = {"power": 0, "lifesteal": 0, "regeneration": 0, "energized": 0, "armor": 0, "clairvoyant": 0}
         self.player.attack = {"damage": 0, "block": 0, "heal": 0, "buff": {}, "debuff": {}}
         self.player.chosen_cards = []
+        self.player.energy = self.player.metadata["energy"]
         self.turn_counter = 0
         self.completed = True
         self.updated = True
