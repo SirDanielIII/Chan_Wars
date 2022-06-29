@@ -4,14 +4,14 @@ moves:
     0:
       block: 5
       buff: None
-      damage: 25
+      damage: 28
       heal: 0
       debuff: None
     1:
       block: 10
       buff:
         armor: 15
-      damage: 20
+      damage: 23
       heal: 0
       debuff:
         weakness: 2

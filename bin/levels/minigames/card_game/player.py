@@ -249,9 +249,9 @@ class Player:
         self.health += self.attack["heal"]
         if self.health > self.metadata["hp"]:
             self.health = self.metadata["hp"]
-        if self.health > self.metadata["hp"]:
-            self.health = self.metadata["hp"]
         self.health -= damage
+        if self.health < 0:
+            self.health = 0
         for a in self.debuff_bar:
             if self.debuff_bar[a]:
                 self.debuff_bar[a] -= 1

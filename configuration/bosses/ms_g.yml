@@ -1,31 +1,31 @@
-hp: 100
+hp: 160
 moves:
   basic:
     0:
-      block: 0
+      block: 20
       buff: None
-      damage: 15
+      damage: 20
       heal: 0
       debuff:
         vulnerable: 1
     1:
-      block: 0
+      block: 25
       buff: None
       damage: 15
       heal: 0
       debuff:
         weakness: 2
     2:
-      block: 20
+      block: 30
       buff: None
-      damage: 0
-      heal: 0
+      damage: 5
+      heal: 10
       debuff: None
   siberia:
     block: 0
     buff: None
     damage: 0
-    heal: 0
+    heal: 40
     debuff: None
 name: Ms. G
 phrases:

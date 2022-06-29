@@ -1,22 +1,22 @@
 settings:
   audio:
-    enable_music: false
+    enable_music: true
     enable_sfx: true
-    vol_music: 0.593
+    vol_music: 1.0
     vol_sfx: 1.0
   fps:
     show: true
     value: 165
-  fullscreen: true
-  skip_intro: true
-  fast_boot: true
-  skip_enemies: true
+  fullscreen: false
+  skip_intro: false
+  fast_boot: false
+  skip_enemies: false
 other:
   chan_card_size:
-  - 110
-  - 165
+    - 110
+    - 165
   boss_face_size:
-  - 500
-  - 500
+    - 500
+    - 500
   highest_level_beat: 1
   last_level: 1
